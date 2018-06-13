@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.8" type="package" method="upgrade">
+	<name>PKG_PROTOTYPE</name>
+	<packagename>prototype</packagename>
+	<author>Nerudas</author>
+	<creationDate>June 2018</creationDate>
+	<copyright>Copyright (c) 2015 - 2018 Nerudas. All rights reserved.</copyright>
+	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<authorEmail>support@nerudas.ru</authorEmail>
+	<authorUrl>nerudas.ru</authorUrl>
+	<version>1.0.0</version>
+	<description>PKG_PROTOTYPE_DESCRIPTION</description>
+	<languages folder="language">
+		<language tag="en-GB">en-GB/en-GB.pkg_prototype.sys.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.pkg_prototype.sys.ini</language>
+	</languages>
+	<files>
+	</files>
+	<updateservers>
+		<server type="extension" priority="1" name="Prototype Package">
+			https://update.nerudas.ru/?extension=pkg_prototype
+		</server>
+	</updateservers>
+</extension>
