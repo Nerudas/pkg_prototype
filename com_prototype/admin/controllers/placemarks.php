@@ -10,3 +10,34 @@
 
 defined('_JEXEC') or die;
 
+
+use Joomla\CMS\MVC\Controller\AdminController;
+
+class PrototypeControllerPlacemarks extends AdminController
+{
+	/**
+	 * The prefix to use with controller messages.
+	 *
+	 * @var    string
+	 * @since  1.0.0
+	 */
+	protected $text_prefix = 'COM_DISCUSSIONS_PLACEMARKS';
+
+	/**
+	 *
+	 * Proxy for getModel.
+	 *
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config The array of possible config values. Optional.
+	 *
+	 * @return  JModelLegacy
+	 *
+	 * @since  1.0.0
+	 */
+	public function getModel($name = 'Placemark', $prefix = 'PrototypeModel', $config = array('ignore_request' => true))
+	{
+		return parent::getModel($name, $prefix, $config);
+	}
+
+}

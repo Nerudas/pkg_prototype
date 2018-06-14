@@ -10,3 +10,32 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Helper\ContentHelper;
+use Joomla\CMS\Language\Text;
+
+class PrototypeHelper extends ContentHelper
+{
+	/**
+	 * Configure the Linkbar.
+	 *
+	 * @param   string $vName The name of the active view.
+	 *
+	 * @return  void
+	 *
+	 * @since 1.0.0
+	 */
+	static function addSubmenu($vName)
+	{
+		JHtmlSidebar::addEntry(Text::_('COM_PROTOTYPE_ITEMS'),
+			'index.php?option=com_prototype&view=items',
+			$vName == 'items');
+
+		JHtmlSidebar::addEntry(Text::_('COM_PROTOTYPE_CATEGORIES'),
+			'index.php?option=com_prototype&view=categories',
+			$vName == 'categories');
+
+		JHtmlSidebar::addEntry(Text::_('COM_PROTOTYPE_PLACEMARKS'),
+			'index.php?option=com_prototype&view=placemarks',
+			$vName == 'placemarks');
+	}
+}
