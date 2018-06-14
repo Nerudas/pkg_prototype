@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS `#__prototype_placemarks` (
 	`title`       VARCHAR(255) NOT NULL DEFAULT '',
 	`images`      LONGTEXT     NOT NULL DEFAULT '',
 	`layout`      TEXT         NOT NULL DEFAULT '',
-	`type`        TEXT         NOT NULL DEFAULT '',
-	`coordinates` TEXT         NOT NULL DEFAULT '',
+	`state`       TINYINT(3)   NOT NULL DEFAULT '0',
+	`access`      INT(10)      NOT NULL DEFAULT '0',
 	UNIQUE KEY `id` (`id`)
 )
 	ENGINE = MyISAM
