@@ -260,11 +260,11 @@ class PrototypeModelPlacemarks extends ListModel
 				->select('template')
 				->from('#__template_styles')
 				->where('client_id = 0')
-				->order('home DESC ');
+				->order('home DESC');
 			$db->setQuery($query);
 			$templates   = $db->loadColumn();
 			$layoutPaths = array();
-			foreach ($templates as $template)
+			foreach (array_unique($templates) as $template)
 			{
 				$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
 			}

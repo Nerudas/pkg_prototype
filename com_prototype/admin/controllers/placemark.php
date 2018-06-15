@@ -80,7 +80,7 @@ class PrototypeControllerPlacemark extends FormController
 		$db->setQuery($query);
 		$templates   = $db->loadColumn();
 		$layoutPaths = array();
-		foreach ($templates as $template)
+		foreach (array_unique($templates) as $template)
 		{
 			$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
 		}
