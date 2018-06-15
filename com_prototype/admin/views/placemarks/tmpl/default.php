@@ -19,7 +19,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::stylesheet('media/com_prototype/css/admin-placemarks.min.css', array('version' => 'auto'));
+HTMLHelper::stylesheet('media/com_prototype/css/admin-placemarks.css', array('version' => 'auto'));
 
 $app       = Factory::getApplication();
 $doc       = Factory::getDocument();
@@ -33,7 +33,7 @@ $columns = 5;
 ?>
 
 <form action="<?php echo Route::_('index.php?option=com_prototype&view=placemarks'); ?>" method="post" name="adminForm"
-      id="adminForm">
+	  id="adminForm">
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
 	</div>
@@ -56,6 +56,9 @@ $columns = 5;
 					</th>
 					<th style="min-width:100px" class="nowrap">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'p.title', $listDirn, $listOrder); ?>
+					</th>
+					<th width="30%" class="nowrap hidden-phone">
+						<?php echo Text::_('COM_PROTOTYPE_PLACEMARK_DEMO'); ?>
 					</th>
 					<th width="10%" class="nowrap hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'p.access', $listDirn, $listOrder); ?>
@@ -109,6 +112,9 @@ $columns = 5;
 									<?php echo $this->escape($item->title); ?>
 								<?php endif; ?>
 							</div>
+						</td>
+						<td class="hidden-phone center">
+							<?php echo $item->demo; ?>
 						</td>
 						<td class="small hidden-phone">
 							<?php echo $this->escape($item->access_level); ?>

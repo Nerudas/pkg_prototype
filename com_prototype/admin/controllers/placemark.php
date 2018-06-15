@@ -12,6 +12,12 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Response\JsonResponse;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Layout\FileLayout;
+
+jimport('joomla.filesystem.file');
+jimport('joomla.filesystem.folder');
 
 class PrototypeControllerPlacemark extends FormController
 {
@@ -43,6 +49,74 @@ class PrototypeControllerPlacemark extends FormController
 			$helper->saveImagesValue($id, '#__prototype_placemarks', $field, $value);
 		}
 
+		$app->close();
+
+		return true;
+	}
+
+	/**
+	 * Method to get Item placemark
+	 *
+	 * @return  boolean  True if successful, false otherwise.
+	 *
+	 * @since  1.0.0
+	 */
+	public function getPlacemark()
+	{
+		$app           = Factory::getApplication();
+		$data          = $this->input->post->get('jform', array(), 'array');
+		$data['image'] = (!empty($data['images']) && !empty(reset($data['images'])['src'])) ?
+			reset($data['images'])['src'] : false;
+
+		$item      = new Registry($data);
+		$placemark = new Registry($data);
+
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select('template')
+			->from('#__template_styles')
+			->where('client_id = 0')
+			->where('home = 1');
+		$db->setQuery($query);
+		$template = $db->loadResult();
+
+		$layoutPaths   = array();
+		$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
+		$layoutPaths[] = JPATH_ROOT . '/layouts';
+
+		$layoutName = $placemark->get('layout', 'default');
+		if (!JPath::find($layoutPaths, 'components/com_prototype/placemarks/' . $layoutName . '.php'))
+		{
+			$layoutName = 'default';
+		}
+
+		$layoutID = 'components.com_prototype.placemarks.' . $layoutName;
+		$layout   = new FileLayout($layoutID);
+		$layout->setIncludePaths($layoutPaths);
+
+		$displayData = array(
+			'item'      => $item,
+			'placemark' => $placemark
+		);
+
+		$html = $layout->render($displayData);
+		preg_match('/data-placemark-coordinates="([^"]*)"/', $html, $matches);
+		$coordinates = '[]';
+		if (!empty($matches[1]))
+		{
+			$coordinates = $matches[1];
+			$html        = str_replace($matches[0], '', $html);
+		}
+
+		$options                 = array();
+		$options['customLayout'] = $html;
+
+		$iconShape              = new stdClass();
+		$iconShape->type        = 'Polygon';
+		$iconShape->coordinates = json_decode($coordinates);
+		$options['iconShape']   = $iconShape;
+
+		echo new JsonResponse($options);
 		$app->close();
 
 		return true;

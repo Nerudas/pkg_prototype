@@ -11,9 +11,30 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Factory;
+
+jimport('joomla.filesystem.file');
 
 class PrototypeModelPlacemarks extends ListModel
 {
+	/**
+	 * Item layouts
+	 *
+	 * @var    array
+	 * @since  1.0.0
+	 */
+	protected $_itemLayouts = array();
+
+	/**
+	 * Palcemarks Layouts path
+	 *
+	 * @var    array
+	 * @since  1.0.0
+	 */
+	protected $_layoutsPaths = null;
+
 	/**
 	 * Constructor.
 	 *
@@ -158,4 +179,98 @@ class PrototypeModelPlacemarks extends ListModel
 		return $query;
 	}
 
+	/**
+	 * Method to get an array of data items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 *
+	 * @since  1.0.0
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+		if (!empty($items))
+		{
+			foreach ($items as &$item)
+			{
+				// Convert the images field to an array.
+				$registry     = new Registry($item->images);
+				$item->images = $registry->toArray();
+				$item->image  = (!empty($item->images) && !empty(reset($item->images)['src'])) ?
+					reset($item->images)['src'] : false;
+
+				$layout     = $this->getItemLayout($item->layout);
+				$layoutData = array(
+					'item'      => new Registry($item),
+					'placemark' => new Registry($item),
+				);
+				$item->demo = $layout->render($layoutData);
+			}
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Get the filter form
+	 *
+	 * @param string $layoutName Layout name
+	 *
+	 * @return  FileLayout;
+	 *
+	 * @since 1.0.0
+	 */
+	protected function getItemLayout($layoutName)
+	{
+		if (isset($this->_itemLayouts[$layoutName]))
+		{
+			return $this->_itemLayouts[$layoutName];
+		}
+
+		$key = $layoutName;
+
+		$layoutPaths = $this->getlayoutsPaths();
+		if (!JPath::find($layoutPaths, 'components/com_prototype/placemarks/' . $layoutName . '.php'))
+		{
+			$layoutName = 'default';
+		}
+
+		$layoutID = 'components.com_prototype.placemarks.' . $layoutName;
+		$layout   = new FileLayout($layoutID);
+		$layout->setIncludePaths($layoutPaths);
+
+		$this->_itemLayouts[$key] = $layout;
+
+		return $this->_itemLayouts[$key];
+	}
+
+	/**
+	 * Method to get Layouts paths
+	 *
+	 * @return array
+	 *
+	 * @since 1.0.0
+	 */
+	public function getLayoutsPaths()
+	{
+		if (!is_array($this->_layoutsPaths))
+		{
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select('template')
+				->from('#__template_styles')
+				->where('client_id = 0')
+				->where('home = 1');
+			$db->setQuery($query);
+			$template = $db->loadResult();
+
+			$layoutPaths   = array();
+			$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
+			$layoutPaths[] = JPATH_ROOT . '/layouts';
+
+			$this->_layoutsPaths = $layoutPaths;
+		}
+
+		return $this->_layoutsPaths;
+	}
 }

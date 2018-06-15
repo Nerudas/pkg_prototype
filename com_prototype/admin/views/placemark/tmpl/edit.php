@@ -23,11 +23,12 @@ HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
 HTMLHelper::stylesheet('media/com_prototype/css/admin-placemark.min.css', array('version' => 'auto'));
+HTMLHelper::_('script', 'media/com_prototype/js/admin-placemark.min.js', array('version' => 'auto'));
 
 $doc->addScriptDeclaration('
 	Joomla.submitbutton = function(task)
 	{
-		if (task == "placemark.cancel" || task == "item.setContacts" || document.formvalidator.isValid(document.getElementById("item-form")))
+		if (task == "placemark.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
 		{
 			Joomla.submitform(task, document.getElementById("item-form"));
 		}
@@ -35,8 +36,7 @@ $doc->addScriptDeclaration('
 ');
 ?>
 <form action="<?php echo Route::_('index.php?option=com_prototype&view=placemark&id=' . $this->item->id); ?>"
-	  method="post"
-	  name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+	  method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 
 	<?php echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
@@ -47,6 +47,7 @@ $doc->addScriptDeclaration('
 		<div class="row-fluid">
 			<div class="span9">
 				<fieldset class="adminform">
+					<?php echo $this->form->renderField('layout'); ?>
 					<div class="control-group">
 						<?php echo $this->form->getInput('images'); ?>
 					</div>
@@ -59,7 +60,6 @@ $doc->addScriptDeclaration('
 			</div>
 		</div>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-
 
 		<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
 		<input type="hidden" name="task" value=""/>

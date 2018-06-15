@@ -7,3 +7,6 @@
  * @link       https://nerudas.ru
  */
 
+[data-prototype-placemark] {
+	margin: 0 !important;
+}

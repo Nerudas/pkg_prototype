@@ -120,7 +120,9 @@ class PrototypeModelPlacemark extends AdminModel
 		$form->setFieldAttribute('images', 'saveurl',
 			Uri::base(true) . '/index.php?option=com_prototype&task=placemark.updateImages&field=images&id=' . $id);
 
-
+		// Set Palcemark link
+		$form->setFieldAttribute('demo', 'placemarkurl',
+			Uri::base(true) . '/index.php?option=com_prototype&task=placemark.getPlacemark&id=' . $id);
 		return $form;
 	}
 

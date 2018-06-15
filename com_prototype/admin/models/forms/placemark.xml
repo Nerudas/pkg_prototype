@@ -10,6 +10,9 @@
 		<field name="images" type="ajaximage"
 			   multiple="true"
 			   label="COM_DISCUSSIONS_TOPIC_IMAGES"/>
+		<field name="layout" type="layout"
+			   label="COM_PROTOTYPE_PLACEMARK_LAYOUT"
+			   folder="placemarks"/>
 	</fieldset>
 
 	<fieldset name="global">
