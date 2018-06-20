@@ -8,6 +8,12 @@
 			<option value="0">JUNPUBLISHED</option>
 			<option value="-2">JTRASHED</option>
 		</field>
+		<field name="front_created" type="list" onchange="this.form.submit();">
+			<option value="">COM_PROTOTYPE_CATEGORY_FRONT_CREATED</option>
+			<option value="0">JNO</option>
+			<option value="1">COM_PROTOTYPE_CATEGORY_FRONT_CREATED_PREMODERATION</option>
+			<option value="2">COM_PROTOTYPE_CATEGORY_FRONT_CREATED_PUBLICATION</option>
+		</field>
 		<field name="access" type="accesslevel" onchange="this.form.submit();">
 			<option value="">JOPTION_SELECT_ACCESS</option>
 		</field>

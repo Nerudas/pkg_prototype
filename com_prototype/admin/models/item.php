@@ -187,16 +187,33 @@ class PrototypeModelItem extends AdminModel
 	 */
 	public function save($data)
 	{
-		$app    = Factory::getApplication();
-		$pk     = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
-		$filter = InputFilter::getInstance();
-		$table  = $this->getTable();
-		$db     = Factory::getDbo();
+		$app      = Factory::getApplication();
+		$pk       = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
+		$filter   = InputFilter::getInstance();
+		$table    = $this->getTable();
+		$db       = Factory::getDbo();
+		$isNew    = true;
+		$catid    = $data['catid'];
+		$category = $this->getCategory($catid);
 
 		// Load the row if saving an existing type.
 		if ($pk > 0)
 		{
 			$table->load($pk);
+			$isNew = false;
+		}
+
+		if ($app->isSite() && $isNew)
+		{
+			$data['state'] = 0;
+			if ($category->front_created == 2)
+			{
+				$data['state'] = 1;
+			}
+			elseif ($category->front_created == 0)
+			{
+				return false;
+			}
 		}
 
 		if (empty($data['created']))
@@ -248,8 +265,6 @@ class PrototypeModelItem extends AdminModel
 		}
 
 
-		$catid    = $data['catid'];
-		$category = $this->getCategory($catid);
 		if (!empty($data['extra']) && $catid > 1 && $category)
 		{
 			$categoryFields = (!empty($category->fields)) ? $category->fields : array();

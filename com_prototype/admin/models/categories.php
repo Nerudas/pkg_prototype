@@ -101,6 +101,9 @@ class PrototypeModelCategories extends ListModel
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
+		
+		$front_created = $this->getUserStateFromRequest($this->context . '.filter.front_created', 'filter_front_created', '');
+		$this->setState('filter.front_created', $front_created);
 
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
 		$this->setState('filter.access', $access);
@@ -132,6 +135,7 @@ class PrototypeModelCategories extends ListModel
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.access');
 		$id .= ':' . $this->getState('filter.published');
+		$id .= ':' . $this->getState('filter.front_created');
 		$id .= ':' . serialize($this->getState('filter.tag'));
 
 		return parent::getStoreId($id);
@@ -174,6 +178,14 @@ class PrototypeModelCategories extends ListModel
 		{
 			$query->where('(c.state = 0 OR c.state = 1)');
 		}
+		
+		// Filter by front_created
+		$front_created = $this->getState('filter.front_created');
+		if (is_numeric($front_created))
+		{
+			$query->where('c.front_created = ' . (int) $front_created);
+		}
+		
 
 		// Filter by a single or group of tags.
 		$tags = $this->getState('filter.tags');

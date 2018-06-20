@@ -57,11 +57,11 @@ $columns = 9;
 					<th style="min-width:100px" class="nowrap">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'i.title', $listDirn, $listOrder); ?>
 					</th>
-					<th width="10%" class="nowrap hidden-phone">
-						<?php echo HTMLHelper::_('searchtools.sort', 'JAUTHOR', 'i.created_by', $listDirn, $listOrder); ?>
-					</th>
 					<th width="15%" class="nowrap hidden-phone">
 						<?php echo Text::_('COM_PROTOTYPE_PLACEMARK'); ?>
+					</th>
+					<th width="10%" class="nowrap hidden-phone">
+						<?php echo HTMLHelper::_('searchtools.sort', 'JAUTHOR', 'i.created_by', $listDirn, $listOrder); ?>
 					</th>
 					<th width="10%" class="nowrap hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'i.access', $listDirn, $listOrder); ?>
@@ -138,6 +138,9 @@ $columns = 9;
 								<?php endif; ?>
 							</div>
 						</td>
+						<td class="hidden-phone center">
+							<?php echo $item->placemark_demo; ?>
+						</td>
 						<td class="hidden-phone">
 							<?php if ((int) $item->created_by != 0) : ?>
 								<div class="author">
@@ -167,9 +170,6 @@ $columns = 9;
 									</div>
 								</div>
 							<?php endif; ?>
-						</td>
-						<td class="hidden-phone center">
-							<?php echo $item->placemark_demo; ?>
 						</td>
 						<td class="small hidden-phone">
 							<?php echo $this->escape($item->access_level); ?>

@@ -99,6 +99,13 @@
 			   folder="balloons">
 			<option value="">JDEFAULT</option>
 		</field>
+		<field name="front_created" type="list"
+			   label="COM_PROTOTYPE_CATEGORY_FRONT_CREATED"
+			   default="1">
+			<option value="0">JNO</option>
+			<option value="1">COM_PROTOTYPE_CATEGORY_FRONT_CREATED_PREMODERATION</option>
+			<option value="2">COM_PROTOTYPE_CATEGORY_FRONT_CREATED_PUBLICATION</option>
+		</field>
 		<fields name="attribs" label="JGLOBAL_FIELDSET_OPTIONS">
 			<field name="list_layout" type="componentlayout"
 				   label="COM_PROTOTYPE_PARAMS_LIST_LAYOUT"
@@ -115,13 +122,6 @@
 				   class="input-xlarge"
 				   useglobal="true"
 				   size="40"/>
-			<field name="front_created" type="list"
-				   label="COM_PROTOTYPE_CATEGORY_FRONT_CREATED"
-				   default="1">
-				<option value="0">JNO</option>
-				<option value="1">COM_PROTOTYPE_CATEGORY_FRONT_CREATED_PREMODERATION</option>
-				<option value="2">COM_PROTOTYPE_CATEGORY_FRONT_CREATED_PUBLICATION</option>
-			</field>
 		</fields>
 	</fieldset>
 	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">

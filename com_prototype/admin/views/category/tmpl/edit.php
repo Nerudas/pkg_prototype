@@ -73,13 +73,7 @@ $doc->addScriptDeclaration('
 
 		<?php
 		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'attribs', Text::_('JGLOBAL_FIELDSET_OPTIONS'));
-		echo $this->form->renderField('placemark_demo');
-		echo $this->form->renderField('placemark_id');
-		echo $this->form->renderField('balloon_layout');
-		echo $this->form->renderField('list_layout', 'attribs');
-		echo $this->form->renderField('map_layout', 'attribs');
-		echo $this->form->renderField('search_placeholder', 'attribs');
-		echo $this->form->renderField('front_created', 'attribs');
+		echo $this->form->renderFieldSet('attribs');
 		echo HTMLHelper::_('bootstrap.endTab');
 		?>
 
