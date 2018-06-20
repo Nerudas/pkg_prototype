@@ -125,7 +125,8 @@ $columns = 9;
 								<?php endif; ?>
 							</div>
 							<div class="small">
-								<?php echo Text::_('JCATEGORY') . ': ' . $this->escape($item->category->title); ?>
+								<?php echo Text::_('JCATEGORY') . ': ' .
+									$item->category->get('title', Text::_('JROOT')); ?>
 							</div>
 							<div class="tags">
 								<?php if (!empty($item->tags->itemTags)): ?>

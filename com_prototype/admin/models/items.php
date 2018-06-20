@@ -325,16 +325,16 @@ class PrototypeModelItems extends ListModel
 				$item->extra = $registry->toArray();
 
 				// Get Category
-				$item->category = $categories[$item->catid];
+				$item->category = new Registry((!empty($categories[$item->catid])) ? $categories[$item->catid] : array());
 
-				$placemark_id    = (!empty($item->placemark_id)) ? $item->placemark_id : $item->category->placemark_id;
+				$placemark_id    = (!empty($item->placemark_id)) ? $item->placemark_id : $item->category->get('placemark_id');
 				$item->placemark = new Registry((!empty($placemarks[$placemark_id])) ?
 					$placemarks[$placemark_id] : array());
 
 				$placemark_layout     = $this->getPlacemarkLayout($item->placemark->get('layout', 'default'));
 				$layoutData           = array(
 					'item'      => new Registry($item),
-					'category'  => new Registry($item->category),
+					'category'  => $item->category,
 					'placemark' => $item->placemark,
 				);
 				$item->placemark_demo = $placemark_layout->render($layoutData);
@@ -367,6 +367,10 @@ class PrototypeModelItems extends ListModel
 				if (isset($this->_categories[$pk]))
 				{
 					$categories[$pk] = $this->_categories[$pk];
+				}
+				elseif ($pk == 1)
+				{
+					$categories[$pk] = array();
 				}
 				elseif (!empty($pk))
 				{
