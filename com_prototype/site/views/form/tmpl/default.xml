@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<metadata>
+	<layout title="COM_PROTOTYPE_VIEW_FORM" option="COM_PROTOTYPE_VIEW_FORM_DEFAULT_OPTION">
+		<message>
+			<![CDATA[COM_PROTOTYPE_VIEW_FORM_DESCRIPTION]]>
+		</message>
+	</layout>
 
-</form>
+	<fieldset name="request">
+		<fields name="request" addfieldpath="/administrator/components/com_prototype/models/fields">
+			<field name="catid" type="prototypecategory"
+				   label="COM_PROTOTYPE_CATEGORY_PARENT"
+				   default="1"
+				   required="true">
+				<option value="1">JGLOBAL_ROOT</option>
+			</field>
+			<field name="id" type="sql"
+				   label="COM_PROTOTYPE_ITEM"
+				   query="SELECT id, title FROM #__prototype_items"
+				   key_field="id"
+				   value_field="title">
+				<option value="">JNONE</option>
+			</field>
+		</fields>
+		<fields name="params">
+			<field name="show_categories" type="hidden" default="1"/>
+		</fields>
+	</fieldset>
+
+
+</metadata>
