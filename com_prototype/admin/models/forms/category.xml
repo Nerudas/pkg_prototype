@@ -43,8 +43,7 @@
 	<fieldset name="global" label="COM_REMZONA_ATTRIBS_FIELDSET_LABEL">
 		<field name="parent_id" type="prototypecategory"
 			   label="COM_PROTOTYPE_CATEGORY_PARENT"
-			   default="1"
-			   maxlevel="1">
+			   default="1">
 			<option value="1">JGLOBAL_ROOT_PARENT</option>
 		</field>
 		<field name="state" type="list"

@@ -25,7 +25,7 @@ class PrototypeModelCategories extends ListModel
 	 * @var    array
 	 * @since  1.0.0
 	 */
-	protected $_Placemarks = array();
+	protected $_placemarks = array();
 
 	/**
 	 * Placemarks layouts
@@ -33,7 +33,7 @@ class PrototypeModelCategories extends ListModel
 	 * @var    array
 	 * @since  1.0.0
 	 */
-	protected $_PlacemarksLayouts = array();
+	protected $_placemarksLayouts = array();
 
 	/**
 	 * Palcemarks Layouts path
@@ -259,7 +259,7 @@ class PrototypeModelCategories extends ListModel
 
 
 	/**
-	 * Get the filter form
+	 * Method to get Placemarks
 	 *
 	 * @param array $pks PlaceMarks Ids
 	 *
@@ -320,7 +320,6 @@ class PrototypeModelCategories extends ListModel
 		return $placemarks;
 	}
 
-
 	/**
 	 * Method to get Layouts paths
 	 *
@@ -354,7 +353,7 @@ class PrototypeModelCategories extends ListModel
 	}
 
 	/**
-	 * Get the filter form
+	 * Method to get Placemarks Layout
 	 *
 	 * @param string $layoutName Layout name
 	 *

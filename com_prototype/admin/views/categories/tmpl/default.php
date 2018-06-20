@@ -35,7 +35,7 @@ if ($saveOrder)
 	$saveOrderingUrl = 'index.php?option=com_prototype&task=categories.saveOrderAjax&tmpl=component';
 	HTMLHelper::_('sortablelist.sortable', 'categoriesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
 }
-$columns = 6;
+$columns = 7;
 
 ?>
 

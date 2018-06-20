@@ -10,3 +10,176 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Application\SiteApplication;
+
+class PrototypeViewItem extends HtmlView
+{
+	/**
+	 * The JForm object
+	 *
+	 * @var  JForm
+	 *
+	 * @since  1.0.0
+	 */
+	protected $form;
+
+	/**
+	 * The active item
+	 *
+	 * @var  object
+	 *
+	 * @since  1.0.0
+	 */
+	protected $item;
+
+	/**
+	 * The model state
+	 *
+	 * @var  object
+	 *
+	 * @since  1.0.0
+	 */
+	protected $state;
+
+	/**
+	 * The actions the user is authorised to perform
+	 *
+	 * @var  JObject
+	 *
+	 * @since  1.0.0
+	 */
+	protected $canDo;
+
+	/**
+	 * Execute and display a template script.
+	 *
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return mixed A string if successful, otherwise an Error object.
+	 *
+	 * @throws Exception
+	 * @since  1.0.0
+	 */
+	public function display($tpl = null)
+	{
+		$this->form  = $this->get('Form');
+		$this->item  = $this->get('Item');
+		$this->state = $this->get('State');
+
+		$catid = $this->form->getValue('catid', '', '');
+		if ($catid > 1 && $category = $this->getModel()->getCategory($catid))
+		{
+			$extraFields    = $this->form->getGroup('extra');
+			$categoryFields = (!empty($category->fields)) ? $category->fields : array();
+			foreach ($extraFields as $extraField)
+			{
+				$name = $extraField->getAttribute('name');
+				if (empty($categoryFields[$name]))
+				{
+					$this->form->removeField($name, 'extra');
+				}
+			}
+		}
+		else
+		{
+			$this->form->removeGroup('extra');
+		}
+
+		Factory::getDocument()->addScriptDeclaration('
+			function categoryHasChanged(element) {
+			var cat = jQuery(element);
+			Joomla.loadingLayer(\'show\');
+			jQuery(\'input[name=task]\').val(\'item.reload\');
+			element.form.submit();
+		}');
+
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			throw new Exception(implode("\n", $errors), 500);
+		}
+
+		$this->addToolbar();
+
+		return parent::display($tpl);
+	}
+
+	/**
+	 * Returns the categories array
+	 *
+	 * @return  mixed  array
+	 *
+	 * @since  1.0.0
+	 */
+	public function getCategories()
+	{
+		if (!is_array($this->categories))
+		{
+			$this->categories = $this->get('Categories');
+		}
+
+		return $this->categories;
+	}
+
+	/**
+	 * Add the type title and toolbar.
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	protected function addToolbar()
+	{
+		Factory::getApplication()->input->set('hidemainmenu', true);
+		$isNew      = ($this->item->id == 0);
+		$this->user = Factory::getUser();
+		$canDo      = PrototypeHelper::getActions('com_prototype', 'item', $this->item->id);
+
+		if ($isNew)
+		{
+			// Add title
+			JToolBarHelper::title(
+				TEXT::_('COM_PROTOTYPE') . ': ' . TEXT::_('COM_PROTOTYPE_ITEM_ADD'), 'clock'
+			);
+			// For new records, check the create permission.
+			if ($canDo->get('core.create'))
+			{
+				JToolbarHelper::apply('item.apply');
+				JToolbarHelper::save('item.save');
+				JToolbarHelper::save2new('item.save2new');
+			}
+		}
+		// Edit
+		else
+		{
+			// Add title
+			JToolBarHelper::title(
+				TEXT::_('COM_PROTOTYPE') . ': ' . TEXT::_('COM_PROTOTYPE_ITEM_EDIT'), 'clock'
+			);
+			// Can't save the record if it's and editable
+			if ($canDo->get('core.edit'))
+			{
+				JToolbarHelper::apply('item.apply');
+				JToolbarHelper::save('item.save');
+				JToolbarHelper::save2new('item.save2new');
+			}
+
+			// Go to page
+			JLoader::register('PrototypeHelperRoute', JPATH_SITE . '/components/com_prototype/helpers/route.php');
+			$siteRouter = SiteApplication::getRouter();
+
+			$itemLink = $siteRouter->build(PrototypeHelperRoute::getItemRoute($this->item->id, $this->item->catid))->toString();
+			$itemLink = str_replace('administrator/', '', $itemLink);
+
+			$toolbar = JToolBar::getInstance('toolbar');
+			$toolbar->appendButton('Custom', '<a href="' . $itemLink . '" class="btn btn-small btn-primary"
+					target="_blank">' . Text::_('COM_PROTOTYPE_GO_TO_ITEM') . '</a>', 'goTo');
+		}
+
+		JToolbarHelper::cancel('item.cancel', 'JTOOLBAR_CLOSE');
+		JToolbarHelper::divider();
+	}
+}

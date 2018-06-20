@@ -10,7 +10,6 @@
 
 defined('_JEXEC') or die;
 
-
 use Joomla\CMS\MVC\Controller\BaseController;
 
 class PrototypeController extends BaseController
@@ -22,5 +21,5 @@ class PrototypeController extends BaseController
 	 *
 	 * @since  1.0.0
 	 */
-	protected $default_view = 'categories';
+	protected $default_view = 'items';
 }

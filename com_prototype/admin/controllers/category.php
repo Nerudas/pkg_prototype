@@ -62,8 +62,6 @@ class PrototypeControllerCategory extends FormController
 	{
 		$app           = Factory::getApplication();
 		$data          = $this->input->post->get('jform', array(), 'array');
-		$data['image'] = (!empty($placemark->images) && !empty(reset($placemark->images)['src'])) ?
-			reset($placemark->images)['src'] : false;
 
 		$item     = new Registry($data);
 		$category = new Registry($data);
