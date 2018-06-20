@@ -10,3 +10,81 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Helper\RouteHelper;
+
+class PrototypeHelperRoute extends RouteHelper
+{
+	/**
+	 * Fetches the list route
+	 *
+	 * @param   int $catid Category ID
+	 *
+	 * @return  string
+	 *
+	 * @since  1.0.0n
+	 */
+	public static function getListRoute($catid = 1)
+	{
+		return 'index.php?option=com_prototype&view=list&id=' . $catid;
+	}
+
+	/**
+	 * Fetches the item route
+	 *
+	 * @param   int $catid Category ID
+	 * @param   int $id    Item ID
+	 *
+	 * @return  string
+	 *
+	 * @since  1.0.0
+	 */
+	public static function getItemRoute($id = null, $catid = 1)
+	{
+		$link = 'index.php?option=com_prototype&view=item';
+		if (!empty($id))
+		{
+			$link .= '&id=' . $id;
+		}
+		if (!empty($catid))
+		{
+			$link .= '&catid=' . $catid;
+		}
+
+		return $link;
+	}
+
+	/**
+	 * Fetches the form route
+	 *
+	 * @param  int $id       Item ID
+	 * @param  int $catid    Category ID
+	 *
+	 * @return  string
+	 *
+	 * @since  1.0.0
+	 */
+	public static function getFormRoute($id = null, $catid = 1)
+	{
+		$link = 'index.php?option=com_prototype&view=form&catid=' . $catid;
+		if (!empty($id))
+		{
+			$link .= '&id=' . $id;
+		}
+
+		return $link;
+	}
+
+	/**
+	 * Fetches the map route
+	 *
+	 * @param   int $catid Category ID
+	 *
+	 * @return  string
+	 *
+	 * @since  1.0.0
+	 */
+	public static function getMapRoute($catid = 1)
+	{
+		return 'index.php?option=com_prototype&view=map&id=' . $catid;
+	}
+}
