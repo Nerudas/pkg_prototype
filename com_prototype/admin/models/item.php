@@ -69,10 +69,6 @@ class PrototypeModelItem extends AdminModel
 	{
 		if ($item = parent::getItem($pk))
 		{
-			// Convert the metadata field to an array.
-			$registry       = new Registry($item->metadata);
-			$item->metadata = $registry->toArray();
-
 			// Convert the attribs field to an array.
 			$registry      = new Registry($item->attribs);
 			$item->attribs = $registry->toArray();
