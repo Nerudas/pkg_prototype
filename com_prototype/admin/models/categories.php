@@ -13,9 +13,36 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\Registry\Registry;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Factory;
 
 class PrototypeModelCategories extends ListModel
 {
+	/**
+	 * Placemarks
+	 *
+	 * @var    array
+	 * @since  1.0.0
+	 */
+	protected $_Placemarks = array();
+
+	/**
+	 * Placemarks layouts
+	 *
+	 * @var    array
+	 * @since  1.0.0
+	 */
+	protected $_PlacemarksLayouts = array();
+
+	/**
+	 * Palcemarks Layouts path
+	 *
+	 * @var    array
+	 * @since  1.0.0
+	 */
+	protected $_layoutsPaths = null;
+
 	/**
 	 * Constructor.
 	 *
@@ -205,15 +232,158 @@ class PrototypeModelCategories extends ListModel
 		$items = parent::getItems();
 		if (!empty($items))
 		{
+			$placemarks = $this->getPlacemarks(array_unique(ArrayHelper::getColumn($items, 'placemark_id')));
+
 			foreach ($items as &$item)
 			{
 				// Get Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_prototype.category', $item->id);
+
+
+				$item->placemark = new Registry((!empty($placemarks[$item->placemark_id])) ?
+					$placemarks[$item->placemark_id] : array());
+
+				$placemark_layout     = $this->getPlacemarkLayout($item->placemark->get('layout', 'default'));
+				$layoutData           = array(
+					'item'      => new Registry($item),
+					'category'  => new Registry($item),
+					'placemark' => $item->placemark,
+				);
+				$item->placemark_demo = $placemark_layout->render($layoutData);
 			}
 		}
 
 		return $items;
+	}
+
+
+	/**
+	 * Get the filter form
+	 *
+	 * @param array $pks PlaceMarks Ids
+	 *
+	 * @return  array;
+	 *
+	 * @since 1.0.0
+	 */
+	protected function getPlacemarks($pks = array())
+	{
+		$pks = (!is_array($pks)) ? (array) $pks : array_unique($pks);
+
+		$placemarks = array();
+		if (!empty($pks))
+		{
+			$getPlacemarks = array();
+			foreach ($pks as $pk)
+			{
+				if (isset($this->_placemarks[$pk]))
+				{
+					$placemarks[$pk] = $this->_placemarks[$pk];
+				}
+				elseif (!empty($pk))
+				{
+					$getPlacemarks[] = $pk;
+				}
+			}
+			if (!empty($getPlacemarks))
+			{
+				try
+				{
+					$db    = Factory::getDbo();
+					$query = $db->getQuery(true)
+						->select('*')
+						->from($db->quoteName('#__prototype_placemarks', 'p'))
+						->where('p.id IN (' . implode(',', $getPlacemarks) . ')');
+					$db->setQuery($query);
+					$objects = $db->loadObjectList('id');
+					foreach ($objects as $object)
+					{
+						// Convert the images field to an array.
+						$registry       = new Registry($object->images);
+						$object->images = $registry->toArray();
+						$object->image  = (!empty($object->images) && !empty(reset($object->images)['src'])) ?
+							reset($object->images)['src'] : false;
+
+						$placemarks[$object->id]        = $object;
+						$this->_placemarks[$object->id] = $object;
+					}
+				}
+				catch (Exception $e)
+				{
+					$this->setError($e);
+				}
+			}
+		}
+
+
+		return $placemarks;
+	}
+
+
+	/**
+	 * Method to get Layouts paths
+	 *
+	 * @return array
+	 *
+	 * @since 1.0.0
+	 */
+	public function getLayoutsPaths()
+	{
+		if (!is_array($this->_layoutsPaths))
+		{
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select('template')
+				->from('#__template_styles')
+				->where('client_id = 0')
+				->order('home DESC');
+			$db->setQuery($query);
+			$templates   = $db->loadColumn();
+			$layoutPaths = array();
+			foreach (array_unique($templates) as $template)
+			{
+				$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
+			}
+			$layoutPaths[] = JPATH_ROOT . '/layouts';
+
+			$this->_layoutsPaths = $layoutPaths;
+		}
+
+		return $this->_layoutsPaths;
+	}
+
+	/**
+	 * Get the filter form
+	 *
+	 * @param string $layoutName Layout name
+	 *
+	 * @return  FileLayout;
+	 *
+	 * @since 1.0.0
+	 */
+	protected function getPlacemarkLayout($layoutName)
+	{
+		if (isset($this->_placemarkLayouts[$layoutName]))
+		{
+			return $this->_placemarkLayouts[$layoutName];
+		}
+
+		$key = $layoutName;
+
+		$layoutPaths = $this->getlayoutsPaths();
+		if (!JPath::find($layoutPaths, 'components/com_prototype/placemarks/' . $layoutName . '.php'))
+		{
+			$layoutName = 'default';
+		}
+
+		$layoutID = 'components.com_prototype.placemarks.' . $layoutName;
+		$layout   = new FileLayout($layoutID);
+		$layout->setIncludePaths($layoutPaths);
+
+		$this->_placemarkLayouts[$key] = $layout;
+
+		return $this->_placemarkLayouts[$key];
 	}
 
 }

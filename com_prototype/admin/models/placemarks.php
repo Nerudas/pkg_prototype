@@ -202,6 +202,7 @@ class PrototypeModelPlacemarks extends ListModel
 				$layout     = $this->getItemLayout($item->layout);
 				$layoutData = array(
 					'item'      => new Registry($item),
+					'category'  => new Registry($item),
 					'placemark' => new Registry($item),
 				);
 				$item->demo = $layout->render($layoutData);
