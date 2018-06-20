@@ -22,5 +22,5 @@ class PrototypeController extends BaseController
 	 *
 	 * @since  1.0.0
 	 */
-	protected $default_view = 'placemarks';
+	protected $default_view = 'categories';
 }
