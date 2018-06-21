@@ -103,7 +103,7 @@ $columns = 9;
 								   href="<?php echo Route::_('index.php?option=com_prototype&task=item.edit&id=' . $item->id); ?>">
 									<span class="icon-apply icon-white"></span>
 								</a>
-								<?php echo HTMLHelper::_('jgrid.published', $item->state, $i, 'items.', $canChange, 'cb'); ?>
+								<?php echo HTMLHelper::_('jgrid.published', $item->state, $i, 'items.', $canChange, 'cb', $item->created, $item->publish_down); ?>
 								<?php
 								if ($canChange)
 								{

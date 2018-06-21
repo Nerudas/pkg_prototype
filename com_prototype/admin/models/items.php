@@ -228,7 +228,18 @@ class PrototypeModelItems extends ListModel
 
 		if (is_numeric($published))
 		{
-			$query->where('i.state = ' . (int) $published);
+			if ($published == 0)
+			{
+				$nullDate = $db->getNullDate();
+				$now      = Factory::getDate()->toSql();
+				$query->where('(i.state = ' . (int) $published . ' OR ' .
+					'(' . $db->quoteName('i.publish_down') . ' != ' . $db->Quote($nullDate) . ' AND '
+					. $db->quoteName('i.publish_down') . '  < ' . $db->Quote($now) . '))');
+			}
+			else
+			{
+				$query->where('i.state = ' . (int) $published);
+			}
 		}
 		elseif ($published === '')
 		{

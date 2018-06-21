@@ -13,6 +13,8 @@ defined('_JEXEC') or die;
 use Joomla\Registry\Registry;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Date\Date;
 
 jimport('joomla.filesystem.file');
 
@@ -22,11 +24,24 @@ extract($displayData);
  * Layout variables
  * -----------------
  * @var   Registry $item      Item data
+ * @var   Registry $category  Category data
  * @var   Registry $placemark Placemark data
  */
 
 $image = ($placemark->get('image', false)) ? $placemark->get('image') : 'media/com_prototype/images/placemark.png';
 
+$publish_down = $item->get('publish_down', '0000-00-00 00:00:00');
+if ($publish_down == '0000-00-00 00:00:00')
+{
+	$publish_down = false;
+}
+if ($publish_down)
+{
+	$publish_down = new Date($publish_down);
+	$publish_down->toSql();
+}
+
+$onModeration = (!$item->get('state', 0) || ($publish_down && $publish_down < Factory::getDate()->toSql()));
 ?>
 <style>
 	[data-prototype-placemark].default {
@@ -70,8 +85,8 @@ $image = ($placemark->get('image', false)) ? $placemark->get('image') : 'media/c
 	}
 
 	[data-prototype-placemark].default[data-viewed="true"] img {
-		width: 32px;
-		height: 32px
+		max-width: 32px;
+		max-height: 32px
 	}
 
 	[data-prototype-placemark].default[data-viewed="true"] .title {
@@ -80,10 +95,19 @@ $image = ($placemark->get('image', false)) ? $placemark->get('image') : 'media/c
 		font-size: 12px;
 		padding: 0 3px
 	}
+
+	[data-prototype-placemark].default.onModeration {
+		opacity: .5;
+	}
+
+	[data-prototype-placemark].default.onModeration .title {
+		background-color: #da314b;
+		color: #fff;
+	}
 </style>
 <div data-prototype-placemark="<?php echo $item->get('id', 'x'); ?>"
 	 data-placemark-coordinates="[[[-24, -48],[300, -48],[24, -8],[24, -8],[0, 0],[-24, -10],[-24, -10]]]"
-	 class="placemark default" data-viewed="false">
+	 class="placemark default<?php echo ($onModeration) ? ' onModeration' : ''; ?>" data-viewed="false">
 	<?php echo HTMLHelper::image($image,
 		$item->get('title', Text::_('JGLOBAL_TITLE'))); ?>
 	<div class="title"><?php echo $item->get('title', Text::_('JGLOBAL_TITLE')); ?></div>
