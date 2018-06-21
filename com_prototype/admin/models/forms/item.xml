@@ -79,7 +79,7 @@
 		<fields name="extra">
 			<field name="price" type="price"
 				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE"
-				   contract_price="true"/>
+				   contract_price="false"/>
 			<field name="why_you" type="textarea"
 				   label="COM_PROTOTYPE_ITEM_EXTRA_WHY_YOU"
 				   rows="10"
