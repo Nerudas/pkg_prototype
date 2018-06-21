@@ -458,6 +458,10 @@ class PrototypeModelItems extends ListModel
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_prototype.item', $item->id);
 
+				$item->imageFolder = '/images/prototype/items/' . $item->id;
+				$item->html        = str_replace('{imageFolder}', $item->imageFolder, $item->html);
+				$item->extra       = str_replace('{imageFolder}', $item->imageFolder, $item->extra);
+
 				// Convert the images field to an array.
 				$registry     = new Registry($item->images);
 				$item->images = $registry->toArray();
@@ -777,11 +781,11 @@ class PrototypeModelItems extends ListModel
 				$data->root = ($data->id == 1);
 
 				// Links
-				$data->listLink    = Route::_(PrototypeHelperRoute::getListRoute($data->id));
-				$data->addLink = ($data->front_created > 0) ?
+				$data->listLink   = Route::_(PrototypeHelperRoute::getListRoute($data->id));
+				$data->addLink    = ($data->front_created > 0) ?
 					Route::_(PrototypeHelperRoute::getFormRoute(null, $data->id)) : false;
-				$data->mapLink     = Route::_(PrototypeHelperRoute::getMapRoute($data->id));
-				$data->mapAddLink  = ($data->front_created > 0) ?
+				$data->mapLink    = Route::_(PrototypeHelperRoute::getMapRoute($data->id));
+				$data->mapAddLink = ($data->front_created > 0) ?
 					Route::_(PrototypeHelperRoute::getFormRoute(null, $data->id, 'map')) : false;
 
 				// Convert parameter fields to objects.
@@ -854,11 +858,11 @@ class PrototypeModelItems extends ListModel
 
 					if ($item)
 					{
-						$item->listLink    = Route::_(PrototypeHelperRoute::getListRoute($item->id));
-						$item->addLink = ($item->front_created > 0) ?
+						$item->listLink   = Route::_(PrototypeHelperRoute::getListRoute($item->id));
+						$item->addLink    = ($item->front_created > 0) ?
 							Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id)) : false;
-						$item->mapLink     = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
-						$item->mapAddLink  = ($item->front_created > 0) ?
+						$item->mapLink    = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
+						$item->mapAddLink = ($item->front_created > 0) ?
 							Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id, 'map')) : false;
 
 						$this->_parent[$pk] = $item;
@@ -947,11 +951,11 @@ class PrototypeModelItems extends ListModel
 
 				foreach ($items as &$item)
 				{
-					$item->listLink    = Route::_(PrototypeHelperRoute::getListRoute($item->id));
-					$item->addLink = ($item->front_created > 0) ?
+					$item->listLink   = Route::_(PrototypeHelperRoute::getListRoute($item->id));
+					$item->addLink    = ($item->front_created > 0) ?
 						Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id)) : false;
-					$item->mapLink     = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
-					$item->mapAddLink  = ($item->front_created > 0) ?
+					$item->mapLink    = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
+					$item->mapAddLink = ($item->front_created > 0) ?
 						Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id, 'map')) : false;
 				}
 

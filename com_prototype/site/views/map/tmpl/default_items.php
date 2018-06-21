@@ -18,12 +18,9 @@ defined('_JEXEC') or die;
 </style>
 <div class="items">
 	<?php if ($this->items): ?>
-		<?php foreach ($this->items as $item):?>
+		<?php foreach ($this->items as $item): ?>
 			<div class="item" data-prototype-item="<?php echo $item->id; ?>">
 				<h2><a data-prototype-show="<?php echo $item->id; ?>"><?php echo $item->title; ?></a></h2>
-				<div class="uk-text-muted uk-text-small">
-
-				</div>
 			</div>
 			<hr data-prototype-item="<?php echo $item->id; ?>">
 		<?php endforeach; ?>

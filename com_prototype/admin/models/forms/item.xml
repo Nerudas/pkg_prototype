@@ -10,7 +10,6 @@
 			   buttons="true"/>
 		<field name="images" type="ajaximage"
 			   multiple="true"
-			   unique="true"
 			   limit="5"
 			   label="COM_PROTOTYPE_ITEM_IMAGES"/>
 		<field name="created_by" type="user"
