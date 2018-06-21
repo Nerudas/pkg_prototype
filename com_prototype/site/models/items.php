@@ -777,9 +777,12 @@ class PrototypeModelItems extends ListModel
 				$data->root = ($data->id == 1);
 
 				// Links
-				$data->listLink = Route::_(PrototypeHelperRoute::getListRoute($data->id));
-				$data->addLink  = Route::_(PrototypeHelperRoute::getFormRoute(null, $data->id));
-				$data->mapLink  = Route::_(PrototypeHelperRoute::getMapRoute($data->id));
+				$data->listLink    = Route::_(PrototypeHelperRoute::getListRoute($data->id));
+				$data->addLink = ($data->front_created > 0) ?
+					Route::_(PrototypeHelperRoute::getFormRoute(null, $data->id)) : false;
+				$data->mapLink     = Route::_(PrototypeHelperRoute::getMapRoute($data->id));
+				$data->mapAddLink  = ($data->front_created > 0) ?
+					Route::_(PrototypeHelperRoute::getFormRoute(null, $data->id, 'map')) : false;
 
 				// Convert parameter fields to objects.
 				$registry     = new Registry($data->attribs);
@@ -842,7 +845,7 @@ class PrototypeModelItems extends ListModel
 				if ($parent > 1)
 				{
 					$query = $db->getQuery(true)
-						->select(array('id', 'title', 'alias', 'parent_id'))
+						->select(array('id', 'title', 'alias', 'parent_id', 'front_created', 'icon'))
 						->from('#__prototype_categories')
 						->where('id = ' . (int) $parent);
 
@@ -851,9 +854,12 @@ class PrototypeModelItems extends ListModel
 
 					if ($item)
 					{
-
-						$item->listLink = Route::_(PrototypeHelperRoute::getListRoute($item->id));
-						$item->mapLink  = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
+						$item->listLink    = Route::_(PrototypeHelperRoute::getListRoute($item->id));
+						$item->addLink = ($item->front_created > 0) ?
+							Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id)) : false;
+						$item->mapLink     = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
+						$item->mapAddLink  = ($item->front_created > 0) ?
+							Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id, 'map')) : false;
 
 						$this->_parent[$pk] = $item;
 					}
@@ -913,7 +919,7 @@ class PrototypeModelItems extends ListModel
 			{
 				$db    = Factory::getDbo();
 				$query = $db->getQuery(true)
-					->select(array('id', 'title', 'alias'))
+					->select(array('id', 'title', 'alias', 'front_created', 'icon'))
 					->from('#__prototype_categories')
 					->where('parent_id = ' . (int) $pk);
 
@@ -941,8 +947,12 @@ class PrototypeModelItems extends ListModel
 
 				foreach ($items as &$item)
 				{
-					$item->listLink = Route::_(PrototypeHelperRoute::getListRoute($item->id));
-					$item->mapLink  = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
+					$item->listLink    = Route::_(PrototypeHelperRoute::getListRoute($item->id));
+					$item->addLink = ($item->front_created > 0) ?
+						Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id)) : false;
+					$item->mapLink     = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
+					$item->mapAddLink  = ($item->front_created > 0) ?
+						Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id, 'map')) : false;
 				}
 
 				$this->_children[$pk] = $items;

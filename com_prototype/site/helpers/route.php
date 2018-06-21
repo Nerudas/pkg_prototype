@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Helper\RouteHelper;
+use Joomla\CMS\Factory;
 
 class PrototypeHelperRoute extends RouteHelper
 {
@@ -56,19 +57,31 @@ class PrototypeHelperRoute extends RouteHelper
 	/**
 	 * Fetches the form route
 	 *
-	 * @param  int $id       Item ID
-	 * @param  int $catid    Category ID
+	 * @param  int $id    Item ID
+	 * @param  int $catid Category ID
+	 * @param null $return_view
 	 *
 	 * @return  string
 	 *
 	 * @since  1.0.0
 	 */
-	public static function getFormRoute($id = null, $catid = 1)
+	public static function getFormRoute($id = null, $catid = 1, $return_view = null)
 	{
 		$link = 'index.php?option=com_prototype&view=form&catid=' . $catid;
 		if (!empty($id))
 		{
 			$link .= '&id=' . $id;
+		}
+
+		$app = Factory::getApplication();
+		if (!empty($return_view))
+		{
+			$link .= '&return_view=' . $return_view;
+		}
+		elseif ($app->input->get('option') == 'com_prototype' && $app->input->get('view') == 'form'
+			&& !empty($app->input->get('return_view')))
+		{
+			$link .= '&return_view=' . $app->input->get('return_view');
 		}
 
 		return $link;

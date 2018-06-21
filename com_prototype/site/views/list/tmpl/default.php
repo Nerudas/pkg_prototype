@@ -10,3 +10,30 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
+?>
+<div>
+	<form action="<?php echo htmlspecialchars(Factory::getURI()->toString()); ?>" method="get" name="adminForm">
+		<?php foreach (array_keys($this->filterForm->getGroup('filter')) as $filter): ?>
+			<?php echo $this->filterForm->renderField(str_replace('filter_', '', $filter), 'filter'); ?>
+		<?php endforeach; ?>
+		<button type="submit"><?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+		<a href="<?php echo $this->link; ?>"><?php echo Text::_('JCLEAR'); ?></a>
+	</form>
+	<?php if (empty($this->items)): ?>
+		<div class="alert alert-no-items">
+			<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+		</div>
+	<?php else: ?>
+		<?php foreach ($this->items as $item): ?>
+			<div>
+				<?php echo '<pre>', print_r($item, true), '</pre>'; ?>
+			</div>
+		<?php endforeach; ?>
+		<div>
+			<?php echo $this->pagination->getPagesLinks(); ?>
+		</div>
+	<?php endif; ?>
+</div>

@@ -10,3 +10,8 @@
 
 defined('_JEXEC') or die;
 
+JLoader::register('PrototypeModelItems', JPATH_SITE . '/components/com_prototype/models/items.php');
+
+class PrototypeModelList extends PrototypeModelItems
+{
+}

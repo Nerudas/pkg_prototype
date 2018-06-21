@@ -117,12 +117,13 @@ class PrototypeViewMap extends HtmlView
 		$this->category      = $this->get('Category');
 		$this->mapParams     = $this->get('mapParams');
 		$this->items         = false;
+		$this->pagination    = false;
 		$this->parent        = $this->get('Parent');
 		$this->children      = $this->get('Children');
-		$this->addLink       = $this->category->addLink;
 		$this->listLink      = $this->category->listLink;
 		$this->mapLink       = $this->category->mapLink;
 		$this->link          = $this->mapLink;
+		$this->addLink       = $this->category->mapAddLink;
 		$this->filterForm    = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
 
@@ -133,10 +134,7 @@ class PrototypeViewMap extends HtmlView
 		}
 
 		// Create a shortcut for category.
-		$category          = $this->category;
-		$category->parent  = $this->parent;
-		$category->addLink = $this->addLink;
-		$category->mapLink = $this->mapLink;
+		$category = $this->category;
 
 		// Merge category params. If this is category view, menu params override category params
 		// Otherwise, category params override menu item params
@@ -282,7 +280,7 @@ class PrototypeViewMap extends HtmlView
 			$path   = array();
 			$path[] = array('title' => $title, 'link' => '');
 
-			$parent = $category->parent;
+			$parent = $this->parent;
 			while ($parent && $parent->id > 1 &&
 				($menu->query['option'] !== 'com_prototype' || $menu->query['view'] !== 'map' || $id != $parent->id))
 			{
