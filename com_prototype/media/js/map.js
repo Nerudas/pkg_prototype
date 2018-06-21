@@ -33,6 +33,21 @@
 			localStorage.setItem('map', JSON.stringify(storageParams));
 		}
 
+		if (joomlaParams.priority_center) {
+			storageParams = $.parseJSON(localStorage.getItem('map'));
+			if (joomlaParams.priority_center.zoom) {
+				storageParams.zoom = joomlaParams.priority_center.zoom;
+			}
+			if (joomlaParams.priority_center.center) {
+				storageParams.latitude = joomlaParams.priority_center.center[0] * 1;
+				storageParams.longitude = joomlaParams.priority_center.center[1] * 1;
+				storageParams.center = [storageParams.latitude, storageParams.longitude];
+			}
+			console.log(storageParams);
+
+			localStorage.setItem('map', JSON.stringify(storageParams));
+		}
+
 		var checkSize = setInterval(function () {
 			if ($(mapContainer).width() > 0 && $(mapContainer).height() > 0) {
 				clearInterval(checkSize);
@@ -56,11 +71,7 @@
 				map.behaviors.disable("dblClickZoom");
 
 				// Object Manager
-				var params = {
-					clusterize: false,
-				};
-
-				var objectManager = new ymaps.ObjectManager(params);
+				var objectManager = new ymaps.ObjectManager({clusterize: false});
 				map.geoObjects.add(objectManager);
 
 				// Items

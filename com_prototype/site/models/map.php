@@ -44,11 +44,24 @@ class PrototypeModelMap extends PrototypeModelItems
 			$regionModel = JModelLegacy::getInstance('regions', 'NerudasModel');
 			$region      = $regionModel->getRegion($app->input->cookie->get('region', '*'));
 
-			$params['center']    = array($region->latitude, $region->longitude);
-			$params['latitude']  = $region->latitude;
-			$params['longitude'] = $region->longitude;
-			$params['zoom']      = $region->zoom;
-			$params['catid']     = $this->getState('category.id');
+			$params['center']          = array($region->latitude, $region->longitude);
+			$params['latitude']        = $region->latitude;
+			$params['longitude']       = $region->longitude;
+			$params['zoom']            = $region->zoom;
+			$params['catid']           = $this->getState('category.id');
+			$params['priority_center'] = false;
+
+			if (!empty($app->input->get('center')) || $app->input->getInt('zoom'))
+			{
+
+				$center = (!empty($app->input->get('center'))) ?
+					explode(',', $app->input->get('center', '', 'text')) : false;
+				$zoom   = (!empty($app->input->getInt('zoom'))) ? $app->input->getInt('zoom') : false;
+
+				$params['priority_center']           = array();
+				$params['priority_center']['center'] = $center;
+				$params['priority_center']['zoom']   = $zoom;
+			}
 
 			$this->_mapParams = $params;
 		}
