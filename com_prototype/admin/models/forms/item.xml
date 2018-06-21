@@ -84,6 +84,10 @@
 				   label="COM_PROTOTYPE_ITEM_EXTRA_WHY_YOU"
 				   rows="10"
 				   cols="5"/>
+			<field name="comment" type="textarea"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_COMMENT"
+				   rows="10"
+				   cols="5"/>
 		</fields>
 	</fieldset>
 

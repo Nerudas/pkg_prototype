@@ -79,6 +79,13 @@
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
+			<field name="comment" type="radio"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_COMMENT"
+				   default="0"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
 		</fieldset>
 	</fields>
 

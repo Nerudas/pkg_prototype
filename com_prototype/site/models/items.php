@@ -403,7 +403,7 @@ class PrototypeModelItems extends ListModel
 		$search = $this->getState('filter.search');
 		if (!empty($search))
 		{
-			$cols = array('i.title', 'r.name', 'i.text', 'i.tags_search', 'i.extra');
+			$cols = array('i.title', 'r.name', 'i.html', 'i.tags_search', 'i.extra');
 			$sql  = array();
 			foreach ($cols as $col)
 			{
