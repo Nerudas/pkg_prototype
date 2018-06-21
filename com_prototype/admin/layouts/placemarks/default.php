@@ -16,8 +16,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Date\Date;
 
-jimport('joomla.filesystem.file');
-
 extract($displayData);
 
 /**
@@ -94,10 +92,6 @@ $onModeration = (!$item->get('state', 0) || ($publish_down && $publish_down < Fa
 		line-height: 15px;
 		font-size: 12px;
 		padding: 0 3px
-	}
-
-	[data-prototype-placemark].default.onModeration {
-		opacity: .5;
 	}
 
 	[data-prototype-placemark].default.onModeration .title {
