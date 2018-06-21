@@ -148,7 +148,10 @@
 														html = '';
 													clone.filter('[data-prototype-placemark]').attr('data-viewed', 'true');
 													$.each(clone, function (key) {
-														html += clone[key].outerHTML;
+														var outerHTML = clone[key].outerHTML;
+														if (outerHTML != '' && outerHTML != undefined) {
+															html += clone[key].outerHTML;
+														}
 													});
 													value = html;
 												}
