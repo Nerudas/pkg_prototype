@@ -13,6 +13,10 @@
 			   unique="true"
 			   limit="5"
 			   label="COM_PROTOTYPE_ITEM_IMAGES"/>
+		<field name="created_by" type="user"
+			   label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+			   description="JGLOBAL_FIELD_CREATED_BY_DESC"
+			   onchange="authorHasChanged(this)"/>
 	</fieldset>
 
 	<fieldset name="title">
@@ -104,9 +108,6 @@
 			   showtime="true"
 			   size="22"
 			   filter="user_utc"/>
-		<field name="created_by" type="user"
-			   label="JGLOBAL_FIELD_CREATED_BY_LABEL"
-			   description="JGLOBAL_FIELD_CREATED_BY_DESC"/>
 		<field name="hits" type="number"
 			   label="JGLOBAL_HITS"
 			   class="readonly"

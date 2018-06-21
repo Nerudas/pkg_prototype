@@ -14,6 +14,7 @@ use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class PrototypeViewItem extends HtmlView
 {
@@ -54,6 +55,24 @@ class PrototypeViewItem extends HtmlView
 	protected $canDo;
 
 	/**
+	 * An author profile
+	 *
+	 * @var  object
+	 *
+	 * @since  1.0.0
+	 */
+	protected $author;
+
+	/**
+	 * An author profile information
+	 *
+	 * @var  object
+	 *
+	 * @since  1.0.0
+	 */
+	protected $author_information;
+
+	/**
 	 * Execute and display a template script.
 	 *
 	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
@@ -68,6 +87,8 @@ class PrototypeViewItem extends HtmlView
 		$this->form  = $this->get('Form');
 		$this->item  = $this->get('Item');
 		$this->state = $this->get('State');
+
+		$doc = Factory::getDocument();
 
 		$catid = $this->form->getValue('catid', '', '');
 		if ($catid > 1 && $category = $this->getModel()->getCategory($catid))
@@ -88,12 +109,31 @@ class PrototypeViewItem extends HtmlView
 			$this->form->removeGroup('extra');
 		}
 
-		Factory::getDocument()->addScriptDeclaration('
-			function categoryHasChanged(element) {
+		$doc->addScriptDeclaration('function categoryHasChanged(element) {
 			var cat = jQuery(element);
 			Joomla.loadingLayer(\'show\');
 			jQuery(\'input[name=task]\').val(\'item.reload\');
 			element.form.submit();
+		}');
+
+		$this->author             = false;
+		$this->author_information = false;
+		$created_by               = $this->form->getValue('created_by', '', '');
+		if (!empty($created_by))
+		{
+			BaseDatabaseModel::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_profiles/models', 'ProfilesModel');
+			$profileModel             = BaseDatabaseModel::getInstance('Profile', 'ProfilesModel', array('ignore_request' => true));
+			$this->author             = $profileModel->getItem($created_by);
+			$this->author_information = $profileModel->getInformation($this->author);
+
+			$language = Factory::getLanguage();
+			$language->load('com_users', JPATH_ADMINISTRATOR, $language->getTag(), true);
+		}
+
+		$doc->addScriptDeclaration('function authorHasChanged(element) {
+				Joomla.loadingLayer(\'show\');
+				jQuery(\'input[name=task]\').val(\'item.reload\');
+				jQuery(element).closest(\'form\').submit();
 		}');
 
 		// Check for errors.

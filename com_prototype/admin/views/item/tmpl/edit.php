@@ -14,6 +14,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
 
 $app = Factory::getApplication();
 $doc = Factory::getDocument();
@@ -71,7 +72,21 @@ $doc->addScriptDeclaration('
 		echo HTMLHelper::_('bootstrap.endTab');
 		?>
 
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'author', Text::_('JAUTHOR')); ?>
+		<div class="row-fluid">
+			<div class="span9">
+				<?php if ($this->author)
+				{
+					echo LayoutHelper::render('components.com_profiles.form.information',
+						array('id' => 'author_information', 'value' => $this->author_information));
+				} ?>
+			</div>
+			<div class="span3 form-vertical">
+				<?php echo $this->form->renderField('created_by'); ?>
+			</div>
+		</div>
 
+		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 		<?php
 		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'attribs', Text::_('JGLOBAL_FIELDSET_OPTIONS'));
