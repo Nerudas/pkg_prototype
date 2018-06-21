@@ -86,7 +86,8 @@ class PrototypeControllerItem extends FormController
 		$data['image'] = (!empty($data['images']) && !empty(reset($data['images'])['src'])) ?
 			reset($data['images'])['src'] : false;
 
-		$item = new Registry($data);
+		$item  = new Registry($data);
+		$extra = new Registry($data['extra']);
 
 		$category = array();
 		if (!empty($data['catid']))
@@ -141,6 +142,7 @@ class PrototypeControllerItem extends FormController
 
 		$displayData = array(
 			'item'      => $item,
+			'extra'     => $extra,
 			'category'  => $category,
 			'placemark' => $placemark
 		);

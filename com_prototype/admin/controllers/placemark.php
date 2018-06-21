@@ -69,6 +69,7 @@ class PrototypeControllerPlacemark extends FormController
 			reset($data['images'])['src'] : false;
 
 		$item      = new Registry($data);
+		$extra     = new Registry(array());
 		$category  = new Registry($data);
 		$placemark = new Registry($data);
 
@@ -99,6 +100,7 @@ class PrototypeControllerPlacemark extends FormController
 
 		$displayData = array(
 			'item'      => $item,
+			'extra'     => $extra,
 			'category'  => $category,
 			'placemark' => $placemark
 		);

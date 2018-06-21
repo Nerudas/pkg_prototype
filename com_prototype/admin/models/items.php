@@ -332,8 +332,7 @@ class PrototypeModelItems extends ListModel
 					reset($item->images)['src'] : false;
 
 				// Convert the extra field to an array.
-				$registry    = new Registry($item->extra);
-				$item->extra = $registry->toArray();
+				$item->extra = new Registry($item->extra);
 
 				// Get Category
 				$item->category = new Registry((!empty($categories[$item->catid])) ? $categories[$item->catid] : array());
@@ -345,6 +344,7 @@ class PrototypeModelItems extends ListModel
 				$placemark_layout     = $this->getPlacemarkLayout($item->placemark->get('layout', 'default'));
 				$layoutData           = array(
 					'item'      => new Registry($item),
+					'extra'     => $item->extra,
 					'category'  => $item->category,
 					'placemark' => $item->placemark,
 				);

@@ -485,6 +485,7 @@ class PrototypeModelItems extends ListModel
 					$placemark_layout     = $this->getPlacemarkLayout($placemark_data->get('layout', 'default'));
 					$placemark_layoutData = array(
 						'item'      => new Registry($item),
+						'extra'     => $item->extra,
 						'category'  => $item->category,
 						'placemark' => $placemark_data,
 					);

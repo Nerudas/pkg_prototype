@@ -22,9 +22,11 @@ extract($displayData);
  * Layout variables
  * -----------------
  * @var   Registry $item      Item data
+ * @var   Registry $extra     Item extra data
  * @var   Registry $category  Category data
  * @var   Registry $placemark Placemark data
  */
+
 
 $image = ($placemark->get('image', false)) ? $placemark->get('image') : 'media/com_prototype/images/placemark.png';
 

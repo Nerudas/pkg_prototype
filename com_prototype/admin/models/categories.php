@@ -101,7 +101,7 @@ class PrototypeModelCategories extends ListModel
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-		
+
 		$front_created = $this->getUserStateFromRequest($this->context . '.filter.front_created', 'filter_front_created', '');
 		$this->setState('filter.front_created', $front_created);
 
@@ -178,14 +178,14 @@ class PrototypeModelCategories extends ListModel
 		{
 			$query->where('(c.state = 0 OR c.state = 1)');
 		}
-		
+
 		// Filter by front_created
 		$front_created = $this->getState('filter.front_created');
 		if (is_numeric($front_created))
 		{
 			$query->where('c.front_created = ' . (int) $front_created);
 		}
-		
+
 
 		// Filter by a single or group of tags.
 		$tags = $this->getState('filter.tags');
@@ -259,6 +259,7 @@ class PrototypeModelCategories extends ListModel
 				$placemark_layout     = $this->getPlacemarkLayout($item->placemark->get('layout', 'default'));
 				$layoutData           = array(
 					'item'      => new Registry($item),
+					'extra'     => new Registry(array()),
 					'category'  => new Registry($item),
 					'placemark' => $item->placemark,
 				);

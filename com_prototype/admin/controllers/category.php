@@ -60,10 +60,11 @@ class PrototypeControllerCategory extends FormController
 	 */
 	public function getPlacemark()
 	{
-		$app           = Factory::getApplication();
-		$data          = $this->input->post->get('jform', array(), 'array');
+		$app  = Factory::getApplication();
+		$data = $this->input->post->get('jform', array(), 'array');
 
 		$item     = new Registry($data);
+		$extra    = new Registry(array());
 		$category = new Registry($data);
 
 		$placemark = array();
@@ -75,7 +76,7 @@ class PrototypeControllerCategory extends FormController
 			{
 				$registry          = new Registry($placemark->images);
 				$placemark->images = $registry->toArray();
-				$placemark->image = (!empty($placemark->images) && !empty(reset($placemark->images)['src'])) ?
+				$placemark->image  = (!empty($placemark->images) && !empty(reset($placemark->images)['src'])) ?
 					reset($placemark->images)['src'] : false;
 			}
 		}
@@ -109,6 +110,7 @@ class PrototypeControllerCategory extends FormController
 
 		$displayData = array(
 			'item'      => $item,
+			'extra'     => $extra,
 			'category'  => $category,
 			'placemark' => $placemark
 		);
