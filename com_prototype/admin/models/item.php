@@ -17,6 +17,8 @@ use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
+use Joomla\Utilities\ArrayHelper;
 
 class PrototypeModelItem extends AdminModel
 {
@@ -315,6 +317,35 @@ class PrototypeModelItem extends AdminModel
 			$data['tags_map']    = '';
 		}
 
+		// Alter the title for save as copy
+		if ($app->input->get('task') == 'save2copy')
+		{
+			$origTable = clone $this->getTable();
+			$origTable->load($app->input->getInt('id'));
+
+			// Change title
+			if ($data['title'] == $origTable->title)
+			{
+				$data['title'] = $data['title'] . ' ' . Text::_('JGLOBAL_COPY');
+			}
+
+			$data['state']     = 0;
+			$data['published'] = 0;
+
+			// Copy images
+			$data['imagefolder'] = $this->imageFolderHelper->createTemporaryFolder();
+			if (!empty($data['images']))
+			{
+				foreach ($data['images'] as &$image)
+				{
+					$old          = JPATH_ROOT . '/' . $image['src'];
+					$image['src'] = $data['imagefolder'] . '/' . $image['file'];
+					$new          = JPATH_ROOT . '/' . $image['src'];
+					JFile::copy($old, $new);
+				}
+			}
+		}
+
 		if (parent::save($data))
 		{
 			$id = $this->getState($this->getName() . '.id');
@@ -369,12 +400,9 @@ class PrototypeModelItem extends AdminModel
 	 */
 	public function getCategory($pk = 1)
 	{
-
 		$this->_category[1] = false;
-
 		if (!isset($this->_category[$pk]))
 		{
-
 			try
 			{
 				$model = parent::getInstance('Category', $prefix = 'PrototypeModel', $config = array('ignore_request' => true));
@@ -390,5 +418,54 @@ class PrototypeModelItem extends AdminModel
 		}
 
 		return $this->_category[$pk];
+	}
+
+	/**
+	 * Method to duplicate one or more records.
+	 *
+	 * @param   array &$pks An array of primary key IDs.
+	 *
+	 * @return  boolean|JException  Boolean true on success, JException instance on error
+	 *
+	 * @since  1.0.0
+	 *
+	 * @throws  Exception
+	 */
+	public function duplicate(&$pks)
+	{
+		// Access checks.
+		if (!Factory::getUser()->authorise('core.create', 'com_prototype'))
+		{
+			throw new Exception(Text::_('JERROR_CORE_CREATE_NOT_PERMITTED'));
+		}
+
+		foreach ($pks as $pk)
+		{
+			if ($item = $this->getItem($pk))
+			{
+				unset($item->id);
+				$item->title       = $item->title . ' ' . Text::_('JGLOBAL_COPY');
+				$item->published   = $item->state = 0;
+				$item->imagefolder = $this->imageFolderHelper->createTemporaryFolder();
+				if (!empty($item->images))
+				{
+					$registry     = new Registry($item->images);
+					$item->images = $registry->toArray();
+					foreach ($item->images as &$image)
+					{
+						$old          = JPATH_ROOT . '/' . $image['src'];
+						$image['src'] = $item->imagefolder . '/' . $image['file'];
+						$new          = JPATH_ROOT . '/' . $image['src'];
+						JFile::copy($old, $new);
+					}
+				}
+
+				$this->save(ArrayHelper::fromObject($item));
+			}
+		}
+
+		$this->cleanCache();
+
+		return true;
 	}
 }

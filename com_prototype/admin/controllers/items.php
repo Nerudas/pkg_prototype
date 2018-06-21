@@ -11,6 +11,9 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Language\Text;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Session\Session;
 
 class PrototypeControllerItems extends AdminController
 {
@@ -37,6 +40,40 @@ class PrototypeControllerItems extends AdminController
 	public function getModel($name = 'Item', $prefix = 'PrototypeModel', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
+	}
+
+	/**
+	 * Method to clone an existing item.
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function duplicate()
+	{
+		// Check for request forgeries
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+
+		$pks = $this->input->post->get('cid', array(), 'array');
+		$pks = ArrayHelper::toInteger($pks);
+
+		try
+		{
+			if (empty($pks))
+			{
+				throw new Exception(Text::_('COM_PROTOTYPE_ERROR_NO_ITEMS_SELECTED'));
+			}
+
+			$model = $this->getModel();
+			$model->duplicate($pks);
+			$this->setMessage(Text::plural('COM_PROTOTYPE_ITEMS_N_ITEMS_DUPLICATED', count($pks)));
+		}
+		catch (Exception $e)
+		{
+			JError::raiseWarning(500, $e->getMessage());
+		}
+
+		$this->setRedirect('index.php?option=com_prototype&view=items');
 	}
 
 }

@@ -207,6 +207,12 @@ class PrototypeViewItem extends HtmlView
 				JToolbarHelper::save2new('item.save2new');
 			}
 
+			// If checked out, we can still save
+			if ($canDo->get('core.create'))
+			{
+				JToolbarHelper::save2copy('item.save2copy');
+			}
+
 			// Go to page
 			JLoader::register('PrototypeHelperRoute', JPATH_SITE . '/components/com_prototype/helpers/route.php');
 			$siteRouter = SiteApplication::getRouter();
