@@ -276,11 +276,13 @@ class PrototypeModelItems extends ListModel
 			'author.name as author_name',
 			'author.avatar as author_avatar',
 			'author.status as author_status',
+			'author.contacts as author_contacts',
 			'(session.time IS NOT NULL) AS author_online',
 			'(company.id IS NOT NULL) AS author_job',
 			'company.id as author_job_id',
 			'company.name as author_job_name',
 			'company.logo as author_job_logo',
+			'company.contacts as company_contacts',
 			'employees.position as  author_position'
 		))
 			->join('LEFT', '#__profiles AS author ON author.id = i.created_by')
