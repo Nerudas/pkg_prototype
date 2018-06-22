@@ -233,6 +233,8 @@ class PrototypeViewList extends HtmlView
 
 		$this->_prepareDocument();
 
+		$this->document->addScriptOptions('prototypeList', array('catid' => $category->id));
+
 
 		return parent::display($tpl);
 	}

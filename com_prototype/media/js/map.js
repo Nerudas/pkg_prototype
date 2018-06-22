@@ -262,7 +262,7 @@
 						content = $(container).find('[data-prototype-balloon-content]'),
 						loading = $(container).find('[data-prototype-balloon-loading]'),
 						error = $(container).find('[data-prototype-balloon-error]');
-					itemsRequest = $.ajax({
+					$.ajax({
 						type: 'GET',
 						dataType: 'json',
 						url: '/index.php?option=com_prototype&task=items.getBalloon',

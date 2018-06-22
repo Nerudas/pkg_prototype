@@ -12,8 +12,23 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('script', 'media/com_prototype/js/list.min.js', array('version' => 'auto'));
 
 ?>
+<script>
+	function showPrototypeListBalloon() {
+		jQuery(('[data-prototype-balloon]')).show();
+	}
+</script>
+<div data-prototype-balloon>
+	<div data-prototype-balloon-error><?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?></div>
+	<div data-prototype-balloon-loading>...</div>
+	<div data-prototype-balloon-content>
+	</div>
+</div>
 <div>
 	<form action="<?php echo htmlspecialchars(Factory::getURI()->toString()); ?>" method="get" name="adminForm">
 		<?php foreach (array_keys($this->filterForm->getGroup('filter')) as $filter): ?>
@@ -28,9 +43,10 @@ use Joomla\CMS\Language\Text;
 		</div>
 	<?php else: ?>
 		<?php foreach ($this->items as $item): ?>
-			<div>
-				<?php echo '<pre>', print_r($item, true), '</pre>'; ?>
+			<div class="item" data-prototype-item="<?php echo $item->id; ?>">
+				<h2><a data-prototype-show="<?php echo $item->id; ?>"><?php echo $item->title; ?></a></h2>
 			</div>
+			<hr data-prototype-item="<?php echo $item->id; ?>">
 		<?php endforeach; ?>
 		<div>
 			<?php echo $this->pagination->getPagesLinks(); ?>
