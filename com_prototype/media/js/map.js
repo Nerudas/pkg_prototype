@@ -268,6 +268,7 @@
 						type: 'GET',
 						dataType: 'json',
 						url: '/index.php?option=com_prototype&task=items.getBalloon',
+						cache: false,
 						data: ajaxData,
 						beforeSend: function () {
 							$(content).html('');
