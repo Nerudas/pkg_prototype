@@ -29,30 +29,6 @@ class PrototypeHelperRoute extends RouteHelper
 		return 'index.php?option=com_prototype&view=list&id=' . $catid;
 	}
 
-	/**
-	 * Fetches the item route
-	 *
-	 * @param   int $catid Category ID
-	 * @param   int $id    Item ID
-	 *
-	 * @return  string
-	 *
-	 * @since  1.0.0
-	 */
-	public static function getItemRoute($id = null, $catid = 1)
-	{
-		$link = 'index.php?option=com_prototype&view=item';
-		if (!empty($id))
-		{
-			$link .= '&id=' . $id;
-		}
-		if (!empty($catid))
-		{
-			$link .= '&catid=' . $catid;
-		}
-
-		return $link;
-	}
 
 	/**
 	 * Fetches the form route
@@ -67,7 +43,7 @@ class PrototypeHelperRoute extends RouteHelper
 	 */
 	public static function getFormRoute($id = null, $catid = 1, $return_view = null)
 	{
-		$link = 'index.php?option=com_prototype&view=form&catid=' . $catid;
+		$link = 'index.php?option=com_prototype&view=form&key=1&catid=' . $catid;
 		if (!empty($id))
 		{
 			$link .= '&id=' . $id;

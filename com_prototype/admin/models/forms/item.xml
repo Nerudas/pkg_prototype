@@ -2,7 +2,6 @@
 
 <form>
 	<fieldset>
-
 		<field name="html" type="editor"
 			   label="COM_PROTOTYPE_ITEM_HTML"
 			   hint="COM_PROTOTYPE_ITEM_HTML"

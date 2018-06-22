@@ -36,7 +36,7 @@ class PrototypeRouter extends RouterView
 
 		// Form route
 		$form = new RouterViewConfiguration('form');
-		$form->setKey('catid')->setParent($list, 'catid');
+		$form->setKey('key')->setParent($list, 'catid');
 		$this->registerView($form);
 
 		// Map route
@@ -151,7 +151,6 @@ class PrototypeRouter extends RouterView
 	 */
 	public function getItemsId($segment, $query)
 	{
-
 		if (isset($query['id']))
 		{
 			$parent = $query['id'];
@@ -220,9 +219,9 @@ class PrototypeRouter extends RouterView
 	{
 		if (in_array($segment, array('form', 'add', 'edit')))
 		{
-			$catid = (!empty($query['catid'])) ? $query['catid'] : 1;
+			$cid = (!empty($query['id'])) ? $query['id'] : 0;
 
-			return (int) $catid;
+			return $cid;
 		}
 
 		return false;

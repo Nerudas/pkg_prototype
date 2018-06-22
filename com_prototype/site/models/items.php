@@ -980,15 +980,9 @@ class PrototypeModelItems extends ListModel
 			}
 			catch (Exception $e)
 			{
-				if ($e->getCode() == 404)
-				{
-					JError::raiseError(404, $e->getMessage());
-				}
-				else
-				{
-					$this->setError($e);
-					$this->_parent[$pk] = false;
-				}
+				$this->setError($e);
+				$this->_parent[$pk] = false;
+
 			}
 		}
 
