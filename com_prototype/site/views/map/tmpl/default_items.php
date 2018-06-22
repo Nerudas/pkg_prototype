@@ -11,11 +11,6 @@
 defined('_JEXEC') or die;
 
 ?>
-<style>
-	[data-prototype-item][data-viewed="true"] {
-		opacity: 0.3;
-	}
-</style>
 <div class="items">
 	<?php if ($this->items): ?>
 		<?php foreach ($this->items as $item): ?>

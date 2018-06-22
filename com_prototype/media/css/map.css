@@ -91,3 +91,13 @@
 	border: 1px solid #333333;
 	font-size: 18px;
 }
+
+[data-prototype-item][data-viewed="true"] {
+	opacity: 0.3;
+}
+
+[data-prototype-balloon],
+[data-prototype-balloon-error],
+[data-prototype-balloon-loading] {
+	display: none;
+}

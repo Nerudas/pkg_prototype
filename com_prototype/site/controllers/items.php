@@ -25,14 +25,12 @@ class PrototypeControllerItems extends AdminController
 	 */
 	public function getTotal()
 	{
-		$app = Factory::getApplication();
-
 		$model   = $this->getModel('Items');
 		$total   = ($total = $model->getTotal()) ? $total : 0;
 		$success = ($total || $total > 0);
 
 		echo new JsonResponse($total, '', !$success);
-		$app->close();
+		Factory::getApplication()->close();
 	}
 
 	/**
@@ -44,9 +42,6 @@ class PrototypeControllerItems extends AdminController
 	 */
 	public function getPlacemarks()
 	{
-		$app = Factory::getApplication();
-		$doc = Factory::getDocument();
-
 		$success  = false;
 		$response = '';
 		if ($items = $this->getModel()->getItems())
@@ -63,23 +58,54 @@ class PrototypeControllerItems extends AdminController
 				}
 			}
 
+			// Get items view
+			$name   = $this->input->get('view', 'map');
+			$type   = Factory::getDocument()->getType();
+			$path   = $this->basePath;
+			$layout = $this->input->get('layout', 'default', 'string');
+			$view   = $this->getView($name, $type, '', array('base_path' => $path, 'layout' => $layout));
+
+			$view->setModel($this->getModel($name), true);
+			$view->document = Factory::getDocument();
+			$view->items    = $items;
+
+			$response->html = $view->loadTemplate('items');
 		}
 
-		// Get items view
-		$name   = $this->input->get('view', 'map');
-		$type   = $doc->getType();
-		$path   = $this->basePath;
-		$layout = $this->input->get('layout', 'default', 'string');
-		$view   = $this->getView($name, $type, '', array('base_path' => $path, 'layout' => $layout));
-
-		$view->setModel($this->getModel($name), true);
-		$view->document = Factory::getDocument();
-		$view->items    = $items;
-
-		$response->html = $view->loadTemplate('items');
-
 		echo new JsonResponse($response, '', !$success);
-		$app->close();
+		Factory::getApplication()->close();
+	}
+
+	/**
+	 * Method to item balloon
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function getBalloon()
+	{
+		$app      = Factory:: getApplication();
+		$success  = false;
+		$response = '';
+		$item_id  = $app->input->get('item_id');
+		$model    = $this->getModel();
+
+		$model->setState('filter.item_id', $item_id);
+		if ($item_id && $items = $model->getItems())
+		{
+			$item = (!empty($items[$item_id])) ? $items[$item_id] : false;
+			if ($item && $item->balloon)
+			{
+				$success             = true;
+				$response            = new stdClass();
+				$response->placemark = $item->placemark;
+				$response->balloon   = $item->balloon;
+			}
+
+		}
+		echo new JsonResponse($response, '', !$success);
+		Factory::getApplication()->close();
 	}
 
 	/**

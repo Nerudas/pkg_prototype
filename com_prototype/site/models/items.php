@@ -56,6 +56,14 @@ class PrototypeModelItems extends ListModel
 	protected $_placemarksLayouts = array();
 
 	/**
+	 * Balloon layouts
+	 *
+	 * @var    array
+	 * @since  1.0.0
+	 */
+	protected $_balloonLayouts = array();
+
+	/**
 	 * Palcemarks Layouts path
 	 *
 	 * @var    array
@@ -165,9 +173,6 @@ class PrototypeModelItems extends ListModel
 		$mergedParams->merge($params);
 		$this->setState('params', $mergedParams);
 
-		$map = $this->getUserStateFromRequest($this->context . '.map', 'map', false);
-		$this->setState('map', $map);
-
 		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
@@ -239,6 +244,8 @@ class PrototypeModelItems extends ListModel
 		$id .= ':' . $this->getState('filter.allregions');
 		$id .= ':' . $this->getState('filter.onlymy');
 		$id .= ':' . $this->getState('filter.author_id');
+		$id .= ':' . serialize($this->getState('filter.item_id'));
+		$id .= ':' . $this->getState('filter.item_id.include');
 		$id .= ':' . serialize($this->getState('filter.coordinates'));
 
 		return parent::getStoreId($id);
@@ -301,7 +308,7 @@ class PrototypeModelItems extends ListModel
 		// Filter by regions
 //		$region     = $app->input->cookie->get('region', '*');
 //		$allregions = $this->getState('filter.allregions');
-//		if (is_numeric($region) && empty($allregions) && !$map)
+//		if (is_numeric($region) && empty($allregions))
 //		{
 //			JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_nerudas/models');
 //			$regionModel = JModelLegacy::getInstance('regions', 'NerudasModel');
@@ -323,6 +330,21 @@ class PrototypeModelItems extends ListModel
 		if (is_numeric($authorId))
 		{
 			$query->where('i.created_by = ' . (int) $authorId);
+		}
+
+		// Filter by a single or group of items.
+		$item_id = $this->getState('filter.item_id');
+		if (is_numeric($item_id))
+		{
+			$type = $this->getState('filter.item_id.include', true) ? '= ' : '<> ';
+			$query->where('i.id ' . $type . (int) $item_id);
+		}
+		elseif (is_array($item_id))
+		{
+			$item_id = ArrayHelper::toInteger($item_id);
+			$item_id = implode(',', $item_id);
+			$type    = $this->getState('filter.item_id.include', true) ? 'IN' : 'NOT IN';
+			$query->where('i.id ' . $type . ' (' . $item_id . ')');
 		}
 
 
@@ -425,6 +447,25 @@ class PrototypeModelItems extends ListModel
 	}
 
 	/**
+	 * Gets an array of objects from the results of database query.
+	 *
+	 * @param   string  $query      The query.
+	 * @param   integer $limitstart Offset.
+	 * @param   integer $limit      The number of records.
+	 *
+	 * @return  object[]  An array of results.
+	 *
+	 * @since 1.0.0
+	 * @throws  \RuntimeException
+	 */
+	protected function _getList($query, $limitstart = 0, $limit = 0)
+	{
+		$this->getDbo()->setQuery($query, $limitstart, $limit);
+
+		return $this->getDbo()->loadObjectList('id');
+	}
+
+	/**
 	 * Method to get an array of data items.
 	 *
 	 * @return  mixed  An array of data items on success, false on failure.
@@ -474,6 +515,18 @@ class PrototypeModelItems extends ListModel
 				// Get Category
 				$item->category = new Registry((!empty($categories[$item->catid])) ? $categories[$item->catid] : array());
 
+				// Get balloon layout
+				$item->balloon_layout = (!empty($item->balloon_layout)) ? $item->balloon_layout :
+					$item->category->get('balloon_layout', 'default');
+
+				// Layout data
+				$layoutData = array(
+					'item'      => new Registry($item),
+					'extra'     => $item->extra,
+					'category'  => $item->category,
+					'placemark' => new Registry(array())
+				);
+
 				// Get placemark
 				$item->placemark = ($item->map) ? $item->map->get('placemark') : false;
 				if ($item->placemark)
@@ -482,15 +535,11 @@ class PrototypeModelItems extends ListModel
 					$placemark_data = new Registry((!empty($placemarks[$placemark_id])) ?
 						$placemarks[$placemark_id] : array());
 
-					$placemark_layout     = $this->getPlacemarkLayout($placemark_data->get('layout', 'default'));
-					$placemark_layoutData = array(
-						'item'      => new Registry($item),
-						'extra'     => $item->extra,
-						'category'  => $item->category,
-						'placemark' => $placemark_data,
-					);
+					$layoutData['placemark'] = $placemark_data;
 
-					$placemark_html = $placemark_layout->render($placemark_layoutData);
+					$placemark_layout = $this->getPlacemarkLayout($placemark_data->get('layout', 'default'));
+
+					$placemark_html = $placemark_layout->render($layoutData);
 					preg_match('/data-placemark-coordinates="([^"]*)"/', $placemark_html, $matches);
 					$coordinates = '[]';
 					if (!empty($matches[1]))
@@ -510,6 +559,10 @@ class PrototypeModelItems extends ListModel
 					$item->map->set('placemark', $item->placemark);
 				}
 
+				// Get balloon
+				$item->balloon  = false;
+				$balloon_layout = $this->getBalloonLayout($item->balloon_layout);
+				$item->balloon  = $balloon_layout->render($layoutData);
 			}
 		}
 
@@ -704,6 +757,39 @@ class PrototypeModelItems extends ListModel
 		$this->_placemarkLayouts[$key] = $layout;
 
 		return $this->_placemarkLayouts[$key];
+	}
+
+	/**
+	 * Method to get balloon Layout
+	 *
+	 * @param string $layoutName Layout name
+	 *
+	 * @return  FileLayout;
+	 *
+	 * @since 1.0.0
+	 */
+	protected function getBalloonLayout($layoutName)
+	{
+		if (isset($this->_balloonLayouts[$layoutName]))
+		{
+			return $this->_balloonLayouts[$layoutName];
+		}
+
+		$key = $layoutName;
+
+		$layoutPaths = $this->getlayoutsPaths();
+		if (!JPath::find($layoutPaths, 'components/com_prototype/balloons/' . $layoutName . '.php'))
+		{
+			$layoutName = 'default';
+		}
+
+		$layoutID = 'components.com_prototype.balloons.' . $layoutName;
+		$layout   = new FileLayout($layoutID);
+		$layout->setIncludePaths($layoutPaths);
+
+		$this->_balloonLayouts[$key] = $layout;
+
+		return $this->_balloonLayouts[$key];
 	}
 
 	/**

@@ -233,6 +233,25 @@ class PrototypeModelCategories extends ListModel
 	}
 
 	/**
+	 * Gets an array of objects from the results of database query.
+	 *
+	 * @param   string  $query      The query.
+	 * @param   integer $limitstart Offset.
+	 * @param   integer $limit      The number of records.
+	 *
+	 * @return  object[]  An array of results.
+	 *
+	 * @since 1.0.0
+	 * @throws  \RuntimeException
+	 */
+	protected function _getList($query, $limitstart = 0, $limit = 0)
+	{
+		$this->getDbo()->setQuery($query, $limitstart, $limit);
+
+		return $this->getDbo()->loadObjectList('id');
+	}
+
+	/**
 	 * Method to get an array of data items.
 	 *
 	 * @return  mixed  An array of data items on success, false on failure.

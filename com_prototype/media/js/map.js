@@ -43,8 +43,6 @@
 				storageParams.longitude = joomlaParams.priority_center.center[1] * 1;
 				storageParams.center = [storageParams.latitude, storageParams.longitude];
 			}
-			console.log(storageParams);
-
 			localStorage.setItem('map', JSON.stringify(storageParams));
 		}
 
@@ -105,7 +103,6 @@
 
 				function getItems() {
 					var ajaxData = $(filter).serializeArray();
-					ajaxData.push({name: 'map', value: 1});
 					ajaxData.push({name: 'id', value: joomlaParams.catid});
 					ajaxData.push({name: 'layout', value: joomlaParams.layout});
 					ajaxData.push({name: 'view', value: 'map'});
@@ -207,7 +204,7 @@
 					return false;
 				});
 
-				// Placemark / Cluster Click
+				// Placemark Click
 				objectManager.objects.events.add('click', function (e) {
 					var objectId = e.get('objectId'),
 						placemark = objectManager.objects.getById(objectId),
@@ -216,8 +213,10 @@
 					$('[data-prototype-placemark="' + id + '"]').attr('data-viewed', 'true');
 					$('[data-prototype-item="' + id + '"]').attr('data-viewed', 'true');
 					itemsViewed.push(id);
+					getBalloon(id);
 				});
 
+				// Item Click
 				$('body').on('click', '[data-prototype-show]', function () {
 					var item = $(this),
 						id = $(item).data('prototype-show'),
@@ -251,7 +250,62 @@
 					}, duration * 2);
 
 					itemsViewed.push(id);
+					getBalloon(id);
 				});
+
+				// Get balloon
+				function getBalloon(id) {
+					var ajaxData = [];
+					ajaxData.push({name: 'id', value: joomlaParams.catid});
+					ajaxData.push({name: 'item_id', value: id});
+
+					$.ajax({
+						type: 'POST',
+						dataType: 'json',
+						url: '',
+						data: {},
+						beforeSend: function (response) {
+						},
+						complete: function (response) {
+						},
+						success: function (response) {
+						},
+
+					});
+
+					var container = $('[data-prototype-balloon]'),
+						content = $(container).find('[data-prototype-balloon-content]'),
+						loading = $(container).find('[data-prototype-balloon-loading]'),
+						error = $(container).find('[data-prototype-balloon-error]');
+					itemsRequest = $.ajax({
+						type: 'GET',
+						dataType: 'json',
+						url: '/index.php?option=com_prototype&task=items.getBalloon',
+						cache: false,
+						data: ajaxData,
+						beforeSend: function () {
+							$(content).html('');
+							$(error).hide();
+							$(loading).show();
+							showPrototypeMapBalloon();
+						},
+						complete: function () {
+							$(loading).hide();
+						},
+						success: function (response) {
+							if (response.success) {
+								var data = response.data;
+								$(content).html(data.balloon);
+							}
+							else {
+								$(error).show();
+							}
+						},
+						error: function () {
+							$(error).show();
+						}
+					});
+				}
 
 				// Bounds
 				var bounds = {
