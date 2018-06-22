@@ -247,10 +247,10 @@
 					setTimeout(function () {
 						$(mapElement).attr('data-viewed', 'true');
 						$(listElement).attr('data-viewed', 'true');
+						getBalloon(id);
 					}, duration * 2);
 
 					itemsViewed.push(id);
-					getBalloon(id);
 				});
 
 				// Get balloon
@@ -258,21 +258,6 @@
 					var ajaxData = [];
 					ajaxData.push({name: 'id', value: joomlaParams.catid});
 					ajaxData.push({name: 'item_id', value: id});
-
-					$.ajax({
-						type: 'POST',
-						dataType: 'json',
-						url: '',
-						data: {},
-						beforeSend: function (response) {
-						},
-						complete: function (response) {
-						},
-						success: function (response) {
-						},
-
-					});
-
 					var container = $('[data-prototype-balloon]'),
 						content = $(container).find('[data-prototype-balloon-content]'),
 						loading = $(container).find('[data-prototype-balloon-loading]'),

@@ -101,6 +101,8 @@ class PrototypeControllerItems extends AdminController
 				$response            = new stdClass();
 				$response->placemark = $item->placemark;
 				$response->balloon   = $item->balloon;
+
+				$model->hit();
 			}
 
 		}

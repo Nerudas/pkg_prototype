@@ -20,6 +20,7 @@ use Joomla\Registry\Registry;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Table;
 
 class PrototypeModelItems extends ListModel
 {
@@ -1057,5 +1058,29 @@ class PrototypeModelItems extends ListModel
 		}
 
 		return $this->_children[$pk];
+	}
+
+	/**
+	 * Increment the hit counter for the article.
+	 *
+	 * @param   integer $pk Optional primary key of the article to increment.
+	 *
+	 * @return  boolean  True if successful; false otherwise and internal error set.
+	 *
+	 * @since  1.0.0
+	 */
+	public function hit($pk = 0)
+	{
+		$app      = Factory::getApplication();
+		$hitcount = $app->input->getInt('hitcount', 1);
+		if ($hitcount)
+		{
+			$pk    = (!empty($pk)) ? $pk : (int) $this->getState('filter.item_id');
+			$table = Table::getInstance('Items', 'PrototypeTable');
+			$table->load($pk);
+			$table->hit($pk);
+		}
+
+		return true;
 	}
 }
