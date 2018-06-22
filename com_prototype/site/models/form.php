@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Language\Text;
 
 JLoader::register('PrototypeModelItem', JPATH_ADMINISTRATOR . '/components/com_prototype/models/item.php');
 
@@ -205,10 +206,12 @@ class PrototypeModelForm extends PrototypeModelItem
 				$data->root = ($data->id == 1);
 
 				// Links
-				$data->listLink = Route::_(PrototypeHelperRoute::getListRoute($data->id));
-				$data->mapLink  = Route::_(PrototypeHelperRoute::getMapRoute($data->id));
-				$data->formLink = Route::_(PrototypeHelperRoute::getFormRoute($this->getState('item.id'),
-					$data->id, $this->getState('return_view')));
+				$returnView       = $this->getState('return_view');
+				$data->listLink   = Route::_(PrototypeHelperRoute::getListRoute($data->id));
+				$data->mapLink    = Route::_(PrototypeHelperRoute::getMapRoute($data->id));
+				$data->cancelLink = ($returnView == 'map') ? $data->mapLink : $data->listLink;
+				$data->formLink   = Route::_(PrototypeHelperRoute::getFormRoute($this->getState('item.id'),
+					$data->id, $returnView));
 
 				$registry     = new Registry($data->fields);
 				$data->fields = $registry->toArray();

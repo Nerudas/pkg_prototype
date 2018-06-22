@@ -12,5 +12,5 @@ defined('_JEXEC') or die;
 
 foreach ($this->children as $child)
 {
-	echo '<a href="' . $child->addLink . '">' . $child->title . '</a><br />';
+	echo '<a href="' . $child->formLink . '">' . $child->title . '</a><br />';
 }
