@@ -14,6 +14,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Uri\Uri;
 
 JLoader::register('PrototypeModelItem', JPATH_ADMINISTRATOR . '/components/com_prototype/models/item.php');
 
@@ -150,14 +154,83 @@ class PrototypeModelForm extends PrototypeModelItem
 	 */
 	public function save($data)
 	{
+		$pk    = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
+		$isNew = ($pk == 0);
+
 		$data['created'] = Factory::getDate()->toSql();
 
 		if ($id = parent::save($data))
 		{
+
+			// Send Email
+			$this->sendEmail($id, $isNew);
+
+			Factory::getApplication()->input->set('id', $id);
+
 			return $id;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Method to get type data for the current type
+	 *
+	 * @param   integer $pk    The id of the item.
+	 *
+	 * @param    bool   $isNew Is item vas new
+	 *
+	 *
+	 * @return  bool
+	 *
+	 * @since  1.0.0
+	 */
+	protected function sendEmail($pk, $isNew)
+	{
+		$item            = $this->getItem($pk);
+		$registry        = new Registry($item->images);
+		$item->images    = $registry->toArray();
+		$item->adminLink = Uri::root() . 'administrator/index.php?option=com_prototype&task=item.edit&id=' . $item->id;
+
+		$category = $this->getCategory($item->catid);
+
+
+		BaseDatabaseModel::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_profiles/models', 'ProfilesModel');
+		$profileModel       = BaseDatabaseModel::getInstance('Profile', 'ProfilesModel', array('ignore_request' => true));
+		$author             = $profileModel->getItem($item->created_by);
+		$author_information = $profileModel->getInformation($author);
+
+
+		$language = Factory::getLanguage();
+		$language->load('com_users', JPATH_ADMINISTRATOR, $language->getTag(), true);
+
+		$layoutData = array(
+			'item'     => $item,
+			'category' => $category,
+			'author'   => new Registry($author_information)
+		);
+
+		$subject = Text::_('COM_PROTOTYPE') . ': ';
+
+		$subject .= ($isNew) ? Text::_('COM_PROTOTYPE_ITEM_SUBMIT_SAVE_SUCCESS') : Text::_('COM_PROTOTYPE_ITEM_SAVE_SUCCESS');
+		$body    = LayoutHelper::render('components.com_prototype.mail.admin', $layoutData);
+
+		$siteConfig      = Factory::getConfig();
+		$componentConfig = ComponentHelper::getParams('com_prototype');
+
+		$sender = array($siteConfig->get('mailfrom'), $siteConfig->get('sitename'));
+
+		$recipient = explode(',', $componentConfig->get('admin_email', $siteConfig->get('mailfrom')));
+
+		$mail = JFactory::getMailer();
+		$mail->setSubject($subject);
+		$mail->setSender($sender);
+		$mail->addRecipient($recipient);
+		$mail->setBody($body);
+		$mail->isHtml(true);
+		$mail->Encoding = 'base64';
+
+		return $mail->send();
 	}
 
 	/**

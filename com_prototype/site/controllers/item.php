@@ -177,7 +177,7 @@ class PrototypeControllerItem extends FormController
 		}
 
 		$errorLink   = PrototypeHelperRoute::getFormRoute($id, $catid, $return_view);
-		$successLink = ($return_view != 'map') ? PrototypeHelperRoute::getListRoute($catid) :
+		$successLink = ($return_view != 'map') ? PrototypeHelperRoute::getListRoute($catid) . 'to_id=' . $id :
 			PrototypeHelperRoute::getMapRoute($catid) .
 			'&center=' . $data['map']['params']['latitude'] . ',' . $data['map']['params']['longitude'] .
 			'&zoom=' . $data['map']['params']['zoom'];

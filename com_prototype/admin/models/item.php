@@ -22,7 +22,6 @@ use Joomla\Utilities\ArrayHelper;
 
 class PrototypeModelItem extends AdminModel
 {
-
 	/**
 	 * The active category
 	 *

@@ -2,6 +2,11 @@
 <config>
 	<fieldset name="global" label="JGLOBAL_FIELDSET_OPTIONS">
 		<field name="sef_advanced" type="hidden" default="1"/>
+
+		<field name="admin_email" type="text"
+			   class="input-xxlarge"
+			   label="COM_PROTOTYPE_PARAMS_ADMIN_EMAIL"/>
+
 		<field name="items_limit" type="list"
 			   label="COM_PROTOTYPE_PARAMS_ITEMS_LIMIT"
 			   default="10">
