@@ -106,6 +106,7 @@
 					ajaxData.push({name: 'id', value: joomlaParams.catid});
 					ajaxData.push({name: 'layout', value: joomlaParams.layout});
 					ajaxData.push({name: 'view', value: 'map'});
+					ajaxData.push({name: 'return_view', value: 'map'});
 					$.each(bounds, function (key, value) {
 						ajaxData.push({name: 'filter[coordinates][' + key + ']', value: value});
 					});
@@ -258,6 +259,7 @@
 					var ajaxData = [];
 					ajaxData.push({name: 'id', value: joomlaParams.catid});
 					ajaxData.push({name: 'item_id', value: id});
+					ajaxData.push({name: 'return_view', value: 'map'});
 					var container = $('[data-prototype-balloon]'),
 						content = $(container).find('[data-prototype-balloon-content]'),
 						loading = $(container).find('[data-prototype-balloon-loading]'),

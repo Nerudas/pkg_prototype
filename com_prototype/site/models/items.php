@@ -162,6 +162,9 @@ class PrototypeModelItems extends ListModel
 		$pk = $app->input->getInt('id', 1);
 		$this->setState('category.id', $pk);
 
+		$return_view = $app->input->get('return_view', '');
+		$this->setState('return_view', $return_view);
+
 		// Load the parameters. Merge Global and Menu Item params into new object
 		$params     = $app->getParams();
 		$menuParams = new Registry;
@@ -480,13 +483,38 @@ class PrototypeModelItems extends ListModel
 		$items = parent::getItems();
 		if (!empty($items))
 		{
+			$user       = Factory::getUser();
 			$categories = $this->getCategories(array_unique(ArrayHelper::getColumn($items, 'catid')));
 
 			$placemarksItems      = array_unique(ArrayHelper::getColumn($items, 'placemark_id'));
 			$placemarksCategories = array_unique(ArrayHelper::getColumn($categories, 'placemark_id'));
 			$placemarks           = $this->getPlacemarks(array_unique(array_merge($placemarksItems, $placemarksCategories)));
+
 			foreach ($items as &$item)
 			{
+
+				$item->editLink = false;
+				if (!$user->guest)
+				{
+					$userId   = $user->id;
+					$asset    = 'com_prototype.item.' . $item->id;
+					$editLink = Route::_(PrototypeHelperRoute::getFormRoute($item->id, $item->catid, $this->getState('return_view')));
+					// Check general edit permission first.
+					if ($user->authorise('core.edit', $asset))
+					{
+						$item->editLink = $editLink;
+					}
+					// Now check if edit.own is available.
+					elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
+					{
+						// Check for a valid user and that they are the owner.
+						if ($userId == $item->created_by)
+						{
+							$item->editLink = $editLink;
+						}
+					}
+				}
+
 				$author_avatar       = (!empty($item->author_avatar) && JFile::exists(JPATH_ROOT . '/' . $item->author_avatar)) ?
 					$item->author_avatar : 'media/com_profiles/images/no-avatar.jpg';
 				$item->author_avatar = Uri::root(true) . '/' . $author_avatar;

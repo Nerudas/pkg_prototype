@@ -13,7 +13,6 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class PrototypeViewItem extends HtmlView
@@ -213,16 +212,6 @@ class PrototypeViewItem extends HtmlView
 				JToolbarHelper::save2copy('item.save2copy');
 			}
 
-			// Go to page
-			JLoader::register('PrototypeHelperRoute', JPATH_SITE . '/components/com_prototype/helpers/route.php');
-			$siteRouter = SiteApplication::getRouter();
-
-			$itemLink = $siteRouter->build(PrototypeHelperRoute::getItemRoute($this->item->id, $this->item->catid))->toString();
-			$itemLink = str_replace('administrator/', '', $itemLink);
-
-			$toolbar = JToolBar::getInstance('toolbar');
-			$toolbar->appendButton('Custom', '<a href="' . $itemLink . '" class="btn btn-small btn-primary"
-					target="_blank">' . Text::_('COM_PROTOTYPE_GO_TO_ITEM') . '</a>', 'goTo');
 		}
 
 		JToolbarHelper::cancel('item.cancel', 'JTOOLBAR_CLOSE');
