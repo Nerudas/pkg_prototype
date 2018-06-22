@@ -14,17 +14,8 @@ use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Response\JsonResponse;
 
-class PrototypeControllerMap extends AdminController
+class PrototypeControllerItems extends AdminController
 {
-
-	/**
-	 * The default view for the display method.
-	 *
-	 * @var    string
-	 * @since  1.0.0
-	 */
-	protected $default_view = 'map';
-
 	/**
 	 * Method to items total
 	 *
@@ -32,7 +23,7 @@ class PrototypeControllerMap extends AdminController
 	 *
 	 * @since  1.0.0
 	 */
-	public function getItemsTotal()
+	public function getTotal()
 	{
 		$app = Factory::getApplication();
 
@@ -42,24 +33,23 @@ class PrototypeControllerMap extends AdminController
 
 		echo new JsonResponse($total, '', !$success);
 		$app->close();
-
 	}
 
 	/**
-	 * Method to items total
+	 * Method to items palcemarks
 	 *
 	 * @return  void
 	 *
 	 * @since  1.0.0
 	 */
-	public function getItems()
+	public function getPlacemarks()
 	{
 		$app = Factory::getApplication();
 		$doc = Factory::getDocument();
 
 		$success  = false;
 		$response = '';
-		if ($items = $this->getModel('Items')->getItems())
+		if ($items = $this->getModel()->getItems())
 		{
 			$success              = true;
 			$response             = new stdClass();
@@ -75,8 +65,8 @@ class PrototypeControllerMap extends AdminController
 
 		}
 
-		// Get view
-		$name   = $this->input->get('view', $this->default_view);
+		// Get items view
+		$name   = $this->input->get('view', 'map');
 		$type   = $doc->getType();
 		$path   = $this->basePath;
 		$layout = $this->input->get('layout', 'default', 'string');
@@ -92,4 +82,20 @@ class PrototypeControllerMap extends AdminController
 		$app->close();
 	}
 
+	/**
+	 *
+	 * Proxy for getModel.
+	 *
+	 * @param   string $name   The model name. Optional.
+	 * @param   string $prefix The class prefix. Optional.
+	 * @param   array  $config The array of possible config values. Optional.
+	 *
+	 * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
+	 *
+	 * @since  1.0.0
+	 */
+	public function getModel($name = 'Items', $prefix = 'PrototypeModel', $config = array())
+	{
+		return parent::getModel($name, $prefix, $config);
+	}
 }

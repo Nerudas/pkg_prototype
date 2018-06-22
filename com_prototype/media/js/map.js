@@ -108,6 +108,7 @@
 					ajaxData.push({name: 'map', value: 1});
 					ajaxData.push({name: 'id', value: joomlaParams.catid});
 					ajaxData.push({name: 'layout', value: joomlaParams.layout});
+					ajaxData.push({name: 'view', value: 'map'});
 					$.each(bounds, function (key, value) {
 						ajaxData.push({name: 'filter[coordinates][' + key + ']', value: value});
 					});
@@ -117,7 +118,7 @@
 						totalRequest = $.ajax({
 							type: 'GET',
 							dataType: 'json',
-							url: '/index.php?option=com_prototype&task=map.getItemsTotal',
+							url: '/index.php?option=com_prototype&task=items.getTotal',
 							data: ajaxData,
 							success: function (response) {
 								var total = response.data;
@@ -134,7 +135,7 @@
 						itemsRequest = $.ajax({
 							type: 'GET',
 							dataType: 'json',
-							url: '/index.php?option=com_prototype&task=map.getItems',
+							url: '/index.php?option=com_prototype&task=items.getPlacemarks',
 							data: ajaxData,
 							success: function (response) {
 								if (response.success) {
