@@ -9,9 +9,12 @@
 	</fields>
 	<fieldset name="extra">
 		<fields name="extra">
-			<field name="price_m3t" type="list">
-				<option value="m3">COM_PROTOTYPE_ITEM_EXTRA_PRICE_M3</option>
-				<option value="t">COM_PROTOTYPE_ITEM_EXTRA_PRICE_T</option>
+			<field name="price_m3t" type="radio"
+				   class="btn-group"
+				   label="COM_PROTOTYPE_FILTER_EXTRA_PRICE_M3T"
+				   default="m3">
+				<option value="m3">COM_PROTOTYPE_FILTER_EXTRA_PRICE_M3T_M3</option>
+				<option value="t">COM_PROTOTYPE_FILTER_EXTRA_PRICE_M3T_T</option>
 			</field>
 		</fields>
 	</fieldset>
