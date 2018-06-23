@@ -78,7 +78,8 @@ $doc->addScriptDeclaration('
 				<?php if ($this->author)
 				{
 					echo LayoutHelper::render('components.com_profiles.form.information',
-						array('id' => 'author_information', 'value' => $this->author_information));
+						array('id' => 'author_information', 'name' => 'author_information',
+							  'value' => $this->author_information));
 				} ?>
 			</div>
 			<div class="span3 form-vertical">

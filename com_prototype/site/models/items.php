@@ -252,6 +252,7 @@ class PrototypeModelItems extends ListModel
 		$id .= ':' . serialize($this->getState('filter.item_id'));
 		$id .= ':' . $this->getState('filter.item_id.include');
 		$id .= ':' . serialize($this->getState('filter.coordinates'));
+		$id .= ':' . serialize($this->getState('extra'));
 
 		return parent::getStoreId($id);
 	}
@@ -286,8 +287,9 @@ class PrototypeModelItems extends ListModel
 			'company.id as author_job_id',
 			'company.name as author_job_name',
 			'company.logo as author_job_logo',
-			'company.contacts as company_contacts',
-			'employees.position as  author_position'
+			'company.contacts as author_job_contacts',
+			'employees.position as  author_position',
+			'(employees.as_company > 0 AND company.id IS NOT NULL) as author_company',
 		))
 			->join('LEFT', '#__profiles AS author ON author.id = i.created_by')
 			->join('LEFT', '#__session AS session ON session.userid = author.id AND session.time > ' . $offline_time)

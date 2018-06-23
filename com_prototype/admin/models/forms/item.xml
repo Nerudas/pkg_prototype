@@ -84,11 +84,13 @@
 			<field name="why_you" type="textarea"
 				   label="COM_PROTOTYPE_ITEM_EXTRA_WHY_YOU"
 				   rows="10"
-				   cols="5"/>
+				   cols="5"
+				   class="input-xxlarge"/>
 			<field name="comment" type="textarea"
 				   label="COM_PROTOTYPE_ITEM_EXTRA_COMMENT"
 				   rows="10"
-				   cols="5"/>
+				   cols="5"
+				   class="input-xxlarge"/>
 		</fields>
 	</fieldset>
 
