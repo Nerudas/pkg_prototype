@@ -673,8 +673,9 @@ class PrototypeModelItems extends ListModel
 					$db    = Factory::getDbo();
 					$query = $db->getQuery(true)
 						->select('*')
-						->from($db->quoteName('#__prototype_categories', 'p'))
-						->where('p.id IN (' . implode(',', $getCategories) . ')');
+						->from('#__prototype_categories')
+						->where('id IN (' . implode(',', $getCategories) . ')')
+						->order('lft ASC');
 					$db->setQuery($query);
 					$objects = $db->loadObjectList('id');
 					foreach ($objects as $object)
@@ -1074,7 +1075,8 @@ class PrototypeModelItems extends ListModel
 				$query = $db->getQuery(true)
 					->select(array('id', 'title', 'alias', 'front_created', 'icon'))
 					->from('#__prototype_categories')
-					->where('parent_id = ' . (int) $pk);
+					->where('parent_id = ' . (int) $pk)
+					->order('lft ASC');
 
 				// Filter by published state.
 				$published = $this->getState('filter.published');
