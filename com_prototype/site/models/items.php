@@ -183,6 +183,9 @@ class PrototypeModelItems extends ListModel
 		$category = $this->getUserStateFromRequest($this->context . '.filter.category', 'filter_category', '');
 		$this->setState('filter.category', $category);
 
+		$extra = $this->getUserStateFromRequest($this->context . '.extra', 'extra');
+		$this->setState('extra_filter', $extra);
+
 		if ((!$user->authorise('core.edit.state', 'com_prototype.item'))
 			&& (!$user->authorise('core.edit', 'com_prototype.item')))
 		{
@@ -205,8 +208,6 @@ class PrototypeModelItems extends ListModel
 		$this->setState('filter.onlymy', $onlymy);
 		$this->setState('filter.author_id', $author_id);
 
-		$for_when = $this->getUserStateFromRequest($this->context . '.filter.for_when', 'filter_for_when', '');
-		$this->setState('filter.for_when', $for_when);
 
 		$coordinates = $this->getUserStateFromRequest($this->context . '.filter.coordinates', 'filter_coordinates', '');
 		$this->setState('filter.coordinates', $coordinates);
@@ -453,6 +454,38 @@ class PrototypeModelItems extends ListModel
 	}
 
 	/**
+	 * Get the filter form
+	 *
+	 * @param   array   $data     data
+	 * @param   boolean $loadData load current data
+	 *
+	 * @return  \Joomla\CMS\Form\Form|boolean  The \JForm object or false on error
+	 *
+	 * @since   1.0.0
+	 */
+	public function getFilterForm($data = array(), $loadData = true)
+	{
+		$form = parent::getFilterForm($data, $loadData);
+		if ($form)
+		{
+			$category     = $this->getCategory();
+			$extraFilters = $form->getGroup('extra');
+
+			$categoryFilters = (!empty($category->filters)) ? $category->filters : array();
+			foreach ($extraFilters as $extraFilter)
+			{
+				$name = $extraFilter->getAttribute('name');
+				if (empty($categoryFilters[$name]))
+				{
+					$form->removeField($name, 'extra');
+				}
+			}
+		}
+
+		return $form;
+	}
+
+	/**
 	 * Gets an array of objects from the results of database query.
 	 *
 	 * @param   string  $query      The query.
@@ -552,10 +585,11 @@ class PrototypeModelItems extends ListModel
 
 				// Layout data
 				$layoutData = array(
-					'item'      => new Registry($item),
-					'extra'     => $item->extra,
-					'category'  => $item->category,
-					'placemark' => new Registry(array())
+					'item'         => new Registry($item),
+					'extra'        => $item->extra,
+					'category'     => $item->category,
+					'extra_filter' => new Registry($this->getState('extra_filter')),
+					'placemark'    => new Registry(array())
 				);
 
 				// Get placemark
@@ -897,6 +931,9 @@ class PrototypeModelItems extends ListModel
 
 				// Root
 				$data->root = ($data->id == 1);
+
+				$registry      = new Registry($data->filters);
+				$data->filters = $registry->toArray();
 
 				// Links
 				$data->listLink   = Route::_(PrototypeHelperRoute::getListRoute($data->id));

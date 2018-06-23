@@ -21,10 +21,11 @@ extract($displayData);
 /**
  * Layout variables
  * -----------------
- * @var   Registry $item      Item data
- * @var   Registry $extra     Item extra data
- * @var   Registry $category  Category data
- * @var   Registry $placemark Placemark data
+ * @var   Registry $item         Item data
+ * @var   Registry $extra        Item extra data
+ * @var   Registry $category     Category data
+ * @var   Registry $extra_filter Extra Filter data
+ * @var   Registry $placemark    Placemark data
  */
 
 

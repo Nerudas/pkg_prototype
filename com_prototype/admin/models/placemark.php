@@ -123,6 +123,7 @@ class PrototypeModelPlacemark extends AdminModel
 		// Set Palcemark link
 		$form->setFieldAttribute('demo', 'placemarkurl',
 			Uri::base(true) . '/index.php?option=com_prototype&task=placemark.getPlacemark&id=' . $id);
+
 		return $form;
 	}
 

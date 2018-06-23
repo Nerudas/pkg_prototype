@@ -63,9 +63,10 @@ class PrototypeControllerCategory extends FormController
 		$app  = Factory::getApplication();
 		$data = $this->input->post->get('jform', array(), 'array');
 
-		$item     = new Registry($data);
-		$extra    = new Registry(array());
-		$category = new Registry($data);
+		$item         = new Registry($data);
+		$extra        = new Registry(array());
+		$category     = new Registry($data);
+		$extra_filter = new Registry(array());
 
 		$placemark = array();
 		if (!empty($data['placemark_id']))
@@ -109,10 +110,11 @@ class PrototypeControllerCategory extends FormController
 		$layout->setIncludePaths($layoutPaths);
 
 		$displayData = array(
-			'item'      => $item,
-			'extra'     => $extra,
-			'category'  => $category,
-			'placemark' => $placemark
+			'item'         => $item,
+			'extra'        => $extra,
+			'category'     => $category,
+			'extra_filter' => $extra_filter,
+			'placemark'    => $placemark
 		);
 
 		$html = $layout->render($displayData);

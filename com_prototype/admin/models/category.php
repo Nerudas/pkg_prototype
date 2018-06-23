@@ -70,8 +70,12 @@ class PrototypeModelCategory extends AdminModel
 			$item->attribs = $registry->toArray();
 
 			// Convert the fields field to an array.
-			$registry      = new Registry($item->fields);
+			$registry     = new Registry($item->fields);
 			$item->fields = $registry->toArray();
+
+			// Convert the fields field to an array.
+			$registry      = new Registry($item->filters);
+			$item->filters = $registry->toArray();
 
 			// Get Tags
 			$item->tags = new TagsHelper;
@@ -208,8 +212,14 @@ class PrototypeModelCategory extends AdminModel
 
 		if (isset($data['fields']) && is_array($data['fields']))
 		{
-			$registry         = new Registry($data['fields']);
+			$registry       = new Registry($data['fields']);
 			$data['fields'] = (string) $registry;
+		}
+
+		if (isset($data['filters']) && is_array($data['filters']))
+		{
+			$registry        = new Registry($data['filters']);
+			$data['filters'] = (string) $registry;
 		}
 
 		// Load the row if saving an existing type.

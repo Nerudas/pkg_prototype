@@ -80,7 +80,8 @@ class PrototypeControllerItem extends FormController
 				$data['placemark_id'] = $category->placemark_id;
 			}
 		}
-		$category = new Registry($category);
+		$category     = new Registry($category);
+		$extra_filter = new Registry(array());
 
 		$placemark = array();
 		if (!empty($data['placemark_id']))
@@ -123,10 +124,11 @@ class PrototypeControllerItem extends FormController
 		$layout->setIncludePaths($layoutPaths);
 
 		$displayData = array(
-			'item'      => $item,
-			'extra'     => $extra,
-			'category'  => $category,
-			'placemark' => $placemark
+			'item'         => $item,
+			'extra'        => $extra,
+			'category'     => $category,
+			'extra_filter' => $extra_filter,
+			'placemark'    => $placemark
 		);
 
 		$html = $layout->render($displayData);

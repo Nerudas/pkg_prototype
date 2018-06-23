@@ -63,18 +63,26 @@
 			   size="1"/>
 		<field name="imagefolder" type="imagefolder" path="images/prototype/categories"/>
 	</fieldset>
-	<fields name="fields" label="COM_PROTOTYPE_CATEGORY_FIELDS">
-		<fieldset name="fields" label="COM_PROTOTYPE_CATEGORY_FIELDS">
-			<field name="price" type="radio"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE"
-				   default="1"
+	<fieldset name="fields" label="COM_PROTOTYPE_CATEGORY_FIELDS">
+		<field type="note" label="COM_PROTOTYPE_CATEGORY_FIELDS"/>
+		<fields name="fields" label="COM_PROTOTYPE_CATEGORY_FIELDS">
+			<field name="price_m3" type="radio"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_M3"
+				   default="0"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+			<field name="price_t" type="radio"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_T"
+				   default="0"
 				   class="btn-group btn-group-yesno">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
 			<field name="why_you" type="radio"
 				   label="COM_PROTOTYPE_ITEM_EXTRA_WHY_YOU"
-				   default="1"
+				   default="0"
 				   class="btn-group btn-group-yesno">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
@@ -86,8 +94,20 @@
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
-		</fieldset>
-	</fields>
+		</fields>
+	</fieldset>
+	<fieldset name="filters" label="COM_PROTOTYPE_CATEGORY_FILTERS">
+		<field type="note" label="COM_PROTOTYPE_CATEGORY_FILTERS"/>
+		<fields name="filters" label="COM_PROTOTYPE_CATEGORY_FILTERS">
+			<field name="price_m3t" type="radio"
+				   label="COM_PROTOTYPE_CATEGORY_FILTERS_PRICE_M3T"
+				   default="0"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+		</fields>
+	</fieldset>
 
 	<fieldset name="attribs" label="JGLOBAL_FIELDSET_OPTIONS">
 		<field name="placemark_demo" type="map"

@@ -75,8 +75,11 @@
 
 	<fieldset name="extra" label="COM_PROTOTYPE_ITEM_EXTRA">
 		<fields name="extra">
-			<field name="price" type="price"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE"
+			<field name="price_m3" type="price"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_M3"
+				   contract_price="false"/>
+			<field name="price_t" type="price"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_T"
 				   contract_price="false"/>
 			<field name="why_you" type="textarea"
 				   label="COM_PROTOTYPE_ITEM_EXTRA_WHY_YOU"

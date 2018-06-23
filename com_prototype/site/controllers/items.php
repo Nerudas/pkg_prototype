@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Response\JsonResponse;
+use Joomla\Registry\Registry;
 
 class PrototypeControllerItems extends AdminController
 {
@@ -44,7 +45,8 @@ class PrototypeControllerItems extends AdminController
 	{
 		$success  = false;
 		$response = '';
-		if ($items = $this->getModel()->getItems())
+		$model    = $this->getModel();
+		if ($items = $model->getItems())
 		{
 			$success              = true;
 			$response             = new stdClass();
@@ -66,8 +68,9 @@ class PrototypeControllerItems extends AdminController
 			$view   = $this->getView($name, $type, '', array('base_path' => $path, 'layout' => $layout));
 
 			$view->setModel($this->getModel($name), true);
-			$view->document = Factory::getDocument();
-			$view->items    = $items;
+			$view->document     = Factory::getDocument();
+			$view->items        = $items;
+			$view->extra_filter = new Registry($model->getState('extra_filter'));
 
 			$response->html = $view->loadTemplate('items');
 		}

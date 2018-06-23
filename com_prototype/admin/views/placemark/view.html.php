@@ -64,9 +64,9 @@ class PrototypeViewPlacemark extends HtmlView
 	 */
 	public function display($tpl = null)
 	{
-		$this->form       = $this->get('Form');
-		$this->item       = $this->get('Item');
-		$this->state      = $this->get('State');
+		$this->form  = $this->get('Form');
+		$this->item  = $this->get('Item');
+		$this->state = $this->get('State');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -89,8 +89,8 @@ class PrototypeViewPlacemark extends HtmlView
 	protected function addToolbar()
 	{
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		$isNew      = ($this->item->id == 0);
-		$canDo      = PrototypeHelper::getActions('com_prototype', 'placemark', $this->item->id);
+		$isNew = ($this->item->id == 0);
+		$canDo = PrototypeHelper::getActions('com_prototype', 'placemark', $this->item->id);
 
 		if ($isNew)
 		{

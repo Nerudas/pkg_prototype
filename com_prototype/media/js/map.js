@@ -204,6 +204,11 @@
 
 					return false;
 				});
+				$(filter).find('[name*="extra"]').on('change', function () {
+					startItemsRequests();
+					console.log('change');
+					return false;
+				});
 
 				// Placemark Click
 				objectManager.objects.events.add('click', function (e) {

@@ -68,10 +68,11 @@ class PrototypeControllerPlacemark extends FormController
 		$data['image'] = (!empty($data['images']) && !empty(reset($data['images'])['src'])) ?
 			reset($data['images'])['src'] : false;
 
-		$item      = new Registry($data);
-		$extra     = new Registry(array());
-		$category  = new Registry($data);
-		$placemark = new Registry($data);
+		$item         = new Registry($data);
+		$extra        = new Registry(array());
+		$category     = new Registry($data);
+		$extra_filter = new Registry(array());
+		$placemark    = new Registry($data);
 
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true)
@@ -99,10 +100,11 @@ class PrototypeControllerPlacemark extends FormController
 		$layout->setIncludePaths($layoutPaths);
 
 		$displayData = array(
-			'item'      => $item,
-			'extra'     => $extra,
-			'category'  => $category,
-			'placemark' => $placemark
+			'item'         => $item,
+			'extra'        => $extra,
+			'category'     => $category,
+			'extra_filter' => $extra_filter,
+			'placemark'    => $placemark
 		);
 
 		$html = $layout->render($displayData);

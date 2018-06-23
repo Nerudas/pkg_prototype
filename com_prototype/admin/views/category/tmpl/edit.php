@@ -67,9 +67,17 @@ $doc->addScriptDeclaration('
 
 		<?php
 		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'fields', Text::_('COM_PROTOTYPE_CATEGORY_FIELDS'));
-		echo $this->form->renderFieldSet('fields');
-		echo HTMLHelper::_('bootstrap.endTab');
 		?>
+		<div class="row-fluid">
+			<div class="span6">
+				<?php echo $this->form->renderFieldSet('fields'); ?>
+			</div>
+			<div class="span6">
+				<?php echo $this->form->renderFieldSet('filters'); ?>
+			</div>
+		</div>
+
+		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 		<?php
 		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'attribs', Text::_('JGLOBAL_FIELDSET_OPTIONS'));
