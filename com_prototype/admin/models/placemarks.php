@@ -220,10 +220,11 @@ class PrototypeModelPlacemarks extends ListModel
 
 				$layout     = $this->getItemLayout($item->layout);
 				$layoutData = array(
-					'item'      => new Registry($item),
-					'extra'     => new Registry(array()),
-					'category'  => new Registry($item),
-					'placemark' => new Registry($item),
+					'item'         => new Registry($item),
+					'extra'        => new Registry(array()),
+					'category'     => new Registry($item),
+					'extra_filter' => new Registry(array()),
+					'placemark'    => new Registry($item),
 				);
 				$item->demo = $layout->render($layoutData);
 			}
@@ -283,8 +284,8 @@ class PrototypeModelPlacemarks extends ListModel
 				->where('client_id = 0')
 				->order('home DESC');
 			$db->setQuery($query);
-			$templates   = $db->loadColumn();
-			$language = Factory::getLanguage();
+			$templates = $db->loadColumn();
+			$language  = Factory::getLanguage();
 
 			$layoutPaths = array();
 			foreach (array_unique($templates) as $template)

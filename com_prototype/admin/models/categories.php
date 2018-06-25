@@ -280,6 +280,7 @@ class PrototypeModelCategories extends ListModel
 					'item'      => new Registry($item),
 					'extra'     => new Registry(array()),
 					'category'  => new Registry($item),
+					'extra_filter'     => new Registry(array()),
 					'placemark' => $item->placemark,
 				);
 				$item->placemark_demo = $placemark_layout->render($layoutData);
