@@ -284,10 +284,13 @@ class PrototypeModelPlacemarks extends ListModel
 				->order('home DESC');
 			$db->setQuery($query);
 			$templates   = $db->loadColumn();
+			$language = Factory::getLanguage();
+
 			$layoutPaths = array();
 			foreach (array_unique($templates) as $template)
 			{
 				$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
+				$language->load('tpl_' . $template, JPATH_SITE, $language->getTag(), true);
 			}
 			$layoutPaths[] = JPATH_ROOT . '/layouts';
 

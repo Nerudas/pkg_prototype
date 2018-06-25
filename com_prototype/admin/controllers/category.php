@@ -93,9 +93,11 @@ class PrototypeControllerCategory extends FormController
 		$db->setQuery($query);
 		$templates   = $db->loadColumn();
 		$layoutPaths = array();
+		$language = Factory::getLanguage();
 		foreach (array_unique($templates) as $template)
 		{
 			$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
+			$language->load('tpl_' . $template, JPATH_SITE, $language->getTag(), true);
 		}
 		$layoutPaths[] = JPATH_ROOT . '/layouts';
 
