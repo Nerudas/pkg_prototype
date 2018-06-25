@@ -288,6 +288,7 @@ class PrototypeModelItems extends ListModel
 			'company.name as author_job_name',
 			'company.logo as author_job_logo',
 			'company.contacts as author_job_contacts',
+			'company.about as author_job_about',
 			'employees.position as  author_position',
 			'(employees.as_company > 0 AND company.id IS NOT NULL) as author_company',
 		))
@@ -554,8 +555,12 @@ class PrototypeModelItems extends ListModel
 					$item->author_avatar : 'media/com_profiles/images/no-avatar.jpg';
 				$item->author_avatar = Uri::root(true) . '/' . $author_avatar;
 
+				$item->author_link = Route::_(ProfilesHelperRoute::getProfileRoute($item->author_id));
+
 				$item->author_job_logo = (!empty($item->author_job_logo) && JFile::exists(JPATH_ROOT . '/' . $item->author_job_logo)) ?
 					Uri::root(true) . '/' . $item->author_job_logo : false;
+
+				$item->author_job_link = Route::_(CompaniesHelperRoute::getCompanyRoute($item->author_job_id));
 
 				// Convert the map field from json.
 				$item->map = (!empty($item->latitude) && !empty($item->longitude) &&
