@@ -128,7 +128,8 @@ class PrototypeViewForm extends HtmlView
 		else
 		{
 			// Check actions
-			$authorised = (empty($this->item->id)) ? $user->authorise('core.create', 'com_prototype') && $this->category :
+			$authorised = (empty($this->item->id)) ?
+				$user->authorise('core.create', 'com_prototype') && $this->category->front_created > 0 :
 				$user->authorise('core.edit', 'com_prototype.item.' . $this->item->id) ||
 				($user->authorise('core.edit.own', 'com_prototype.item.' . $this->item->id)
 					&& $this->item->created_by == $user->id);
