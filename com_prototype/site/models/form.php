@@ -402,7 +402,7 @@ class PrototypeModelForm extends PrototypeModelItem
 					->select(array('id', 'title', 'alias', 'front_created', 'icon'))
 					->from('#__prototype_categories')
 					->where('parent_id = ' . (int) $pk)
-					->where('front_created = 1')
+					->where('front_created > 0')
 					->order('lft ASC');
 
 				// Filter by published state.
