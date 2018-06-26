@@ -126,6 +126,9 @@ class PrototypeModelItems extends ListModel
 		$category = $this->getUserStateFromRequest($this->context . '.filter.category', 'filter_category', '');
 		$this->setState('filter.category', $category);
 
+		$publish_down = $this->getUserStateFromRequest($this->context . '.filter.publish_down', 'filter_publish_down', '');
+		$this->setState('filter.publish_down', $publish_down);
+
 		// List state information.
 		$ordering  = empty($ordering) ? 'i.created' : $ordering;
 		$direction = empty($direction) ? 'desc' : $direction;
@@ -153,6 +156,7 @@ class PrototypeModelItems extends ListModel
 		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.region');
 		$id .= ':' . $this->getState('filter.category');
+		$id .= ':' . $this->getState('filter.publish_down');
 
 		return parent::getStoreId($id);
 	}
@@ -225,33 +229,31 @@ class PrototypeModelItems extends ListModel
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
-
 		if (is_numeric($published))
 		{
-			$nullDate = $db->getNullDate();
-			$now      = Factory::getDate()->toSql();
-			if ($published == 0)
-			{
-
-				$query->where('(i.state = ' . (int) $published . ' OR ' .
-					'(' . $db->quoteName('i.publish_down') . ' != ' . $db->Quote($nullDate) . ' AND '
-					. $db->quoteName('i.publish_down') . '  < ' . $db->Quote($now) . '))');
-			}
-			elseif ($published == 1)
-			{
-				$query->where('i.state = ' . (int) $published);
-				$query->where('(' . $db->quoteName('i.publish_down') . ' = ' . $db->Quote($nullDate) . ' OR '
-					. $db->quoteName('i.publish_down') . '  >= ' . $db->Quote($now) . ')');
-			}
-			else
-			{
-				$query->where('i.state = ' . (int) $published);
-			}
+			$query->where('i.state = ' . (int) $published);
 		}
 		elseif ($published === '')
 		{
 			$query->where('(i.state = 0 OR i.state = 1)');
 		}
+
+		$publish_down = $this->getState('filter.publish_down');
+		if (!empty($publish_down))
+		{
+			$nullDate = $db->getNullDate();
+			if ($publish_down == 'never')
+			{
+				$query->where($db->quoteName('i.publish_down') . ' = ' . $db->Quote($nullDate));
+			}
+			else
+			{
+				$now = Factory::getDate($publish_down)->toSql();
+				$query->where($db->quoteName('i.publish_down') . ' != ' . $db->Quote($nullDate));
+				$query->where($db->quoteName('i.publish_down') . '  < ' . $db->Quote($now));
+			}
+		}
+
 
 		// Filter by created_by
 		$created_by = $this->getState('filter.created_by');
@@ -369,11 +371,11 @@ class PrototypeModelItems extends ListModel
 
 				$placemark_layout     = $this->getPlacemarkLayout($item->placemark->get('layout', 'default'));
 				$layoutData           = array(
-					'item'      => new Registry($item),
-					'extra'     => $item->extra,
-					'category'  => $item->category,
-					'extra_filter'     => new Registry(array()),
-					'placemark' => $item->placemark,
+					'item'         => new Registry($item),
+					'extra'        => $item->extra,
+					'category'     => $item->category,
+					'extra_filter' => new Registry(array()),
+					'placemark'    => $item->placemark,
 				);
 				$item->placemark_demo = $placemark_layout->render($layoutData);
 
