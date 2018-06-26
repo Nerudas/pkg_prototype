@@ -566,6 +566,14 @@ class PrototypeModelItems extends ListModel
 				$item->map = (!empty($item->latitude) && !empty($item->longitude) &&
 					$item->latitude !== '0.000000' && $item->longitude !== '0.000000') ? new Registry($item->map) : false;
 
+
+				if ($item->map)
+				{
+					$item->map->set('link', Route::_(PrototypeHelperRoute::getMapRoute($item->catid) .
+						'&center=' . $item->latitude . ',' . $item->longitude .
+						'&zoom=' . $item->map->get('params')->zoom));
+				}
+
 				// Get Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_prototype.item', $item->id);
