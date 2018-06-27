@@ -172,8 +172,8 @@ class PrototypeModelPlacemarks extends ListModel
 		$query->group(array('p.id'));
 
 		// Add the list ordering clause.
-		$ordering  = $this->state->get('list.ordering', 'p.id');
-		$direction = $this->state->get('list.direction', 'desc');
+		$ordering  = $this->state->get('list.ordering', 'p.title');
+		$direction = $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($ordering) . ' ' . $db->escape($direction));
 
 		return $query;

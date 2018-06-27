@@ -40,8 +40,7 @@
 			   setplacemark="true"/>
 		<field name="placemark_id" type="sql"
 			   label="COM_PROTOTYPE_PARAMS_PLACEMARK"
-			   query="SELECT id, title FROM #__prototype_placemarks"
-			   order="id ask"
+			   query="SELECT id, title FROM #__prototype_placemarks ORDER BY title asc"
 			   key_field="id"
 			   value_field="title">
 			<option value="">JDEFAULT</option>
