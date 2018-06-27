@@ -71,6 +71,7 @@ class PrototypeControllerItems extends AdminController
 			$view->document     = Factory::getDocument();
 			$view->items        = $items;
 			$view->extra_filter = new Registry($model->getState('extra_filter'));
+			$view->category     = $model->getCategory();
 
 			$response->html = $view->loadTemplate('items');
 		}

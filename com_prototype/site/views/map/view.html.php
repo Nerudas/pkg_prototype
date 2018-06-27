@@ -25,7 +25,7 @@ class PrototypeViewMap extends HtmlView
 	 *
 	 * @since  1.0.0
 	 */
-	protected $category;
+	public $category;
 
 	/**
 	 * The link to add form
