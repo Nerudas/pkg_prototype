@@ -85,7 +85,8 @@ class PrototypeModelMap extends PrototypeModelItems
 		$query = $db->getQuery(true)
 			->select('Count(*)')
 			->from('#__session')
-			->where('time > ' . $offline_time);
+			->where('time > ' . $offline_time)
+			->where('client_id = 0');
 		$db->setQuery($query);
 
 		return $db->loadResult();
