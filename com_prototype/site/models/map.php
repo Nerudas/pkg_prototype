@@ -11,12 +11,12 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Component\ComponentHelper;
 
 JLoader::register('PrototypeModelItems', JPATH_SITE . '/components/com_prototype/models/items.php');
 
 class PrototypeModelMap extends PrototypeModelItems
 {
-
 	/**
 	 * Map Params
 	 *
@@ -67,5 +67,27 @@ class PrototypeModelMap extends PrototypeModelItems
 		}
 
 		return $this->_mapParams;
+	}
+
+	/**
+	 * Method to get visitors count
+	 *
+	 * @return int
+	 *
+	 * @since 1.0.1
+	 */
+	public function getVisitors()
+	{
+		$offline      = (int) ComponentHelper::getParams('com_profiles')->get('offline_time', 5) * 60;
+		$offline_time = Factory::getDate()->toUnix() - $offline;
+
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select('Count(*)')
+			->from('#__session')
+			->where('time > ' . $offline_time);
+		$db->setQuery($query);
+
+		return $db->loadResult();
 	}
 }

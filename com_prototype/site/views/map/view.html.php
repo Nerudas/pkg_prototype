@@ -28,6 +28,15 @@ class PrototypeViewMap extends HtmlView
 	public $category;
 
 	/**
+	 * Visitors count
+	 *
+	 * @var    int
+	 *
+	 * @since  1.0.1
+	 */
+	public $visitors;
+
+	/**
 	 * The link to add form
 	 *
 	 * @var  string
@@ -116,6 +125,7 @@ class PrototypeViewMap extends HtmlView
 		$this->state         = $this->get('State');
 		$this->category      = $this->get('Category');
 		$this->mapParams     = $this->get('mapParams');
+		$this->visitors     = $this->get('visitors');
 		$this->items         = false;
 		$this->pagination    = false;
 		$this->parent        = $this->get('Parent');
