@@ -183,6 +183,14 @@
 				   class="input-xlarge"
 				   useglobal="true"
 				   size="40"/>
+
+			<field type="note" label="COM_PROTOTYPE_CATEGORY_SAVE_TEXT"/>
+			<field name="save_text_add" type="text"
+				   label="COM_PROTOTYPE_CATEGORY_SAVE_TEXT_ADD"
+				   class="input-xlarge"/>
+			<field name="save_text_edit" type="text"
+				   label="COM_PROTOTYPE_CATEGORY_SAVE_TEXT_EDIT"
+				   class="input-xlarge"/>
 		</fields>
 	</fieldset>
 	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">

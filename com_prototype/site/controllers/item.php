@@ -175,7 +175,15 @@ class PrototypeControllerItem extends FormController
 
 		if ($result)
 		{
-			$this->setMessage(Text::_($this->text_prefix . (($data['id'] == 0) ? '_SUBMIT' : '') . '_SAVE_SUCCESS'));
+			$category  = $this->getModel()->getCategory($catid);
+			$catParams = new Registry($category->attribs);
+
+			echo '<pre>', print_r($category, true), '</pre>';
+
+			$addText  = $catParams->get('save_text_add', $this->text_prefix . '_SUBMIT_SAVE_SUCCESS');
+			$editText = $catParams->get('save_text_edit', $this->text_prefix . '_SAVE_SUCCESS');
+
+			$this->setMessage(Text::_(($data['id'] == 0) ? $addText : $editText));
 		}
 
 		$errorLink   = PrototypeHelperRoute::getFormRoute($id, $catid, $return_view);
