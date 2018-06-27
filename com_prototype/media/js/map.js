@@ -116,6 +116,7 @@
 						totalRequest = $.ajax({
 							type: 'GET',
 							dataType: 'json',
+							cache: false,
 							url: '/index.php?option=com_prototype&task=items.getTotal',
 							data: ajaxData,
 							success: function (response) {
@@ -133,6 +134,7 @@
 						itemsRequest = $.ajax({
 							type: 'GET',
 							dataType: 'json',
+							cache: false,
 							url: '/index.php?option=com_prototype&task=items.getPlacemarks',
 							data: ajaxData,
 							success: function (response) {
