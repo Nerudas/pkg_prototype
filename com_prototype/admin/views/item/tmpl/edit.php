@@ -47,9 +47,6 @@ $doc->addScriptDeclaration('
 		<div class="row-fluid">
 			<div class="span9">
 				<fieldset class="adminform">
-					<div class="control-group">
-						<?php echo $this->form->getInput('html'); ?>
-					</div>
 					<?php
 					if (!empty($this->form->getGroup('extra')))
 					{
@@ -67,6 +64,12 @@ $doc->addScriptDeclaration('
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 		<?php
+		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'html', Text::_('COM_PROTOTYPE_ITEM_HTML'));
+		echo $this->form->getInput('html');
+		echo HTMLHelper::_('bootstrap.endTab');
+		?>
+
+		<?php
 		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'images', Text::_('COM_PROTOTYPE_ITEM_IMAGES'));
 		echo $this->form->getInput('images');
 		echo HTMLHelper::_('bootstrap.endTab');
@@ -78,8 +81,8 @@ $doc->addScriptDeclaration('
 				<?php if ($this->author)
 				{
 					echo LayoutHelper::render('components.com_profiles.form.information',
-						array('id' => 'author_information', 'name' => 'author_information',
-							  'value' => $this->author_information));
+						array('id'    => 'author_information', 'name' => 'author_information',
+						      'value' => $this->author_information));
 				} ?>
 			</div>
 			<div class="span3 form-vertical">
@@ -89,11 +92,6 @@ $doc->addScriptDeclaration('
 
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
-		<?php
-		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'attribs', Text::_('JGLOBAL_FIELDSET_OPTIONS'));
-		echo $this->form->renderFieldset('attribs');
-		echo HTMLHelper::_('bootstrap.endTab');
-		?>
 
 		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'publishing', Text::_('JGLOBAL_FIELDSET_PUBLISHING')); ?>
 		<div class="row-fluid form-horizontal-desktop">

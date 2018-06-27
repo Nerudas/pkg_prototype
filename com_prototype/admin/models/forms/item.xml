@@ -81,6 +81,15 @@
 			<field name="price_t" type="price"
 				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_T"
 				   contract_price="false"/>
+			<field name="price_h" type="price"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_H"
+				   contract_price="false"/>
+			<field name="price_s" type="price"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_S"
+				   contract_price="false"/>
+			<field name="price_o" type="price"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_O"
+				   contract_price="false"/>
 			<field name="why_you" type="textarea"
 				   label="COM_PROTOTYPE_ITEM_EXTRA_WHY_YOU"
 				   rows="10"
@@ -90,6 +99,9 @@
 				   label="COM_PROTOTYPE_ITEM_EXTRA_COMMENT"
 				   rows="10"
 				   cols="5"
+				   class="input-xxlarge"/>
+			<field name="discussion_link" type="text"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_DISCUSSION_LINK"
 				   class="input-xxlarge"/>
 		</fields>
 	</fieldset>

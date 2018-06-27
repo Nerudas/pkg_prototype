@@ -16,6 +16,13 @@
 				<option value="m3">COM_PROTOTYPE_FILTER_EXTRA_PRICE_M3T_M3</option>
 				<option value="t">COM_PROTOTYPE_FILTER_EXTRA_PRICE_M3T_T</option>
 			</field>
+			<field name="price_hs" type="radio"
+				   class="btn-group"
+				   label="COM_PROTOTYPE_FILTER_EXTRA_PRICE_HS"
+				   default="h">
+				<option value="h">COM_PROTOTYPE_FILTER_EXTRA_PRICE_HS_H</option>
+				<option value="s">COM_PROTOTYPE_FILTER_EXTRA_PRICE_HS_S</option>
+			</field>
 		</fields>
 	</fieldset>
 </form>

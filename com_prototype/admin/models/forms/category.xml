@@ -80,6 +80,27 @@
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
+			<field name="price_h" type="radio"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_H"
+				   default="0"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+			<field name="price_s" type="radio"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_S"
+				   default="0"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+			<field name="price_o" type="radio"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_O"
+				   default="0"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
 			<field name="why_you" type="radio"
 				   label="COM_PROTOTYPE_ITEM_EXTRA_WHY_YOU"
 				   default="0"
@@ -94,6 +115,13 @@
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
+			<field name="discussion_link" type="radio"
+				   label="COM_PROTOTYPE_ITEM_EXTRA_DISCUSSION_LINK"
+				   default="0"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
 		</fields>
 	</fieldset>
 	<fieldset name="filters" label="COM_PROTOTYPE_CATEGORY_FILTERS">
@@ -101,6 +129,13 @@
 		<fields name="filters" label="COM_PROTOTYPE_CATEGORY_FILTERS">
 			<field name="price_m3t" type="radio"
 				   label="COM_PROTOTYPE_CATEGORY_FILTERS_PRICE_M3T"
+				   default="0"
+				   class="btn-group btn-group-yesno">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+			<field name="price_hs" type="radio"
+				   label="COM_PROTOTYPE_CATEGORY_FILTERS_PRICE_HS"
 				   default="0"
 				   class="btn-group btn-group-yesno">
 				<option value="1">JYES</option>
