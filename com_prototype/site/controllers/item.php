@@ -190,7 +190,8 @@ class PrototypeControllerItem extends FormController
 		$successLink = ($return_view != 'map') ? PrototypeHelperRoute::getListRoute($catid) . '&item_id=' . $id :
 			PrototypeHelperRoute::getMapRoute($catid) .
 			'&center=' . $data['map']['params']['latitude'] . ',' . $data['map']['params']['longitude'] .
-			'&zoom=' . $data['map']['params']['zoom'];
+			'&zoom=' . $data['map']['params']['zoom'] .
+			'&item_id=' . $id;
 
 		$this->setRedirect(Route::_(($result) ? $successLink : $errorLink));
 

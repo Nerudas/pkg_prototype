@@ -261,6 +261,36 @@
 					itemsViewed.push(id);
 				});
 
+				// Show item from link
+				if (joomlaParams.item_id) {
+					var showItemFromLink = setInterval(function () {
+						var mapElement = $('[data-prototype-placemark="' + joomlaParams.item_id + '"]');
+						if (mapElement.length > 0) {
+							clearInterval(showItemFromLink);
+							var maxScale = 1.4,
+								duration = 350;
+							$({scale: 1}).animate({
+								scale: maxScale
+							}, {
+								duration: duration,
+								step: function (now) {
+									mapElement.css('transform', 'scale(' + now + ')')
+								}
+							}, 'linear');
+							setTimeout(function () {
+								$({scale: maxScale}).animate({
+									scale: 1
+								}, {
+									duration: duration,
+									step: function (now) {
+										mapElement.css('transform', 'scale(' + now + ')')
+									}
+								}, 'linear');
+							}, duration);
+						}
+					}, 3);
+				}
+
 				// Get balloon
 				function getBalloon(id) {
 					var ajaxData = [];

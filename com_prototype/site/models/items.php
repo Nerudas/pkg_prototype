@@ -571,7 +571,8 @@ class PrototypeModelItems extends ListModel
 				{
 					$item->map->set('link', Route::_(PrototypeHelperRoute::getMapRoute($item->catid) .
 						'&center=' . $item->latitude . ',' . $item->longitude .
-						'&zoom=' . $item->map->get('params')->zoom));
+						'&zoom=' . $item->map->get('params')->zoom .
+						'&item_id=' . $item->id));
 				}
 
 				// Get Tags

@@ -63,6 +63,11 @@ class PrototypeModelMap extends PrototypeModelItems
 				$params['priority_center']['zoom']   = $zoom;
 			}
 
+			if (!empty($app->input->getInt('item_id')))
+			{
+				$params['item_id'] = $app->input->getInt('item_id');
+			}
+
 			$this->_mapParams = $params;
 		}
 
