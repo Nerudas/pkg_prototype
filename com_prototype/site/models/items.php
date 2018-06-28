@@ -208,6 +208,8 @@ class PrototypeModelItems extends ListModel
 		$this->setState('filter.onlymy', $onlymy);
 		$this->setState('filter.author_id', $author_id);
 
+		$company_id = $this->getUserStateFromRequest($this->context . '.filter.company_id', 'filter_company_id', '');
+		$this->setState('filter.company_id', $company_id);
 
 		$coordinates = $this->getUserStateFromRequest($this->context . '.filter.coordinates', 'filter_coordinates', '');
 		$this->setState('filter.coordinates', $coordinates);
@@ -249,6 +251,7 @@ class PrototypeModelItems extends ListModel
 		$id .= ':' . $this->getState('filter.allregions');
 		$id .= ':' . $this->getState('filter.onlymy');
 		$id .= ':' . $this->getState('filter.author_id');
+		$id .= ':' . $this->getState('filter.company_id');
 		$id .= ':' . serialize($this->getState('filter.item_id'));
 		$id .= ':' . $this->getState('filter.item_id.include');
 		$id .= ':' . serialize($this->getState('filter.coordinates'));
@@ -341,6 +344,15 @@ class PrototypeModelItems extends ListModel
 		{
 			$query->where('i.created_by = ' . (int) $authorId);
 		}
+
+		// Filter by company
+		$companyId = $this->getState('filter.company_id');
+		if (is_numeric($companyId))
+		{
+			$query->where('company.id = ' . (int) $companyId);
+			$query->where('employees.as_company > 0');
+		}
+
 
 		// Filter by a single or group of items.
 		$item_id = $this->getState('filter.item_id');
