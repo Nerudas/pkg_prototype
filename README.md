@@ -13,3 +13,6 @@ Thank you for your understanding.
 ## Package Contents
 * **Prototype Component**  
 Component for the preparation of the remaining sections of the site
+
+* **Prototype - Latest Module**  
+Module for displaying the latest Prototype items

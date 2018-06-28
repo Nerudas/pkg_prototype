@@ -16,6 +16,7 @@
 	</languages>
 	<files>
 		<folder type="component" id="com_prototype">com_prototype</folder>
+		<folder type="module" id="mod_prototype_latest" client="site">mod_prototype_latest</folder>
 	</files>
 	<updateservers>
 		<server type="extension" priority="1" name="Prototype Package">
