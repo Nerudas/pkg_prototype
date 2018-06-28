@@ -91,7 +91,7 @@ $doc->addScriptDeclaration('
 				<?php echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
 			</div>
 			<div class="span6">
-				<?php echo LayoutHelper::render('joomla.edit.metadata', $this); ?>
+				<?php echo $this->form->renderFieldSet('metadata'); ?>
 			</div>
 		</div>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>

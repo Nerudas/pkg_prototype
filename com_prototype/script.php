@@ -335,4 +335,27 @@ class com_PrototypeInstallerScript
 			}
 		}
 	}
+
+	/**
+	 * Change database structure && delete association
+	 *
+	 * @param  \stdClass $parent - Parent object calling object.
+	 *
+	 * @return void
+	 *
+	 * @since  1.0.2
+	 */
+	public function update($parent)
+	{
+		$db      = Factory::getDbo();
+		$table   = '#__prototype_categories';
+		$columns = $db->getTableColumns($table);
+
+		// Add metaimage
+		if (!isset($columns['metaimage']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `metaimage` MEDIUMTEXT NOT NULL DEFAULT '' AFTER `metadesc`")
+				->query();
+		}
+	}
 }

@@ -140,7 +140,9 @@ class PrototypeModelCategory extends AdminModel
 		}
 
 		// Set update icon link
-		$form->setFieldAttribute('icon', 'saveurl', 'index.php?option=com_prototype&task=category.updateImages&field=icon&id=' . $id);
+		$iamgesSaveUrl = 'index.php?option=com_prototype&task=category.updateImages&id=' . $id;
+		$form->setFieldAttribute('icon', 'saveurl', $iamgesSaveUrl . '&field=icon');
+		$form->setFieldAttribute('metaimage', 'saveurl', $iamgesSaveUrl . '&field=metaimage');
 
 		// Set Placemark link
 		$form->setFieldAttribute('placemark_demo', 'placemarkurl',
@@ -359,6 +361,10 @@ class PrototypeModelCategory extends AdminModel
 		if (isset($data['icon']))
 		{
 			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__prototype_categories', 'icon', $data['icon']);
+		}
+		if (isset($data['metaimage']))
+		{
+			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__prototype_categories', 'metaimage', $data['metaimage']);
 		}
 
 		return true;

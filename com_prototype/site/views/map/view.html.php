@@ -344,6 +344,18 @@ class PrototypeViewMap extends HtmlView
 			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
 		}
 
+
+		// Set Meta Image
+		if (!empty($category->metaimage))
+		{
+			$this->document->setMetadata('image', Uri::base() .$category->metaimage);
+		}
+		elseif ($this->params->get('menu-meta_image', ''))
+		{
+			$this->document->setMetaData('image', Uri::base() . $this->params->get('menu-meta_image'));
+		}
+
+
 		// Set Meta Robots
 		if ($category->metadata->get('robots', ''))
 		{
@@ -364,16 +376,6 @@ class PrototypeViewMap extends HtmlView
 		if ($category->metadata->get('rights', ''))
 		{
 			$this->document->setMetaData('author', $category->metadata->get('rights'));
-		}
-
-		// Set Meta Image
-		if ($category->metadata->get('image', ''))
-		{
-			$this->document->setMetaData('image', URI::base() . $category->metadata->get('image'));
-		}
-		elseif ($this->params->get('menu-meta_image', ''))
-		{
-			$this->document->setMetaData('image', Uri::base() . $this->params->get('menu-meta_image'));
 		}
 
 		// Set Meta twitter

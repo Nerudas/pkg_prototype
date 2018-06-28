@@ -27,16 +27,6 @@
 		<field name="icon" type="ajaximage"
 			   label="COM_PROTOTYPE_CATEGORY_ICON"
 			   filename="icon"/>
-		<field name="metakey" type="textarea"
-			   label="JFIELD_META_KEYWORDS_LABEL"
-			   description="JFIELD_META_KEYWORDS_DESC"
-			   rows="3"
-			   cols="30"/>
-		<field name="metadesc" type="textarea"
-			   label="JFIELD_META_DESCRIPTION_LABEL"
-			   description="JFIELD_META_DESCRIPTION_DESC"
-			   rows="3"
-			   cols="30"/>
 		<field name="lft" type="hidden" filter="unset"/>
 		<field name="rgt" type="hidden" filter="unset"/>
 	</fieldset>
@@ -193,8 +183,22 @@
 				   class="input-xlarge"/>
 		</fields>
 	</fieldset>
-	<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
-		<fieldset name="jmetadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+
+	<fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+		<field name="metakey" type="textarea"
+			   label="JFIELD_META_KEYWORDS_LABEL"
+			   description="JFIELD_META_KEYWORDS_DESC"
+			   rows="3"
+			   cols="30"/>
+		<field name="metadesc" type="textarea"
+			   label="JFIELD_META_DESCRIPTION_LABEL"
+			   description="JFIELD_META_DESCRIPTION_DESC"
+			   rows="3"
+			   cols="30"/>
+		<field name="metaimage" type="ajaximage"
+			   label="COM_PROTOTYPE_CATEGORY_METAIMAGE"
+			   filename="meta"/>
+		<fields name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 			<field name="robots" type="list"
 				   label="JFIELD_METADATA_ROBOTS_LABEL"
 				   description="JFIELD_METADATA_ROBOTS_DESC">
@@ -204,7 +208,6 @@
 				<option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
 				<option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
 			</field>
-
 			<field name="author" type="text"
 				   label="JAUTHOR"
 				   description="JFIELD_METADATA_AUTHOR_DESC"
@@ -220,7 +223,7 @@
 			<field name="xreference" type="text" label="JFIELD_METADATA_XREFERENCE_LABEL"
 				   description="JFIELD_METADATA_FIELD_XREFERENCE_DESC"
 				   size="20"/>
+		</fields>
+	</fieldset>
 
-		</fieldset>
-	</fields>
 </form>
