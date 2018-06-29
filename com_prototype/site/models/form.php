@@ -134,11 +134,16 @@ class PrototypeModelForm extends PrototypeModelItem
 	protected function loadFormData()
 	{
 		$data = parent::loadFormData();
-		if (empty($data->id) && empty($data->created_by))
+
+		if (is_object($data))
 		{
-			$data->created_by = Factory::getUser()->id;
+			if (empty($data->id) && empty($data->created_by))
+			{
+				$data->created_by = Factory::getUser()->id;
+			}
+
+			$data->catid = $this->getState('category.id');
 		}
-		$data->catid = $this->getState('category.id');
 
 		return $data;
 	}
