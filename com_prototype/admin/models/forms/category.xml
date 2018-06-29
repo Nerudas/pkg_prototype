@@ -158,6 +158,10 @@
 			<option value="2">COM_PROTOTYPE_CATEGORY_FRONT_CREATED_PUBLICATION</option>
 		</field>
 		<fields name="attribs" label="JGLOBAL_FIELDSET_OPTIONS">
+			<field name="item_publish_down" type="pluspublishdown"
+				   label="COM_PROTOTYPE_CATEGORY_ITEM_PUBLISH_DOWN"
+				   showon="front_created:2"/>
+
 			<field name="list_layout" type="componentlayout"
 				   label="COM_PROTOTYPE_PARAMS_LIST_LAYOUT"
 				   useglobal="true"

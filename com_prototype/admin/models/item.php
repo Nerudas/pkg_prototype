@@ -188,14 +188,16 @@ class PrototypeModelItem extends AdminModel
 	 */
 	public function save($data)
 	{
-		$app      = Factory::getApplication();
-		$pk       = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
-		$filter   = InputFilter::getInstance();
-		$table    = $this->getTable();
-		$db       = Factory::getDbo();
-		$isNew    = true;
-		$catid    = $data['catid'];
-		$category = $this->getCategory($catid);
+		$app    = Factory::getApplication();
+		$pk     = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
+		$filter = InputFilter::getInstance();
+		$table  = $this->getTable();
+		$db     = Factory::getDbo();
+		$isNew  = true;
+
+		$catid             = $data['catid'];
+		$category          = $this->getCategory($catid);
+		$category->attribs = new Registry($category->attribs);
 
 		// Load the row if saving an existing type.
 		if ($pk > 0)
@@ -210,6 +212,13 @@ class PrototypeModelItem extends AdminModel
 			if ($category->front_created == 2)
 			{
 				$data['state'] = 1;
+
+				$auto_publish_down = $category->attribs->get('item_publish_down', false);
+				if ($auto_publish_down && !empty($auto_publish_down->number))
+				{
+					$data['publish_down'] = Factory::getDate('+ ' . $auto_publish_down->number . ' ' .
+						$auto_publish_down->variable)->toSql();
+				}
 			}
 			elseif ($category->front_created == 0)
 			{

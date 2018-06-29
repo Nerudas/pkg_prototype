@@ -81,7 +81,9 @@ $doc->addScriptDeclaration('
 
 		<?php
 		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'attribs', Text::_('JGLOBAL_FIELDSET_OPTIONS'));
-		echo $this->form->renderFieldSet('attribs');
+		$attribs = $this->form->renderFieldSet('attribs');
+		$attribs = str_replace('jform[attribs][front_created]', 'jform[front_created]', $attribs);
+		echo $attribs;
 		echo HTMLHelper::_('bootstrap.endTab');
 		?>
 
