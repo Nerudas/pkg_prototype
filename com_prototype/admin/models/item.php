@@ -226,6 +226,13 @@ class PrototypeModelItem extends AdminModel
 			}
 		}
 
+		if (!empty($data['plus_publish_down']) && is_array($data['plus_publish_down'])
+			&& !empty($data['plus_publish_down']['number']))
+		{
+			$data['publish_down'] = Factory::getDate('+ ' . $data['plus_publish_down']['number'] . ' ' .
+				$data['plus_publish_down']['variable'])->toSql();
+		}
+
 		if (empty($data['created']))
 		{
 			$data['created'] = Factory::getDate()->toSql();

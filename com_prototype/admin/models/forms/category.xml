@@ -161,7 +161,6 @@
 			<field name="item_publish_down" type="pluspublishdown"
 				   label="COM_PROTOTYPE_CATEGORY_ITEM_PUBLISH_DOWN"
 				   showon="front_created:2"/>
-
 			<field name="list_layout" type="componentlayout"
 				   label="COM_PROTOTYPE_PARAMS_LIST_LAYOUT"
 				   useglobal="true"
