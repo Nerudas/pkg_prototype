@@ -368,6 +368,12 @@ class PrototypeModelItem extends AdminModel
 			// Save images
 			$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
 				$this->imageFolderHelper->getItemImageFolder($id);
+
+			if ($isNew)
+			{
+				$data['images'] = (isset($data['images'])) ? $data['images'] : array();
+			}
+
 			if (isset($data['images']))
 			{
 				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__prototype_items', 'images', $data['images']);

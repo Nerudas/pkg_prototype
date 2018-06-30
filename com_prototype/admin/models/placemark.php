@@ -159,11 +159,13 @@ class PrototypeModelPlacemark extends AdminModel
 	{
 		$pk    = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
 		$table = $this->getTable();
+		$isNew = true;
 
 		// Load the row if saving an existing type.
 		if ($pk > 0)
 		{
 			$table->load($pk);
+			$isNew = false;
 		}
 
 		if (parent::save($data))
@@ -173,6 +175,12 @@ class PrototypeModelPlacemark extends AdminModel
 			// Save images
 			$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
 				$this->imageFolderHelper->getItemImageFolder($id);
+
+			if ($isNew)
+			{
+				$data['images'] = (isset($data['images'])) ? $data['images'] : array();
+			}
+
 			if (isset($data['images']))
 			{
 				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__prototype_placemarks', 'images', $data['images']);

@@ -358,10 +358,18 @@ class PrototypeModelCategory extends AdminModel
 		// Save images
 		$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
 			$this->imageFolderHelper->getItemImageFolder($id);
+
+		if ($isNew)
+		{
+			$data['icon']      = (isset($data['icon'])) ? $data['icon'] : '';
+			$data['metaimage'] = (isset($data['metaimage'])) ? $data['metaimage'] : '';
+		}
+
 		if (isset($data['icon']))
 		{
 			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__prototype_categories', 'icon', $data['icon']);
 		}
+
 		if (isset($data['metaimage']))
 		{
 			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__prototype_categories', 'metaimage', $data['metaimage']);
