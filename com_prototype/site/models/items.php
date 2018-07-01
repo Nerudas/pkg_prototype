@@ -578,7 +578,6 @@ class PrototypeModelItems extends ListModel
 				$item->map = (!empty($item->latitude) && !empty($item->longitude) &&
 					$item->latitude !== '0.000000' && $item->longitude !== '0.000000') ? new Registry($item->map) : false;
 
-
 				if ($item->map)
 				{
 					$item->map->set('link', Route::_(PrototypeHelperRoute::getMapRoute($item->catid) .
@@ -633,6 +632,7 @@ class PrototypeModelItems extends ListModel
 					$placemark_layout = $this->getPlacemarkLayout($placemark_data->get('layout', 'default'));
 
 					$placemark_html = $placemark_layout->render($layoutData);
+
 					preg_match('/data-placemark-coordinates="([^"]*)"/', $placemark_html, $matches);
 					$coordinates = '[]';
 					if (!empty($matches[1]))
@@ -641,9 +641,18 @@ class PrototypeModelItems extends ListModel
 						$placemark_html = str_replace($matches[0], '', $placemark_html);
 					}
 
-					$iconShape              = new stdClass();
-					$iconShape->type        = 'Polygon';
-					$iconShape->coordinates = json_decode($coordinates);
+					preg_match('/data-placemark-coordinates-viewed="([^"]*)"/', $placemark_html, $matches);
+					$coordinates_viewed = $coordinates;
+					if (!empty($matches[1]))
+					{
+						$coordinates_viewed = $matches[1];
+						$placemark_html     = str_replace($matches[0], '', $placemark_html);
+					}
+
+					$iconShape                     = new stdClass();
+					$iconShape->type               = 'Polygon';
+					$iconShape->coordinates        = json_decode($coordinates);
+					$iconShape->coordinates_viewed = json_decode($coordinates_viewed);
 
 					$item->placemark->id                      = $item->id;
 					$item->placemark->options                 = array();

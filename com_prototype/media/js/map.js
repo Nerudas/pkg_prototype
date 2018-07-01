@@ -154,6 +154,7 @@
 										};
 										$.each(placemark.options, function (key, value) {
 											if (key == 'customLayout') {
+												object.options[key] = value;
 												key = 'iconLayout';
 												if ($.inArray(placemark.id * 1, itemsViewed) !== -1) {
 													var clone = $(value).clone(),
@@ -167,9 +168,13 @@
 													});
 													value = html;
 												}
-
 												value = ymaps.templateLayoutFactory.createClass(value);
 											}
+
+											if ($.inArray(placemark.id * 1, itemsViewed) !== -1 && key == 'iconShape') {
+												value.coordinates = value.coordinates_viewed;
+											}
+
 											object.options[key] = value;
 										});
 										objectManager.add(object);
@@ -214,22 +219,14 @@
 
 				// Placemark Click
 				objectManager.objects.events.add('click', function (e) {
-					var objectId = e.get('objectId'),
-						placemark = objectManager.objects.getById(objectId),
-						id = placemark.id * 1;
-
-					$('[data-prototype-placemark="' + id + '"]').attr('data-viewed', 'true');
-					$('[data-prototype-item="' + id + '"]').attr('data-viewed', 'true');
-					itemsViewed.push(id);
-					getBalloon(id);
+					showPlacemark(e.get('objectId'));
 				});
 
 				// Item Click
 				$('body').on('click', '[data-prototype-show]', function () {
 					var item = $(this),
 						id = $(item).data('prototype-show'),
-						mapElement = $('[data-prototype-placemark="' + id + '"]'),
-						listElement = $('[data-prototype-item="' + id + '"]');
+						mapElement = $('[data-prototype-placemark="' + id + '"]');
 
 					var maxScale = 1.4,
 						duration = 350;
@@ -253,13 +250,44 @@
 					}, duration);
 
 					setTimeout(function () {
-						$(mapElement).attr('data-viewed', 'true');
-						$(listElement).attr('data-viewed', 'true');
-						getBalloon(id);
-					}, duration * 2);
+						showPlacemark(id)
 
-					itemsViewed.push(id);
+					}, duration * 2);
 				});
+
+				// Show placemark;
+				function showPlacemark(id) {
+					var placemark = objectManager.objects.getById(id),
+						listElement = $('[data-prototype-item="' + id + '"]');
+
+					// Prepare iconShape
+					var shape = placemark.options.iconShape;
+					shape.coordinates = shape.coordinates_viewed;
+
+					// Prepare layout
+					var clone = $(placemark.options.customLayout).clone(),
+						html = '';
+					clone.filter('[data-prototype-placemark]').attr('data-viewed', 'true');
+					$.each(clone, function (key) {
+						var outerHTML = clone[key].outerHTML;
+						if (outerHTML != '' && outerHTML != undefined) {
+							html += clone[key].outerHTML;
+						}
+					});
+					var layout = ymaps.templateLayoutFactory.createClass(html);
+
+					// set new placemark params
+					objectManager.objects.setObjectOptions(id, {
+						iconLayout: layout,
+						iconShape: shape,
+					});
+
+					// Set active to list element
+					$(listElement).attr('data-viewed', 'true');
+
+					getBalloon(id);
+					itemsViewed.push(id);
+				}
 
 				// Show item from link
 				if (joomlaParams.item_id) {
