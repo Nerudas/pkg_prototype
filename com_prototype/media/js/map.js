@@ -154,8 +154,6 @@
 										};
 										$.each(placemark.options, function (key, value) {
 											if (key == 'customLayout') {
-												object.options[key] = value;
-												key = 'iconLayout';
 												if ($.inArray(placemark.id * 1, itemsViewed) !== -1) {
 													var clone = $(value).clone(),
 														html = '';
@@ -168,6 +166,8 @@
 													});
 													value = html;
 												}
+												object.options[key] = value;
+												key = 'iconLayout';
 												value = ymaps.templateLayoutFactory.createClass(value);
 											}
 
@@ -286,7 +286,7 @@
 					$(listElement).attr('data-viewed', 'true');
 
 					getBalloon(id);
-					itemsViewed.push(id);
+					itemsViewed.push(id * 1);
 				}
 
 				// Show item from link
