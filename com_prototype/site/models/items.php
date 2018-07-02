@@ -709,14 +709,28 @@ class PrototypeModelItems extends ListModel
 				{
 					$db    = Factory::getDbo();
 					$query = $db->getQuery(true)
-						->select('*')
-						->from('#__prototype_categories')
-						->where('id IN (' . implode(',', $getCategories) . ')')
-						->order('lft ASC');
+						->select(array('c.*', 'cp.title as parent_title'))
+						->from($db->quoteName('#__prototype_categories', 'c'))
+						->join('LEFT', '#__prototype_categories AS cp ON cp.id = c.parent_id')
+						->where('c.id IN (' . implode(',', $getCategories) . ')')
+						->order('c.lft ASC');
 					$db->setQuery($query);
 					$objects = $db->loadObjectList('id');
 					foreach ($objects as $object)
 					{
+
+						// Links
+						$object->listLink   = Route::_(PrototypeHelperRoute::getListRoute($object->id));
+						$object->addLink    = ($object->front_created > 0) ?
+							Route::_(PrototypeHelperRoute::getFormRoute(null, $object->id)) : false;
+						$object->mapLink    = Route::_(PrototypeHelperRoute::getMapRoute($object->id));
+						$object->mapAddLink = ($object->front_created > 0) ?
+							Route::_(PrototypeHelperRoute::getFormRoute(null, $object->id, 'map')) : false;
+
+						// ParentLinks
+						$object->parent_listLink   = Route::_(PrototypeHelperRoute::getListRoute($object->parent_id));
+						$object->parent_mapLink    = Route::_(PrototypeHelperRoute::getMapRoute($object->parent_id));
+
 						$categories[$object->id]        = $object;
 						$this->_categories[$object->id] = $object;
 					}
