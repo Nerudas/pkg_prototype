@@ -14,6 +14,7 @@ use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Application\SiteApplication;
 
 class PrototypeViewItem extends HtmlView
 {
@@ -212,6 +213,27 @@ class PrototypeViewItem extends HtmlView
 				JToolbarHelper::save2copy('item.save2copy');
 			}
 
+			// Go to page
+			JLoader::register('PrototypeHelperRoute', JPATH_SITE . '/components/com_prototype/helpers/route.php');
+			$siteRouter = SiteApplication::getRouter();
+
+			$listLink = $siteRouter->build(PrototypeHelperRoute::getListRoute($this->item->catid) .
+				'&item_id=' . $this->item->id)->toString();
+			$listLink = str_replace('administrator/', '', $listLink);
+
+			$mapLink = $siteRouter->build(PrototypeHelperRoute::getMapRoute($this->item->catid .
+				'&center=' . $this->item->map['params']['latitude'] . ',' . $this->item->map['params']['longitude'] .
+				'&zoom=' . $this->item->map['params']['zoom'] .
+				'&item_id=' . $this->item->id))->toString();
+			$mapLink = str_replace('administrator/', '', $mapLink);
+
+			$toolbar = JToolBar::getInstance('toolbar');
+			$toolbar->appendButton('Custom', '<div class="btn-group">' .
+				'<a href="' . $listLink . '" class="btn btn-small btn-primary"
+					target="_blank">' . Text::_('COM_PROTOTYPE_GO_TO_LIST') . '</a>' .
+				'<a href="' . $mapLink . '" class="btn btn-small btn-primary"
+					target="_blank">' . Text::_('COM_PROTOTYPE_GO_TO_MAP') . '</a>' .
+				'</div>', 'goTo');
 		}
 
 		JToolbarHelper::cancel('item.cancel', 'JTOOLBAR_CLOSE');
