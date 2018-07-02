@@ -82,8 +82,8 @@ class PrototypeModelPlacemarks extends ListModel
 		$this->setState('filter.access', $access);
 
 		// List state information.
-		$ordering  = empty($ordering) ? 'p.id' : $ordering;
-		$direction = empty($direction) ? 'desc' : $direction;
+		$ordering  = empty($ordering) ? 'p.title' : $ordering;
+		$direction = empty($direction) ? 'asc' : $direction;
 		parent::populateState($ordering, $direction);
 	}
 
