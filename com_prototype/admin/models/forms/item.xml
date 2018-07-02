@@ -50,6 +50,11 @@
 			   folder="balloons">
 			<option value="">JDEFAULT</option>
 		</field>
+		<field name="listitem_layout" type="layout"
+			   label="COM_PROTOTYPE_PARAMS_LISTITEM"
+			   folder="listitems">
+			<option value="">JDEFAULT</option>
+		</field>
 		<field name="state" type="list"
 			   label="JSTATUS"
 			   description="JFIELD_PUBLISHED_DESC"

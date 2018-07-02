@@ -55,6 +55,7 @@
 		<field name="html" type="hidden" readonly="true"/>
 		<field name="placemark_id" type="hidden" readonly="true"/>
 		<field name="balloon_layout" type="hidden" readonly="true"/>
+		<field name="listitem_layout" type="hidden" readonly="true"/>
 		<field name="access" type="hidden" readonly="true"/>
 		<field name="created" type="hidden" readonly="true"/>
 		<field name="publish_down" type="hidden" readonly="true"/>
