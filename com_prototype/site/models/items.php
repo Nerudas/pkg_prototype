@@ -615,6 +615,10 @@ class PrototypeModelItems extends ListModel
 				$item->balloon_layout = (!empty($item->balloon_layout)) ? $item->balloon_layout :
 					$item->category->get('balloon_layout', 'default');
 
+				// Get list item layout
+				$item->listitem_layout = (!empty($item->listitem_layout)) ? $item->listitem_layout :
+					$item->category->get('listitem_layout', 'default');
+
 				// Layout data
 				$layoutData = array(
 					'item'         => new Registry($item),
@@ -671,10 +675,11 @@ class PrototypeModelItems extends ListModel
 				$balloon_layout = $this->getBalloonLayout($item->balloon_layout);
 				$item->balloon  = $balloon_layout->render($layoutData);
 
-				// Get balloon
-				$item->listitem  = false;
-				$listitem_layout = $this->getListItemLayout($item->listitem_layout);
-				$item->listitem  = $listitem_layout->render($layoutData);
+				// Get list item
+				$layoutData['map'] = $item->map;
+				$item->listitem    = false;
+				$listitem_layout   = $this->getListItemLayout($item->listitem_layout);
+				$item->listitem    = $listitem_layout->render($layoutData);
 			}
 		}
 
