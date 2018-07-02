@@ -21,7 +21,13 @@ extract($displayData);
  * @var   Registry $placemark Placemark data
  */
 
-echo '<pre>', print_r($item, true), '</pre>';
-echo '<pre>', print_r($extra, true), '</pre>';
-echo '<pre>', print_r($category, true), '</pre>';
-echo '<pre>', print_r($placemark, true), '</pre>';
+//echo '<pre>', print_r($item, true), '</pre>';
+//echo '<pre>', print_r($extra, true), '</pre>';
+//echo '<pre>', print_r($category, true), '</pre>';
+//echo '<pre>', print_r($placemark, true), '</pre>';
+?>
+
+<div class="item" data-prototype-item="<?php echo $item->get('id'); ?>">
+	<h2><a data-prototype-show="<?php echo $item->get('id'); ?>"><?php echo $item->get('title'); ?></a></h2>
+</div>
+<hr data-prototype-item="<?php echo $item->get('id'); ?>">

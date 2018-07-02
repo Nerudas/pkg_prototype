@@ -43,10 +43,7 @@ HTMLHelper::_('script', 'media/com_prototype/js/list.min.js', array('version' =>
 		</div>
 	<?php else: ?>
 		<?php foreach ($this->items as $item): ?>
-			<div class="item" data-prototype-item="<?php echo $item->id; ?>">
-				<h2><a data-prototype-show="<?php echo $item->id; ?>"><?php echo $item->title; ?></a></h2>
-			</div>
-			<hr data-prototype-item="<?php echo $item->id; ?>">
+			<?php echo $item->listitem; ?>
 		<?php endforeach; ?>
 		<div>
 			<?php echo $this->pagination->getPagesLinks(); ?>

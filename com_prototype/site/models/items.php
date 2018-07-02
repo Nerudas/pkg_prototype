@@ -65,13 +65,20 @@ class PrototypeModelItems extends ListModel
 	protected $_balloonLayouts = array();
 
 	/**
+	 * Balloon layouts
+	 *
+	 * @var    array
+	 * @since  1.0.0
+	 */
+	protected $_listItemLayouts = array();
+
+	/**
 	 * Palcemarks Layouts path
 	 *
 	 * @var    array
 	 * @since  1.0.0
 	 */
 	protected $_layoutsPaths = null;
-
 
 	/**
 	 * Current Category data
@@ -243,7 +250,6 @@ class PrototypeModelItems extends ListModel
 	 */
 	protected function getStoreId($id = '')
 	{
-
 		$id .= ':' . $this->getState('map');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . serialize($this->getState('filter.published'));
@@ -259,7 +265,6 @@ class PrototypeModelItems extends ListModel
 
 		return parent::getStoreId($id);
 	}
-
 
 	/**
 	 * Build an SQL query to load the list data.
@@ -665,6 +670,11 @@ class PrototypeModelItems extends ListModel
 				$item->balloon  = false;
 				$balloon_layout = $this->getBalloonLayout($item->balloon_layout);
 				$item->balloon  = $balloon_layout->render($layoutData);
+
+				// Get balloon
+				$item->listitem  = false;
+				$listitem_layout = $this->getListItemLayout($item->listitem_layout);
+				$item->listitem  = $listitem_layout->render($layoutData);
 			}
 		}
 
@@ -728,8 +738,8 @@ class PrototypeModelItems extends ListModel
 							Route::_(PrototypeHelperRoute::getFormRoute(null, $object->id, 'map')) : false;
 
 						// ParentLinks
-						$object->parent_listLink   = Route::_(PrototypeHelperRoute::getListRoute($object->parent_id));
-						$object->parent_mapLink    = Route::_(PrototypeHelperRoute::getMapRoute($object->parent_id));
+						$object->parent_listLink = Route::_(PrototypeHelperRoute::getListRoute($object->parent_id));
+						$object->parent_mapLink  = Route::_(PrototypeHelperRoute::getMapRoute($object->parent_id));
 
 						$categories[$object->id]        = $object;
 						$this->_categories[$object->id] = $object;
@@ -907,6 +917,39 @@ class PrototypeModelItems extends ListModel
 		$this->_balloonLayouts[$key] = $layout;
 
 		return $this->_balloonLayouts[$key];
+	}
+
+	/**
+	 * Method to get list item Layout
+	 *
+	 * @param string $layoutName Layout name
+	 *
+	 * @return  FileLayout;
+	 *
+	 * @since 1.0.0
+	 */
+	protected function getListItemLayout($layoutName)
+	{
+		if (isset($this->_listItemLayouts[$layoutName]))
+		{
+			return $this->_listItemLayouts[$layoutName];
+		}
+
+		$key = $layoutName;
+
+		$layoutPaths = $this->getlayoutsPaths();
+		if (!JPath::find($layoutPaths, 'components/com_prototype/listitems/' . $layoutName . '.php'))
+		{
+			$layoutName = 'default';
+		}
+
+		$layoutID = 'components.com_prototype.listitems.' . $layoutName;
+		$layout   = new FileLayout($layoutID);
+		$layout->setIncludePaths($layoutPaths);
+
+		$this->_listItemLayouts[$key] = $layout;
+
+		return $this->_listItemLayouts[$key];
 	}
 
 	/**
