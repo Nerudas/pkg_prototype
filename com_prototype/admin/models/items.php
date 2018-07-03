@@ -67,7 +67,7 @@ class PrototypeModelItems extends ListModel
 			$config['filter_fields'] = array(
 				'id', 'i.id',
 				'title', 'i.title',
-				'text', 'i.text',
+				'html', 'i.html',
 				'images', 'i.images',
 				'state', 'i.state',
 				'created', 'i.created',
@@ -280,7 +280,7 @@ class PrototypeModelItems extends ListModel
 			}
 			else
 			{
-				$cols = array('i.title', 'r.name', 'i.text', 'ua.name', 'i.extra');
+				$cols = array('i.title', 'r.name', 'i.html', 'author.name', 'i.extra');
 				$sql  = array();
 				foreach ($cols as $col)
 				{
