@@ -335,45 +335,4 @@ class com_PrototypeInstallerScript
 			}
 		}
 	}
-
-	/**
-	 * Change database structure && delete association
-	 *
-	 * @param  \stdClass $parent - Parent object calling object.
-	 *
-	 * @return void
-	 *
-	 * @since  1.0.2
-	 */
-	public function update($parent)
-	{
-		$db      = Factory::getDbo();
-		$table   = '#__prototype_categories';
-		$columns = $db->getTableColumns($table);
-
-		// Add listitem_layout
-		if (!isset($columns['listitem_layout']))
-		{
-			$db->setQuery("ALTER TABLE " . $table . " ADD `listitem_layout` TEXT NOT NULL DEFAULT '' AFTER `balloon_layout`")
-				->query();
-
-			$query = $db->getQuery(true)
-				->update($db->quoteName($table))
-				->set($db->quoteName('listitem_layout') . ' = ' . $db->quote('default'))
-				->where('id != 1');
-			$db->setQuery($query)
-				->execute();
-		}
-
-
-		$table   = '#__prototype_items';
-		$columns = $db->getTableColumns($table);
-
-		// Add listitem_layout
-		if (!isset($columns['listitem_layout']))
-		{
-			$db->setQuery("ALTER TABLE " . $table . " ADD `listitem_layout` TEXT NOT NULL DEFAULT '' AFTER `balloon_layout`")
-				->query();
-		}
-	}
 }
