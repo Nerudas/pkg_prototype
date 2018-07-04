@@ -1006,8 +1006,9 @@ class PrototypeModelItems extends ListModel
 			{
 				$db    = $this->getDbo();
 				$query = $db->getQuery(true)
-					->select('c.*')
-					->from('#__prototype_categories AS c')
+					->select(array('c.*', 'cp.title as parent_title'))
+					->from($db->quoteName('#__prototype_categories', 'c'))
+					->join('LEFT', '#__prototype_categories AS cp ON cp.id = c.parent_id')
 					->where('c.id = ' . (int) $pk);
 
 				// Filter by published state.
