@@ -409,8 +409,7 @@ class PrototypeModelItems extends ListModel
 				->where('(this.id = ' . (int) $category . ' OR sc.id = ' . $category . ')');
 
 			// Add the subquery to the main query
-			$query->where('i.catid IN (' . (string) $categoriesQuery . ')');
-
+			$query->where('(i.catid IN (' . (string) $categoriesQuery . ') OR i.catid = ' . $category . ')');
 		}
 
 		// Filter by coordinates.
