@@ -408,7 +408,7 @@ class PrototypeModelItems extends ListModel
 				->join('INNER', '#__prototype_categories as this ON sc.lft > this.lft AND sc.rgt < this.rgt')
 				->where('(this.id = ' . (int) $category . ' OR sc.id = ' . $category . ')');
 
-			// Add the subquery to the main query
+			// Add the category query
 			$query->where('(i.catid IN (' . (string) $categoriesQuery . ') OR i.catid = ' . $category . ')');
 		}
 
