@@ -724,7 +724,7 @@ class PrototypeModelItems extends ListModel
 				{
 					$db    = Factory::getDbo();
 					$query = $db->getQuery(true)
-						->select(array('c.*', 'cp.title as parent_title'))
+						->select(array('c.*', 'cp.title as parent_title', 'cp.level as parent_level'))
 						->from($db->quoteName('#__prototype_categories', 'c'))
 						->join('LEFT', '#__prototype_categories AS cp ON cp.id = c.parent_id')
 						->where('c.id IN (' . implode(',', $getCategories) . ')')
@@ -1006,7 +1006,7 @@ class PrototypeModelItems extends ListModel
 			{
 				$db    = $this->getDbo();
 				$query = $db->getQuery(true)
-					->select(array('c.*', 'cp.title as parent_title'))
+					->select(array('c.*', 'cp.title as parent_title', 'cp.level as parent_level'))
 					->from($db->quoteName('#__prototype_categories', 'c'))
 					->join('LEFT', '#__prototype_categories AS cp ON cp.id = c.parent_id')
 					->where('c.id = ' . (int) $pk);
