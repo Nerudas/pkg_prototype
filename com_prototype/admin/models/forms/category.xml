@@ -143,17 +143,14 @@
 			   query="SELECT id, title FROM #__prototype_placemarks ORDER BY title asc"
 			   key_field="id"
 			   value_field="title">
-			<option value="">JDEFAULT</option>
 		</field>
 		<field name="balloon_layout" type="layout"
 			   label="COM_PROTOTYPE_PARAMS_BALLOON"
 			   folder="balloons">
-			<option value="">JDEFAULT</option>
 		</field>
 		<field name="listitem_layout" type="layout"
 			   label="COM_PROTOTYPE_PARAMS_LISTITEM"
 			   folder="listitems">
-			<option value="">JDEFAULT</option>
 		</field>
 		<field name="front_created" type="list"
 			   label="COM_PROTOTYPE_CATEGORY_FRONT_CREATED"
