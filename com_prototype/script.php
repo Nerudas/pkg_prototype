@@ -335,4 +335,28 @@ class com_PrototypeInstallerScript
 			}
 		}
 	}
+
+	/**
+	 * Change database structure && delete association
+	 *
+	 * @param  \stdClass $parent - Parent object calling object.
+	 *
+	 * @return void
+	 *
+	 * @since  1.0.6
+	 */
+	public function update($parent)
+	{
+		$db      = Factory::getDbo();
+		$table   = '#__prototype_items';
+		$columns = $db->getTableColumns($table);
+
+		// Add payment_number
+		if (!isset($columns['payment_number']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `payment_number` TEXT NOT NULL DEFAULT '' AFTER `publish_down`")
+				->query();
+		}
+	}
+
 }

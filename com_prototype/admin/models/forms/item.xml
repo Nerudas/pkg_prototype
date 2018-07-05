@@ -133,6 +133,9 @@
 			   filter="user_utc"/>
 		<field name="plus_publish_down" type="pluspublishdown"
 			   label="COM_PROTOTYPE_ITEM_PLUS_PUBLISH_DOWN"/>
+		<field name="payment_number" type="text"
+			   label="COM_PROTOTYPE_ITEM_PAYMENT_NUMBER"
+			   class="input-xxlarge"/>
 		<field name="hits" type="number"
 			   label="JGLOBAL_HITS"
 			   class="readonly"

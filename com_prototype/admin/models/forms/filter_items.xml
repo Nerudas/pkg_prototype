@@ -15,9 +15,7 @@
 			<option value="1 month">COM_PROTOTYPE_FILTER_PUBLISH_DOWN_1MONTH</option>
 			<option value="never">JNEVER</option>
 		</field>
-		<field name="access" type="accesslevel" onchange="this.form.submit();">
-			<option value="">JOPTION_SELECT_ACCESS</option>
-		</field>
+		<field name="payment_number" class="input-xlarge" type="text" hint="COM_PROTOTYPE_ITEM_PAYMENT_NUMBER"/>
 		<field name="created_by" type="user"/>
 		<field name="category" type="prototypecategory" onchange="this.form.submit();" default="">
 			<option value="">JOPTION_SELECT_CATEGORY</option>

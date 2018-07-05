@@ -73,6 +73,7 @@ class PrototypeModelItems extends ListModel
 				'created', 'i.created',
 				'created_by', 'i.created_by',
 				'publish_down', 'i.publish_down',
+				'payment_number', 'i.payment_number',
 				'placemark_id', 'i.placemark_id',
 				'balloon_layout', 'i.balloon_layout',
 				'map', 'i.map',
@@ -129,6 +130,9 @@ class PrototypeModelItems extends ListModel
 		$publish_down = $this->getUserStateFromRequest($this->context . '.filter.publish_down', 'filter_publish_down', '');
 		$this->setState('filter.publish_down', $publish_down);
 
+		$payment_number = $this->getUserStateFromRequest($this->context . '.filter.payment_number', 'filter_payment_number', '');
+		$this->setState('filter.payment_number', $payment_number);
+
 		// List state information.
 		$ordering  = empty($ordering) ? 'i.created' : $ordering;
 		$direction = empty($direction) ? 'desc' : $direction;
@@ -157,6 +161,7 @@ class PrototypeModelItems extends ListModel
 		$id .= ':' . $this->getState('filter.region');
 		$id .= ':' . $this->getState('filter.category');
 		$id .= ':' . $this->getState('filter.publish_down');
+		$id .= ':' . $this->getState('filter.payment_number');
 
 		return parent::getStoreId($id);
 	}
@@ -236,6 +241,13 @@ class PrototypeModelItems extends ListModel
 		elseif ($published === '')
 		{
 			$query->where('(i.state = 0 OR i.state = 1)');
+		}
+
+		// Filter by payment number
+		$payment_number = trim($this->getState('filter.payment_number'));
+		if (!empty($payment_number))
+		{
+			$query->where($db->quoteName('i.payment_number') . ' = ' . $db->quote($payment_number));
 		}
 
 		$publish_down = $this->getState('filter.publish_down');
@@ -423,9 +435,10 @@ class PrototypeModelItems extends ListModel
 				{
 					$db    = Factory::getDbo();
 					$query = $db->getQuery(true)
-						->select('*')
-						->from($db->quoteName('#__prototype_categories', 'p'))
-						->where('p.id IN (' . implode(',', $getCategories) . ')');
+						->select(array('c.*', 'cp.title as parent_title', 'cp.level as parent_level'))
+						->from($db->quoteName('#__prototype_categories', 'c'))
+						->join('LEFT', '#__prototype_categories AS cp ON cp.id = c.parent_id')
+						->where('c.id IN (' . implode(',', $getCategories) . ')');
 					$db->setQuery($query);
 					$objects = $db->loadObjectList('id');
 					foreach ($objects as $object)

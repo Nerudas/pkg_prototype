@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS `#__prototype_items` (
 	`created`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`created_by`      INT(11)          NOT NULL DEFAULT '0',
 	`publish_down`    DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`payment_number`  TEXT             NOT NULL DEFAULT '',
 	`placemark_id`    INT(11)          NOT NULL DEFAULT '0',
 	`balloon_layout`  TEXT             NOT NULL DEFAULT '',
 	`listitem_layout` TEXT             NOT NULL DEFAULT '',

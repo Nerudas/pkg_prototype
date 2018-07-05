@@ -125,9 +125,19 @@ $columns = 9;
 								<?php endif; ?>
 							</div>
 							<div class="small">
-								<?php echo Text::_('JCATEGORY') . ': ' .
-									$item->category->get('title', Text::_('JROOT')); ?>
+								<span><?php echo Text::_('JCATEGORY'); ?>: </span>
+								<?php if ($item->category->get('parent_level') > 1) : ?>
+									<span><?php echo $item->category->get('parent_title'); ?></span>
+								<?php endif; ?>
+								<span><?php echo $item->category->get('title', Text::_('JROOT')); ?></span>
 							</div>
+							<?php if (!empty($item->payment_number)): ?>
+								<div class="muted">
+									<?php echo Text::_('COM_PROTOTYPE_ITEM_PAYMENT_NUMBER') . ': '
+										. $item->payment_number; ?>
+
+								</div>
+							<?php endif; ?>
 						</td>
 						<td class="hidden-phone center">
 							<?php echo $item->placemark_demo; ?>

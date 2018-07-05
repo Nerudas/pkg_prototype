@@ -57,3 +57,7 @@
 [data-prototype-placemark] {
 	margin: 0 !important;
 }
+
+#filter_payment_number {
+	margin-bottom: 0;
+}
