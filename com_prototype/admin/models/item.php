@@ -489,4 +489,50 @@ class PrototypeModelItem extends AdminModel
 
 		return true;
 	}
+
+	/**
+	 * Method to prolong items to date
+	 *
+	 * @param   array &$pks An array of primary key IDs.
+	 *
+	 * @param string  $plus date plus publish_down
+	 *
+	 * @return  boolean|JException  Boolean true on success, JException instance on error
+	 *
+	 * @throws Exception
+	 * @since  1.0.0
+	 */
+	public function prolong(&$pks, $plus = '')
+	{
+		// Access checks.
+		if (!Factory::getUser()->authorise('core.edit', 'com_prototype'))
+		{
+			throw new Exception(Text::_('JERROR_CORE_CREATE_NOT_PERMITTED'));
+		}
+
+		if (!empty($pks) && !empty($plus))
+		{
+			$table = '#__prototype_items';
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select(array('id', 'publish_down'))
+				->from($table)
+				->where('id IN(' . implode(',', $pks) . ')');
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+
+			foreach ($items as $item)
+			{
+				$publish_down       = ($item->publish_down > 0) ? $item->publish_down : Factory::getDate()->toSql();
+				$item->publish_down = Factory::getDate($publish_down . ' +' . $plus)->toSql();
+
+				$db->updateObject($table, $item, array('id'));
+			}
+
+		}
+
+		$this->cleanCache();
+
+		return true;
+	}
 }

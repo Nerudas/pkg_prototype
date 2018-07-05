@@ -234,6 +234,17 @@ class PrototypeViewItem extends HtmlView
 				'<a href="' . $mapLink . '" class="btn btn-small btn-primary"
 					target="_blank">' . Text::_('COM_PROTOTYPE_GO_TO_MAP') . '</a>' .
 				'</div>', 'goTo');
+
+			// Prolong
+			if ($canDo->get('core.edit'))
+			{
+				JToolbarHelper::custom('item.prolong_1m', 'prolong_1m', 'prolong_1m',
+					'COM_PROTOTYPE_ITEM_PROLONG_1M', false);
+				JToolbarHelper::custom('item.prolong_1w', 'prolong_1w', 'prolong_1w',
+					'COM_PROTOTYPE_ITEM_PROLONG_1W', false);
+				JToolbarHelper::custom('item.prolong_3d', 'prolong_3d', 'prolong_3d',
+					'COM_PROTOTYPE_ITEM_PROLONG_3D', false);
+			}
 		}
 
 		JToolbarHelper::cancel('item.cancel', 'JTOOLBAR_CLOSE');

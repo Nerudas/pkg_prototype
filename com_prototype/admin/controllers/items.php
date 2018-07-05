@@ -76,4 +76,75 @@ class PrototypeControllerItems extends AdminController
 		$this->setRedirect('index.php?option=com_prototype&view=items');
 	}
 
+	/**
+	 *  Method to prolong items to 3 days.
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function prolong_3d()
+	{
+		$this->prolong('3 day');
+	}
+
+	/**
+	 * Method to prolong items to 1 week.
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function prolong_1w()
+	{
+		$this->prolong('1 week');
+	}
+
+	/**
+	 * Method to prolong items to 1 month.
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function prolong_1m()
+	{
+		$this->prolong('1 month');
+	}
+
+	/**
+	 * Method to prolong items.
+	 *
+	 * @param string $plus date plus publish_down
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function prolong($plus = '')
+	{
+		// Check for request forgeries
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+
+		$pks = $this->input->post->get('cid', array(), 'array');
+		$pks = ArrayHelper::toInteger($pks);
+
+		try
+		{
+			if (empty($pks))
+			{
+				throw new Exception(Text::_('COM_PROTOTYPE_ERROR_NO_ITEMS_SELECTED'));
+			}
+
+			$model = $this->getModel();
+			$model->prolong($pks, $plus);
+			$this->setMessage(Text::plural('COM_PROTOTYPE_ITEMS_N_ITEMS_PROLONGED', count($pks)));
+		}
+		catch (Exception $e)
+		{
+			JError::raiseWarning(500, $e->getMessage());
+		}
+
+		$this->setRedirect('index.php?option=com_prototype&view=items');
+	}
 }

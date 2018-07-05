@@ -64,13 +64,13 @@ $columns = 9;
 						<?php echo HTMLHelper::_('searchtools.sort', 'JAUTHOR', 'i.created_by', $listDirn, $listOrder); ?>
 					</th>
 					<th width="10%" class="nowrap hidden-phone">
-						<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'i.access', $listDirn, $listOrder); ?>
-					</th>
-					<th width="10%" class="nowrap hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_REGION', 'region_name', $listDirn, $listOrder); ?>
 					</th>
 					<th width="10%" class="nowrap hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_CREATED_DATE', 'i.created', $listDirn, $listOrder); ?>
+					</th>
+					<th width="10%" class="nowrap hidden-phone">
+						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_FIELD_PUBLISH_DOWN_LABEL', 'i.publish_down', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%" class="nowrap hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_HITS', 'i.hits', $listDirn, $listOrder); ?>
@@ -172,15 +172,17 @@ $columns = 9;
 								</div>
 							<?php endif; ?>
 						</td>
-						<td class="small hidden-phone">
-							<?php echo $this->escape($item->access_level); ?>
-						</td>
+
 						<td class="small hidden-phone nowrap">
 							<?php echo ($item->region !== '*') ? $this->escape($item->region_name) :
 								Text::_('JGLOBAL_FIELD_REGIONS_ALL'); ?>
 						</td>
 						<td class="nowrap small hidden-phone">
 							<?php echo $item->created > 0 ? HTMLHelper::_('date', $item->created,
+								Text::_('DATE_FORMAT_LC2')) : '-' ?>
+						</td>
+						<td class="small hidden-phone">
+							<?php echo $item->publish_down > 0 ? HTMLHelper::_('date', $item->publish_down,
 								Text::_('DATE_FORMAT_LC2')) : '-' ?>
 						</td>
 						<td class="hidden-phone center">

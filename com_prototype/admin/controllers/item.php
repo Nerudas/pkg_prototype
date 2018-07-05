@@ -125,7 +125,7 @@ class PrototypeControllerItem extends FormController
 		$db->setQuery($query);
 		$templates   = $db->loadColumn();
 		$layoutPaths = array();
-		$language = Factory::getLanguage();
+		$language    = Factory::getLanguage();
 		foreach (array_unique($templates) as $template)
 		{
 			$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
@@ -172,5 +172,63 @@ class PrototypeControllerItem extends FormController
 		$app->close();
 
 		return true;
+	}
+
+	/**
+	 *  Method to prolong items to 3 days.
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function prolong_3d()
+	{
+		$this->prolong('3 day');
+	}
+
+	/**
+	 * Method to prolong items to 1 week.
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function prolong_1w()
+	{
+		$this->prolong('1 week');
+	}
+
+	/**
+	 * Method to prolong items to 1 month.
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function prolong_1m()
+	{
+		$this->prolong('1 month');
+	}
+
+	/**
+	 * Method to prolong items.
+	 *
+	 * @param string $plus date plus publish_down
+	 *
+	 * @return  bool
+	 *
+	 * @since  1.0.0
+	 */
+	public function prolong($plus = '')
+	{
+		$data = $this->input->post->get('jform', array(), 'array');
+
+		$publish_down         = ($data['publish_down'] > 0) ? $data['publish_down'] : Factory::getDate()->toSql();
+		$data['publish_down'] = Factory::getDate($publish_down . ' +' . $plus)->format('d-m-Y h:i:s');
+
+		$this->input->post->set('jform', $data);
+		$this->task = 'apply';
+
+		return parent::save();
 	}
 }

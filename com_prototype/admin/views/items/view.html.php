@@ -143,6 +143,17 @@ class PrototypeViewItems extends HtmlView
 		{
 			JToolbarHelper::preferences('com_prototype');
 		}
+
+		// Prolong
+		if ($canDo->get('core.edit'))
+		{
+			JToolbarHelper::custom('items.prolong_1m', 'prolong_1m', 'prolong_1m',
+				'COM_PROTOTYPE_ITEM_PROLONG_1M', true);
+			JToolbarHelper::custom('items.prolong_1w', 'prolong_1w', 'prolong_1w',
+				'COM_PROTOTYPE_ITEM_PROLONG_1W', true);
+			JToolbarHelper::custom('items.prolong_3d', 'prolong_3d', 'prolong_3d',
+				'COM_PROTOTYPE_ITEM_PROLONG_3D', true);
+		}
 	}
 
 	/**

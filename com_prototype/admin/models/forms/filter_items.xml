@@ -30,8 +30,6 @@
 			<option value="">JGLOBAL_SORT_BY</option>
 			<option value="i.title ASC">JGLOBAL_TITLE_ASC</option>
 			<option value="i.title DESC">JGLOBAL_TITLE_DESC</option>
-			<option value="i.access ASC">JGRID_HEADING_ACCESS_ASC</option>
-			<option value="i.access DESC">JGRID_HEADING_ACCESS_DESC</option>
 			<option value="i.id ASC">JGRID_HEADING_ID_ASC</option>
 			<option value="i.id DESC">JGRID_HEADING_ID_DESC</option>
 			<option value="region_name ASC">JGRID_HEADING_REGION_ASC</option>
@@ -44,6 +42,8 @@
 			<option value="i.created_by DESC">JAUTHOR_DESC</option>
 			<option value="i.created ASC">JDATE_ASC</option>
 			<option value="i.created DESC">JDATE_DESC</option>
+			<option value="i.publish_down ASC">COM_PROTOTYPE_ITEM_PUBLISH_DOWN_ASC</option>
+			<option value="i.publish_down DESC">COM_PROTOTYPE_ITEM_PUBLISH_DOWN_DESC</option>
 		</field>
 		<field name="limit" type="limitbox"
 			   class="inputbox input-mini"

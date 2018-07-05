@@ -61,3 +61,16 @@
 #filter_payment_number {
 	margin-bottom: 0;
 }
+
+#toolbar-prolong_3d,
+#toolbar-prolong_1w,
+#toolbar-prolong_1m {
+	float: right;
+}
+
+#toolbar-prolong_3d .icon-prolong_3d::before,
+#toolbar-prolong_1w .icon-prolong_1w::before,
+#toolbar-prolong_1m .icon-prolong_1m::before {
+	content: "\e201";
+	color: #378137;
+}
