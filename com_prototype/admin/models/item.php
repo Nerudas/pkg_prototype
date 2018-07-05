@@ -523,7 +523,8 @@ class PrototypeModelItem extends AdminModel
 
 			foreach ($items as $item)
 			{
-				$publish_down       = ($item->publish_down > 0) ? $item->publish_down : Factory::getDate()->toSql();
+				$publish_down       = ($item->publish_down > 0 && $item->publish_down > Factory::getDate()->toSql()) ?
+					$item->publish_down : Factory::getDate()->toSql();
 				$item->publish_down = Factory::getDate($publish_down . ' +' . $plus)->toSql();
 
 				$db->updateObject($table, $item, array('id'));
