@@ -223,7 +223,7 @@ class PrototypeControllerItem extends FormController
 	{
 		$data = $this->input->post->get('jform', array(), 'array');
 
-		$publish_down         = ($data['publish_down'] > 0) ? $data['publish_down'] : Factory::getDate()->toSql();
+		$publish_down         = ($data['publish_down'] > 0) ? $data['publish_down'] : Factory::getDate()->format('d-m-Y h:i:s');
 		$data['publish_down'] = Factory::getDate($publish_down . ' +' . $plus)->format('d-m-Y h:i:s');
 
 		$this->input->post->set('jform', $data);
