@@ -144,6 +144,12 @@ class PrototypeViewItems extends HtmlView
 			JToolbarHelper::preferences('com_prototype');
 		}
 
+		if ($canDo->get('core.edit'))
+		{
+			JToolbarHelper::custom('items.setPaymentNumber', 'set_item_payment', 'set_item_payment',
+				'COM_PROTOTYPE_ITEM_SET_PAYMENT_NUMBER', true);
+		}
+
 		// Prolong
 		if ($canDo->get('core.edit'))
 		{

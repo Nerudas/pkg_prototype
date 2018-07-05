@@ -536,4 +536,41 @@ class PrototypeModelItem extends AdminModel
 
 		return true;
 	}
+
+	/**
+	 * Method to prolong items to date
+	 *
+	 * @param   array &$pks           An array of primary key IDs.
+	 *
+	 * @param string  $payment_number Payment number
+	 *
+	 * @return  boolean|JException  Boolean true on success, JException instance on error
+	 *
+	 * @throws Exception
+	 * @since  1.0.0
+	 */
+	public function setPaymentNumber(&$pks, $payment_number = '')
+	{
+		// Access checks.
+		if (!Factory::getUser()->authorise('core.edit', 'com_prototype'))
+		{
+			throw new Exception(Text::_('JERROR_CORE_CREATE_NOT_PERMITTED'));
+		}
+
+		if (!empty($pks) && !empty($payment_number))
+		{
+			foreach ($pks as $pk)
+			{
+				$item                 = new stdClass();
+				$item->id             = $pk;
+				$item->payment_number = $payment_number;
+
+				Factory::getDbo()->updateObject('#__prototype_items', $item, array('id'));
+			}
+		}
+
+		$this->cleanCache();
+
+		return true;
+	}
 }

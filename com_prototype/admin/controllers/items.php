@@ -147,4 +147,47 @@ class PrototypeControllerItems extends AdminController
 
 		$this->setRedirect('index.php?option=com_prototype&view=items');
 	}
+
+	/**
+	 * Method to prolong items.
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function setPaymentNumber()
+	{
+		// Check for request forgeries
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+
+		$pks = $this->input->post->get('cid', array(), 'array');
+		$pks = ArrayHelper::toInteger($pks);
+
+		$filter = $this->input->post->get('filter', array(), 'array');
+
+		$payment_number = (!empty($filter['payment_number'])) ? $filter['payment_number'] : '';
+
+		try
+		{
+			if (empty($pks))
+			{
+				throw new Exception(Text::_('COM_PROTOTYPE_ERROR_NO_ITEMS_SELECTED'));
+			}
+
+			if (empty($payment_number))
+			{
+				throw new Exception(Text::_('COM_PROTOTYPE_ERROR_EMPTY_PAYMENT_NUMBER'));
+			}
+
+			$model = $this->getModel();
+			$model->setPaymentNumber($pks, $payment_number);
+			$this->setMessage(Text::plural('COM_PROTOTYPE_ITEMS_N_ITEMS_SET_PAYMENT_NUMBER', count($pks)));
+		}
+		catch (Exception $e)
+		{
+			JError::raiseWarning(500, $e->getMessage());
+		}
+
+		$this->setRedirect('index.php?option=com_prototype&view=items');
+	}
 }
