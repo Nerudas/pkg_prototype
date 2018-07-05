@@ -128,15 +128,6 @@ $columns = 9;
 								<?php echo Text::_('JCATEGORY') . ': ' .
 									$item->category->get('title', Text::_('JROOT')); ?>
 							</div>
-							<div class="tags">
-								<?php if (!empty($item->tags->itemTags)): ?>
-									<?php foreach ($item->tags->itemTags as $tag): ?>
-										<span class="label label-inverse">
-											<?php echo $tag->title; ?>
-										</span>
-									<?php endforeach; ?>
-								<?php endif; ?>
-							</div>
 						</td>
 						<td class="hidden-phone center">
 							<?php echo $item->placemark_demo; ?>
