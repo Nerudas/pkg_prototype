@@ -98,6 +98,8 @@ class PrototypeViewPlacemark extends HtmlView
 			JToolBarHelper::title(
 				TEXT::_('COM_PROTOTYPE') . ': ' . TEXT::_('COM_PROTOTYPE_PLACEMARK_ADD'), 'clock'
 			);
+			$this->document->setTitle(TEXT::_('COM_PROTOTYPE_PLACEMARK_ADD'));
+
 			// For new records, check the create permission.
 			if ($canDo->get('core.create'))
 			{
@@ -113,6 +115,8 @@ class PrototypeViewPlacemark extends HtmlView
 			JToolBarHelper::title(
 				TEXT::_('COM_PROTOTYPE') . ': ' . TEXT::_('COM_PROTOTYPE_PLACEMARK_EDIT'), 'clock'
 			);
+			$this->document->setTitle($this->item->title);
+
 			// Can't save the record if it's and editable
 			if ($canDo->get('core.edit'))
 			{

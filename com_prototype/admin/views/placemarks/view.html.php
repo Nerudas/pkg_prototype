@@ -108,6 +108,7 @@ class PrototypeViewPlacemarks extends HtmlView
 		$canDo = PrototypeHelper::getActions('com_prototype', 'placemarks');
 
 		JToolBarHelper::title(Text::_('COM_PROTOTYPE') . ': ' . Text::_('COM_PROTOTYPE_PLACEMARKS'), 'clock');
+		$this->document->setTitle(TEXT::_('COM_PROTOTYPE_PLACEMARKS'));
 
 		if ($canDo->get('core.create'))
 		{

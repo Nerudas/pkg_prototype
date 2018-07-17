@@ -108,6 +108,7 @@ class PrototypeViewItems extends HtmlView
 		$canDo = PrototypeHelper::getActions('com_prototype', 'items');
 
 		JToolBarHelper::title(Text::_('COM_PROTOTYPE') . ': ' . Text::_('COM_PROTOTYPE_ITEMS'), 'clock');
+		$this->document->setTitle(TEXT::_('COM_PROTOTYPE_ITEMS'));
 
 		if ($canDo->get('core.create'))
 		{

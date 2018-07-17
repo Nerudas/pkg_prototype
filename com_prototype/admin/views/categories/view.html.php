@@ -117,6 +117,7 @@ class PrototypeViewCategories extends HtmlView
 		$canDo = PrototypeHelper::getActions('com_prototype', 'categories');
 
 		JToolBarHelper::title(Text::_('COM_PROTOTYPE') . ': ' . Text::_('COM_PROTOTYPE_CATEGORIES'), 'clock');
+		$this->document->setTitle(Text::_('COM_PROTOTYPE_CATEGORIES'));
 
 		if ($canDo->get('core.create') || count($user->getAuthorisedCategories('com_prototype', 'core.create')) > 0)
 		{

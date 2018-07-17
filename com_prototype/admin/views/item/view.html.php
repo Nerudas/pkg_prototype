@@ -184,6 +184,8 @@ class PrototypeViewItem extends HtmlView
 			JToolBarHelper::title(
 				TEXT::_('COM_PROTOTYPE') . ': ' . TEXT::_('COM_PROTOTYPE_ITEM_ADD'), 'clock'
 			);
+			$this->document->setTitle(TEXT::_('COM_PROTOTYPE_ITEM_ADD'));
+
 			// For new records, check the create permission.
 			if ($canDo->get('core.create'))
 			{
@@ -199,6 +201,8 @@ class PrototypeViewItem extends HtmlView
 			JToolBarHelper::title(
 				TEXT::_('COM_PROTOTYPE') . ': ' . TEXT::_('COM_PROTOTYPE_ITEM_EDIT'), 'clock'
 			);
+			$this->document->setTitle($this->item->title);
+
 			// Can't save the record if it's and editable
 			if ($canDo->get('core.edit'))
 			{
