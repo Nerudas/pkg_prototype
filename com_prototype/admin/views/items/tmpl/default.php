@@ -20,6 +20,7 @@ HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
 HTMLHelper::stylesheet('media/com_prototype/css/admin-items.min.css', array('version' => 'auto'));
+HTMLHelper::_('script', 'media/com_prototype/js/admin-items.min.js', array('version' => 'auto'));
 
 $app       = Factory::getApplication();
 $doc       = Factory::getDocument();
@@ -56,6 +57,9 @@ $columns = 9;
 					</th>
 					<th style="min-width:100px" class="nowrap">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'i.title', $listDirn, $listOrder); ?>
+					</th>
+					<th width="15%" class="nowrap hidden-phone">
+						<?php echo Text::_('COM_PROTOTYPE_ITEM_PAYMENT_NUMBER'); ?>
 					</th>
 					<th width="15%" class="nowrap hidden-phone">
 						<?php echo Text::_('COM_PROTOTYPE_PLACEMARK'); ?>
@@ -131,13 +135,11 @@ $columns = 9;
 								<?php endif; ?>
 								<span><?php echo $item->category->get('title', Text::_('JROOT')); ?></span>
 							</div>
-							<?php if (!empty($item->payment_number)): ?>
-								<div class="muted">
-									<?php echo Text::_('COM_PROTOTYPE_ITEM_PAYMENT_NUMBER') . ': '
-										. $item->payment_number; ?>
-
-								</div>
-							<?php endif; ?>
+						</td>
+						<td class="hidden-phone">
+							<a data-filter-payment_number="<?php echo $item->payment_number; ?>">
+								<?php echo $this->escape($item->payment_number); ?>
+							</a>
 						</td>
 						<td class="hidden-phone center">
 							<?php echo $item->placemark_demo; ?>

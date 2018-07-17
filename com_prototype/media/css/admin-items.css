@@ -77,3 +77,7 @@
 #toolbar-set_item_payment .icon-set_item_payment::before {
 	content: "\e020";
 }
+
+[data-filter-payment_number] {
+	cursor: pointer;
+}
