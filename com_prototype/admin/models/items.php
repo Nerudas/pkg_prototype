@@ -369,6 +369,15 @@ class PrototypeModelItems extends ListModel
 				// Get Category
 				$item->category = new Registry((!empty($categories[$item->catid])) ? $categories[$item->catid] : array());
 
+				// Get region
+				$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
+					Uri::root(true) . $item->region_icon : false;
+				if ($item->region == '*')
+				{
+					$item->region_icon = false;
+					$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
+				}
+
 				$placemark_id    = (!empty($item->placemark_id)) ? $item->placemark_id : $item->category->get('placemark_id');
 				$item->placemark = new Registry((!empty($placemarks[$placemark_id])) ?
 					$placemarks[$placemark_id] : array());
@@ -382,16 +391,6 @@ class PrototypeModelItems extends ListModel
 					'placemark'    => $item->placemark,
 				);
 				$item->placemark_demo = $placemark_layout->render($layoutData);
-
-				// Get region
-				$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
-					Uri::root(true) . $item->region_icon : false;
-				if ($item->region == '*')
-				{
-					$item->region_icon = false;
-					$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
-				}
-
 			}
 		}
 
