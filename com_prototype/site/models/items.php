@@ -310,9 +310,9 @@ class PrototypeModelItems extends ListModel
 		$query->join('LEFT', '#__prototype_categories AS c ON c.id = i.catid');
 
 		// Join over the regions.
-		$query->select(array('r.id as region_id', 'r.name AS region_name'))
-			->join('LEFT', '#__regions AS r ON r.id = 
-					(CASE i.region WHEN ' . $db->quote('*') . ' THEN 100 ELSE i.region END)');
+		$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+			->join('LEFT', '#__location_regions AS r ON r.id = i.region');
+
 
 		// Filter by access level.
 		if (!$user->authorise('core.admin'))
@@ -322,21 +322,6 @@ class PrototypeModelItems extends ListModel
 			$query->where('c.access IN (' . $groups . ')');
 		}
 
-
-		// Filter by regions
-//		$region     = $app->input->cookie->get('region', '*');
-//		$allregions = $this->getState('filter.allregions');
-//		if (is_numeric($region) && empty($allregions))
-//		{
-//			JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_nerudas/models');
-//			$regionModel = JModelLegacy::getInstance('regions', 'NerudasModel');
-//			$regions     = $regionModel->getRegionsIds($region);
-//			$regions[]   = $db->quote('*');
-//			$regions[]   = $regionModel->getRegion($region)->parent;
-//			$regions     = array_unique($regions);
-//			$query->where('(' . $db->quoteName('i.region') . ' IN (' . implode(',', $regions) . ')'
-//				. 'OR i.created_by = ' . $user->id . ')');
-//		}
 
 		// Filter by author
 		$authorId = $this->getState('filter.author_id');
