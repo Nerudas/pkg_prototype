@@ -19,6 +19,7 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class PrototypeModelItem extends AdminModel
 {
@@ -237,16 +238,11 @@ class PrototypeModelItem extends AdminModel
 		{
 			$data['created'] = Factory::getDate()->toSql();
 		}
-		if (empty($data['region']))
-		{
-			$data['region'] = $app->input->cookie->get('region', '*');
-		}
 
 		if (isset($data['metadata']) && isset($data['metadata']['author']))
 		{
 			$data['metadata']['author'] = $filter->clean($data['metadata']['author'], 'TRIM');
 		}
-
 
 		if (isset($data['map']) && is_array($data['map']))
 		{
@@ -281,6 +277,15 @@ class PrototypeModelItem extends AdminModel
 			$data['created_by'] = Factory::getUser()->id;
 		}
 
+		BaseDatabaseModel::addIncludePath(JPATH_SITE . '/components/com_location/models', 'LocationModel');
+		$regionsModel = BaseDatabaseModel::getInstance('Regions', 'LocationModel', array('ignore_request' => false));
+
+		if (empty($data['region']))
+		{
+			$data['region'] = ($app->isSite()) ? $regionsModel->getVisitorRegion() : $this->getProfileRegion($data['created_by']);
+		}
+		$region = $regionsModel->getRegion($data['region']);
+
 
 		if (!empty($data['extra']) && $catid > 1 && $category)
 		{
@@ -306,6 +311,11 @@ class PrototypeModelItem extends AdminModel
 
 		// Get tags search
 		$data['tags'] = (!empty($category) && !empty($category->items_tags)) ? explode(',', $category->items_tags) : array();
+		if ($region && !empty($region->items_tags))
+		{
+			$data['tags'] = array_unique(array_merge($data['tags'], explode(',', $region->items_tags)));
+		}
+
 		if (!empty($data['tags']))
 		{
 			$query = $db->getQuery(true)
