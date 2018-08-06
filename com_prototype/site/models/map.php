@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 JLoader::register('PrototypeModelItems', JPATH_SITE . '/components/com_prototype/models/items.php');
 
@@ -40,9 +41,9 @@ class PrototypeModelMap extends PrototypeModelItems
 			$app    = Factory::getApplication();
 			$params = array();
 
-			JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_nerudas/models');
-			$regionModel = JModelLegacy::getInstance('regions', 'NerudasModel');
-			$region      = $regionModel->getRegion($app->input->cookie->get('region', '*'));
+			BaseDatabaseModel::addIncludePath(JPATH_SITE . '/components/com_location/models', 'LocationModel');
+			$regionsModel = BaseDatabaseModel::getInstance('Regions', 'LocationModel', array('ignore_request' => false));
+			$region       = $regionsModel->getVisitorRegion();
 
 			$params['center']          = array($region->latitude, $region->longitude);
 			$params['latitude']        = $region->latitude;
