@@ -282,10 +282,9 @@ class PrototypeModelItem extends AdminModel
 
 		if (empty($data['region']))
 		{
-			$data['region'] = ($app->isSite()) ? $regionsModel->getVisitorRegion() : $this->getProfileRegion($data['created_by']);
+			$data['region'] = ($app->isSite()) ? $regionsModel->getVisitorRegion()->id : $regionsModel->getProfileRegion($data['created_by'])->id;
 		}
 		$region = $regionsModel->getRegion($data['region']);
-
 
 		if (!empty($data['extra']) && $catid > 1 && $category)
 		{

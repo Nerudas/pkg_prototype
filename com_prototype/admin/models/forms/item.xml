@@ -68,8 +68,9 @@
 		</field>
 		<field name="region" type="regions"
 			   label="JGLOBAL_FIELD_REGIONS_LABEL"
-			   description="JGLOBAL_FIELD_REGIONS_DESC"
-			   show_all="true"/>
+			   description="JGLOBAL_FIELD_REGIONS_DESC">
+			<option value="">JGLOBAL_FIELD_REGIONS_NULL</option>
+		</field>
 		<field name="access" type="accesslevel"
 			   label="JFIELD_ACCESS_LABEL"
 			   description="JFIELD_ACCESS_DESC"
