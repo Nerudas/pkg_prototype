@@ -22,6 +22,8 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 
+jimport('joomla.filesystem.file');
+
 class PrototypeModelItems extends ListModel
 {
 	/**
@@ -203,9 +205,6 @@ class PrototypeModelItems extends ListModel
 			$this->setState('filter.published', array(0, 1));
 		}
 
-		$allregions = $this->getUserStateFromRequest($this->context . '.filter.allregions', 'filter_allregions', '');
-		$this->setState('filter.allregions', $allregions);
-
 		$onlymy    = $this->getUserStateFromRequest($this->context . '.filter.onlymy', 'filter_onlymy', '');
 		$author_id = $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id', '');
 		if (!empty($author_id) && $author_id == $user->id)
@@ -254,7 +253,6 @@ class PrototypeModelItems extends ListModel
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . serialize($this->getState('filter.published'));
 		$id .= ':' . $this->getState('filter.category');
-		$id .= ':' . $this->getState('filter.allregions');
 		$id .= ':' . $this->getState('filter.onlymy');
 		$id .= ':' . $this->getState('filter.author_id');
 		$id .= ':' . $this->getState('filter.company_id');
@@ -321,7 +319,6 @@ class PrototypeModelItems extends ListModel
 			$query->where('i.access IN (' . $groups . ')');
 			$query->where('c.access IN (' . $groups . ')');
 		}
-
 
 		// Filter by author
 		$authorId = $this->getState('filter.author_id');
@@ -578,6 +575,16 @@ class PrototypeModelItems extends ListModel
 				// Get Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_prototype.item', $item->id);
+
+				// Get region
+				$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
+					Uri::root(true) . $item->region_icon : false;
+				if ($item->region == '*')
+				{
+					$item->region_icon = false;
+					$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
+				}
+
 
 				$item->imageFolder = '/images/prototype/items/' . $item->id;
 				$item->html        = str_replace('{imageFolder}', $item->imageFolder, $item->html);
