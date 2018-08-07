@@ -20,7 +20,11 @@
 		<field name="category" type="prototypecategory" onchange="this.form.submit();" default="">
 			<option value="">JOPTION_SELECT_CATEGORY</option>
 		</field>
-		<field name="region" type="regions" show_null="true" onchange="this.form.submit();"/>
+		<field name="region" type="regions"
+			   show_null="true"
+			   onchange="this.form.submit();">
+			<option value="">JGLOBAL_FIELD_REGIONS_NULL</option>
+		</field>
 	</fields>
 
 	<fields name="list">
