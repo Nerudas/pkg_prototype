@@ -4,7 +4,6 @@
 		<field name="search" type="text"
 			   label="JSEARCH_FILTER"
 			   hint="JSEARCH_FILTER"/>
-		<!--<field name="allregions" type="checkbox" label="COM_PROTOTYPE_ALLREGIONS" value="1"/>-->
 		<field name="onlymy" type="checkbox" label="COM_PROTOTYPE_ONLYMY" value="1"/>
 	</fields>
 	<fieldset name="extra">
