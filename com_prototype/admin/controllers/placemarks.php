@@ -21,7 +21,7 @@ class PrototypeControllerPlacemarks extends AdminController
 	 * @var    string
 	 * @since  1.0.0
 	 */
-	protected $text_prefix = 'COM_DISCUSSIONS_PLACEMARKS';
+	protected $text_prefix = 'COM_PROTOTYPE_PLACEMARKS';
 
 	/**
 	 *
