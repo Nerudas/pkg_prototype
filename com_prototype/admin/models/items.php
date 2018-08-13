@@ -223,7 +223,7 @@ class PrototypeModelItems extends ListModel
 		$region = $this->getState('filter.region');
 		if (!empty($region))
 		{
-			$query->where($db->quoteName('i.region') . ' = ' . $db->quoteName($region));
+			$query->where($db->quoteName('i.region') . ' = ' . $db->quote($region));
 		}
 
 		// Filter by published state
