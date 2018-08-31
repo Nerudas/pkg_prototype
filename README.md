@@ -16,3 +16,6 @@ Component for the preparation of the remaining sections of the site
 
 * **Prototype - Latest Module**  
 Module for displaying the latest Prototype items
+
+* **Sitemap - Prototype Plugin**  
+Plugin for adding the Prototype section to sitemap
