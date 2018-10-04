@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS `#__prototype_categories` (
 	`placemark_id`    INT(11)      NOT NULL DEFAULT '0',
 	`balloon_layout`  TEXT         NOT NULL DEFAULT '',
 	`listitem_layout` TEXT         NOT NULL DEFAULT '',
-	`icon`            TEXT         NOT NULL DEFAULT '',
 	`state`           TINYINT(3)   NOT NULL DEFAULT '0',
 	`front_created`   TINYINT(3)   NOT NULL DEFAULT '0',
 	`metakey`         MEDIUMTEXT   NOT NULL DEFAULT '',

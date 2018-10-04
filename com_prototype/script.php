@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
 
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
@@ -336,27 +337,151 @@ class com_PrototypeInstallerScript
 		}
 	}
 
+
 	/**
-	 * Change database structure && delete association
+	 * Remove categories
 	 *
 	 * @param  \stdClass $parent - Parent object calling object.
 	 *
 	 * @return void
 	 *
-	 * @since  1.0.6
+	 * @since  1.2.0
 	 */
 	public function update($parent)
 	{
-		$db      = Factory::getDbo();
-		$table   = '#__prototype_items';
+		$db = Factory::getDbo();
+
+		// Items
+		$table = '#__prototype_items';
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName($table));
+		$db->setQuery($query);
+		$items = $db->loadObjectList();
+
+		foreach ($items as $item)
+		{
+			$registry     = new Registry($item->images);
+			$images       = $registry->toArray();
+			$newImages    = array();
+			$updateImages = false;
+			foreach ($images as $image)
+			{
+				if (!isset($image['ordering']))
+				{
+					$updateImages              = true;
+					$newImage                  = new stdClass();
+					$newImage->ordering        = count($newImages) + 1;
+					$newImages[$image['file']] = $newImage;
+				}
+			}
+			if ($updateImages)
+			{
+				$registry     = new Registry($newImages);
+				$item->images = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+			}
+			$db->updateObject($table, $item, array('id'));
+			$oldFolder = JPATH_ROOT . '/images/prototype/items/' . $item->id;
+			$newFolder = $oldFolder . '/content';
+			if (!JFolder::exists($newFolder))
+			{
+				JFolder::create($newFolder);
+				JFile::write($newFolder . '/index.html', '<!DOCTYPE html><title></title>');
+				$files = JFolder::files($oldFolder, '', false);
+				foreach ($files as $file)
+				{
+					if ($file != 'index.html' && !preg_match('/meta/', $file))
+					{
+						JFile::move($oldFolder . '/' . $file, $newFolder . '/' . $file);
+					}
+				}
+			}
+		}
+
+		// categories
+		$table = '#__prototype_categories';
 		$columns = $db->getTableColumns($table);
 
-		// Add payment_number
-		if (!isset($columns['payment_number']))
+		// Remove icon
+		if (isset($columns['icon']))
 		{
-			$db->setQuery("ALTER TABLE " . $table . " ADD `payment_number` TEXT NOT NULL DEFAULT '' AFTER `publish_down`")
-				->query();
+			$db->setQuery("ALTER TABLE " . $table . " DROP icon")->query();
+		}
+
+		// Remove metaimage
+		if (isset($columns['metaimage']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP metaimage")->query();
+		}
+
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName($table));
+		$db->setQuery($query);
+		$items = $db->loadObjectList();
+
+		foreach ($items as $item)
+		{
+			$registry     = new Registry($item->fields);
+			$item->fields = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+
+			$registry     = new Registry($item->filters);
+			$item->filters = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+
+			$registry     = new Registry($item->attribs);
+			$item->attribs = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+
+			$registry     = new Registry($item->metadata);
+			$item->metadata = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+
+			$db->updateObject($table, $item, array('id'));
+		}
+
+		// Placemarks
+		$table = '#__prototype_placemarks';
+		$query = $db->getQuery(true)
+			->select('*')
+			->from($db->quoteName($table));
+		$db->setQuery($query);
+		$items = $db->loadObjectList();
+
+		foreach ($items as $item)
+		{
+			$registry     = new Registry($item->images);
+			$images       = $registry->toArray();
+			$newImages    = array();
+			$updateImages = false;
+			foreach ($images as $image)
+			{
+				if (!isset($image['ordering']))
+				{
+					$updateImages              = true;
+					$newImage                  = new stdClass();
+					$newImage->ordering        = count($newImages) + 1;
+					$newImages[$image['file']] = $newImage;
+				}
+			}
+			if ($updateImages)
+			{
+				$registry     = new Registry($newImages);
+				$item->images = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+			}
+			$db->updateObject($table, $item, array('id'));
+			$oldFolder = JPATH_ROOT . '/images/prototype/placemarks/' . $item->id;
+			$newFolder = $oldFolder . '/content';
+			if (!JFolder::exists($newFolder))
+			{
+				JFolder::create($newFolder);
+				JFile::write($newFolder . '/index.html', '<!DOCTYPE html><title></title>');
+				$files = JFolder::files($oldFolder, '', false);
+				foreach ($files as $file)
+				{
+					if ($file != 'index.html' && !preg_match('/meta/', $file))
+					{
+						JFile::move($oldFolder . '/' . $file, $newFolder . '/' . $file);
+					}
+				}
+			}
 		}
 	}
-
 }
