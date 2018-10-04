@@ -248,14 +248,14 @@ class PrototypeViewList extends HtmlView
 	 */
 	protected function _prepareDocument()
 	{
-		$app      = Factory::getApplication();
-		$pathway  = $app->getPathway();
-		$category = $this->category;
-		$url      = rtrim(URI::root(), '/') . $category->listLink;
-		$sitename = $app->get('sitename');
-		$menus    = $app->getMenu();
-		$menu     = $menus->getActive();
-		$id       = (int) @$menu->query['id'];
+		$app       = Factory::getApplication();
+		$pathway   = $app->getPathway();
+		$category  = $this->category;
+		$canonical = rtrim(URI::root(), '/') . $category->listLink;
+		$sitename  = $app->get('sitename');
+		$menus     = $app->getMenu();
+		$menu      = $menus->getActive();
+		$id        = (int) @$menu->query['id'];
 
 		if ($menu)
 		{
@@ -335,7 +335,7 @@ class PrototypeViewList extends HtmlView
 		// Set Meta Image
 		if (!empty($category->metaimage))
 		{
-			$this->document->setMetadata('image', Uri::base() .$category->metaimage);
+			$this->document->setMetadata('image', Uri::base() . $category->metaimage);
 		}
 		elseif ($this->params->get('menu-meta_image', ''))
 		{
@@ -377,7 +377,7 @@ class PrototypeViewList extends HtmlView
 		{
 			$this->document->setMetaData('twitter:image', $this->document->getMetaData('image'));
 		}
-		$this->document->setMetaData('twitter:url', $url);
+		$this->document->setMetaData('twitter:url', $canonical);
 
 		// Set Meta Open Graph
 		$this->document->setMetadata('og:type', 'website', 'property');
@@ -391,6 +391,50 @@ class PrototypeViewList extends HtmlView
 		{
 			$this->document->setMetaData('og:image', $this->document->getMetaData('image'), 'property');
 		}
-		$this->document->setMetaData('og:url', $url, 'property');
+		$this->document->setMetaData('og:url', $canonical, 'property');
+
+		// No doubles
+		$uri = Uri::getInstance();
+		$url = urldecode($uri->toString());
+		if ($url !== $canonical)
+		{
+			$this->document->addHeadLink($canonical, 'canonical');
+
+			$link       = $canonical;
+			$linkParams = array();
+
+			if (!empty($uri->getVar('start')))
+			{
+				$linkParams['start'] = $uri->getVar('start');
+			}
+
+			if (!empty($uri->getVar('item_id')))
+			{
+				$linkParams['item_id'] = $uri->getVar('item_id');
+			}
+
+			$filter = array();
+			foreach ($uri->getVar('filter', array()) as $name => $value)
+			{
+				if (!empty($value))
+				{
+					$filter[$name] = $value;
+				}
+			}
+			if (!empty($filter))
+			{
+				$linkParams['filter'] = $filter;
+			}
+
+			if (!empty($linkParams))
+			{
+				$link = $link . '?' . urldecode(http_build_query($linkParams));
+			}
+
+			if ($url != $link)
+			{
+				$app->redirect($link, true);
+			}
+		}
 	}
 }

@@ -263,7 +263,7 @@ class PrototypeViewMap extends HtmlView
 		$app      = Factory::getApplication();
 		$pathway  = $app->getPathway();
 		$category = $this->category;
-		$url      = rtrim(URI::root(), '/') . $category->mapLink;
+		$canonical      = rtrim(URI::root(), '/') . $category->mapLink;
 		$sitename = $app->get('sitename');
 		$menus    = $app->getMenu();
 		$menu     = $menus->getActive();
@@ -391,7 +391,7 @@ class PrototypeViewMap extends HtmlView
 		{
 			$this->document->setMetaData('twitter:image', $this->document->getMetaData('image'));
 		}
-		$this->document->setMetaData('twitter:url', $url);
+		$this->document->setMetaData('twitter:url', $canonical);
 
 		// Set Meta Open Graph
 		$this->document->setMetadata('og:type', 'website', 'property');
@@ -405,6 +405,56 @@ class PrototypeViewMap extends HtmlView
 		{
 			$this->document->setMetaData('og:image', $this->document->getMetaData('image'), 'property');
 		}
-		$this->document->setMetaData('og:url', $url, 'property');
+		$this->document->setMetaData('og:url', $canonical, 'property');
+
+		// No doubles
+		$uri = Uri::getInstance();
+		$url = urldecode($uri->toString());
+		if ($url !== $canonical)
+		{
+			$this->document->addHeadLink($canonical, 'canonical');
+
+			$link       = $canonical;
+			$linkParams = array();
+
+			if (!empty($uri->getVar('item_id')))
+			{
+				$linkParams['item_id'] = $uri->getVar('item_id');
+			}
+
+			if (!empty($uri->getVar('center')))
+			{
+				$linkParams['center'] = $uri->getVar('center');
+			}
+
+
+			if (!empty($uri->getVar('zoom')))
+			{
+				$linkParams['zoom'] = $uri->getVar('zoom');
+			}
+
+			$filter = array();
+			foreach ($uri->getVar('filter', array()) as $name => $value)
+			{
+				if (!empty($value))
+				{
+					$filter[$name] = $value;
+				}
+			}
+			if (!empty($filter))
+			{
+				$linkParams['filter'] = $filter;
+			}
+
+			if (!empty($linkParams))
+			{
+				$link = $link . '?' . urldecode(http_build_query($linkParams));
+			}
+
+			if ($url != $link)
+			{
+				$app->redirect($link, true);
+			}
+		}
 	}
 }
