@@ -7,10 +7,12 @@
 			   hint="COM_PROTOTYPE_ITEM_HTML"
 			   filter="JComponentHelper::filterText"
 			   buttons="true"/>
-		<field name="images" type="ajaximage"
-			   multiple="true"
-			   limit="5"
-			   label="COM_PROTOTYPE_ITEM_IMAGES"/>
+		<field name="images" type="images"
+			   label="COM_PROTOTYPE_ITEM_IMAGES"
+			   folder_field="images_folder"
+			   folder="content"
+			   text="true"
+			   limit="5"/>
 		<field name="created_by" type="user"
 			   label="JGLOBAL_FIELD_CREATED_BY_LABEL"
 			   description="JGLOBAL_FIELD_CREATED_BY_DESC"
@@ -75,7 +77,8 @@
 			   label="JFIELD_ACCESS_LABEL"
 			   description="JFIELD_ACCESS_DESC"
 			   size="1"/>
-		<field name="imagefolder" type="imagefolder" path="images/prototype/items"/>
+		<field name="images_folder" type="folder"
+			   label="JGLOBAL_FIELD_IMAGES_FOLDER_LABEL"/>
 	</fieldset>
 
 	<fieldset name="extra" label="COM_PROTOTYPE_ITEM_EXTRA">

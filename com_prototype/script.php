@@ -380,6 +380,10 @@ class com_PrototypeInstallerScript
 				$registry     = new Registry($newImages);
 				$item->images = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 			}
+
+			$registry     = new Registry($item->extra);
+			$item->extra = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+
 			$db->updateObject($table, $item, array('id'));
 			$oldFolder = JPATH_ROOT . '/images/prototype/items/' . $item->id;
 			$newFolder = $oldFolder . '/content';

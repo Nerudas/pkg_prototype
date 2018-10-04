@@ -18,7 +18,8 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Layout\FileLayout;
-use Joomla\CMS\Language\Text;
+
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
 
 class PrototypeModelItems extends ListModel
 {
@@ -188,13 +189,11 @@ class PrototypeModelItems extends ListModel
 		$query->select(array(
 			'author.id as author_id',
 			'author.name as author_name',
-			'author.avatar as author_avatar',
 			'author.status as author_status',
 			'(session.time IS NOT NULL) AS author_online',
 			'(company.id IS NOT NULL) AS author_job',
 			'company.id as author_job_id',
 			'company.name as author_job_name',
-			'company.logo as author_job_logo',
 			'employees.position as  author_position'
 		))
 			->join('LEFT', '#__profiles AS author ON author.id = i.created_by')
@@ -208,7 +207,7 @@ class PrototypeModelItems extends ListModel
 			->join('LEFT', '#__viewlevels AS ag ON ag.id = i.access');
 
 		// Join over the regions.
-		$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+		$query->select(array('r.id as region_id', 'r.name as region_name'))
 			->join('LEFT', '#__location_regions AS r ON r.id = i.region');
 
 
@@ -344,24 +343,16 @@ class PrototypeModelItems extends ListModel
 			$placemarksItems      = array_unique(ArrayHelper::getColumn($items, 'placemark_id'));
 			$placemarksCategories = array_unique(ArrayHelper::getColumn($categories, 'placemark_id'));
 			$placemarks           = $this->getPlacemarks(array_unique(array_merge($placemarksItems, $placemarksCategories)));
+			$imagesHelper = new FieldTypesFilesHelper();
 			foreach ($items as &$item)
 			{
-				$author_avatar       = (!empty($item->author_avatar) && JFile::exists(JPATH_ROOT . '/' . $item->author_avatar)) ?
-					$item->author_avatar : 'media/com_profiles/images/no-avatar.jpg';
+				$author_avatar       = $imagesHelper->getImage('avatar', 'images/profiles/' . $item->author_id,
+					'media/com_profiles/images/no-avatar.jpg', false);
 				$item->author_avatar = Uri::root(true) . '/' . $author_avatar;
-
-				$item->author_job_logo = (!empty($item->author_job_logo) && JFile::exists(JPATH_ROOT . '/' . $item->author_job_logo)) ?
-					Uri::root(true) . '/' . $item->author_job_logo : false;
 
 				// Get Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_prototype.item', $item->id);
-
-				// Convert the images field to an array.
-				$registry     = new Registry($item->images);
-				$item->images = $registry->toArray();
-				$item->image  = (!empty($item->images) && !empty(reset($item->images)['src'])) ?
-					reset($item->images)['src'] : false;
 
 				// Convert the extra field to an array.
 				$item->extra = new Registry($item->extra);
@@ -369,14 +360,6 @@ class PrototypeModelItems extends ListModel
 				// Get Category
 				$item->category = new Registry((!empty($categories[$item->catid])) ? $categories[$item->catid] : array());
 
-				// Get region
-				$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
-					Uri::root(true) . $item->region_icon : false;
-				if ($item->region == '*')
-				{
-					$item->region_icon = false;
-					$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
-				}
 
 				$placemark_id    = (!empty($item->placemark_id)) ? $item->placemark_id : $item->category->get('placemark_id');
 				$item->placemark = new Registry((!empty($placemarks[$placemark_id])) ?
@@ -497,13 +480,19 @@ class PrototypeModelItems extends ListModel
 						->where('p.id IN (' . implode(',', $getPlacemarks) . ')');
 					$db->setQuery($query);
 					$objects = $db->loadObjectList('id');
+
+					$imagesHelper   = new FieldTypesFilesHelper();
+
 					foreach ($objects as $object)
 					{
 						// Convert the images field to an array.
 						$registry       = new Registry($object->images);
 						$object->images = $registry->toArray();
-						$object->image  = (!empty($object->images) && !empty(reset($object->images)['src'])) ?
-							reset($object->images)['src'] : false;
+						$imageFolder  = 'images/prototype/placemarks/' . $object->id;
+						$object->images = $imagesHelper->getImages('content', $imageFolder, $object->images,
+							array('text' => true, 'for_field' => false));
+						$object->image  = (!empty($object->images) && !empty(reset($object->images)->src)) ?
+							reset($object->images)->src : false;
 
 						$placemarks[$object->id]        = $object;
 						$this->_placemarks[$object->id] = $object;

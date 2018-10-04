@@ -27,31 +27,6 @@ class PrototypeControllerItem extends FormController
 	protected $text_prefix = 'COM_PROTOTYPE_ITEM';
 
 	/**
-	 * Method to update item icon
-	 *
-	 * @return  boolean  True if successful, false otherwise.
-	 *
-	 * @since  1.0.0
-	 */
-	public function updateImages()
-	{
-		$app   = Factory::getApplication();
-		$id    = $app->input->get('id', 0, 'int');
-		$value = $app->input->get('value', '', 'raw');
-		$field = $app->input->get('field', '', 'raw');
-		if (!empty($id) & !empty($field))
-		{
-			JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-			$helper = new imageFolderHelper('images/prototype/items');
-			$helper->saveImagesValue($id, '#__prototype_items', $field, $value);
-		}
-
-		$app->close();
-
-		return true;
-	}
-
-	/**
 	 * Set a URL for browser redirection.
 	 *
 	 * @param   string $url  URL to redirect to.
@@ -86,8 +61,9 @@ class PrototypeControllerItem extends FormController
 		$data['image'] = (!empty($data['images']) && !empty(reset($data['images'])['src'])) ?
 			reset($data['images'])['src'] : false;
 
-		$item  = new Registry($data);
-		$extra = new Registry($data['extra']);
+		$item          = new Registry($data);
+		$data['extra'] = (isset($data['extra'])) ? $data['extra'] : array();
+		$extra         = new Registry($data['extra']);
 
 		$category = array();
 		if (!empty($data['catid']))
@@ -108,10 +84,15 @@ class PrototypeControllerItem extends FormController
 
 			if ($placemark)
 			{
+				$imagesHelper = new FieldTypesFilesHelper();
+
 				$registry          = new Registry($placemark->images);
 				$placemark->images = $registry->toArray();
-				$placemark->image  = (!empty($placemark->images) && !empty(reset($placemark->images)['src'])) ?
-					reset($placemark->images)['src'] : false;
+				$imageFolder       = 'images/prototype/placemarks/' . $placemark->id;
+				$placemark->images = $imagesHelper->getImages('content', $imageFolder, $placemark->images,
+					array('text' => true, 'for_field' => false));
+				$placemark->image  = (!empty($placemark->images) && !empty(reset($placemark->images)->src)) ?
+					reset($placemark->images)->src : false;
 			}
 		}
 		$placemark = new Registry($placemark);
