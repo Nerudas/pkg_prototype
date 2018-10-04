@@ -7,9 +7,11 @@
 			   class="input-xxlarge input-large-text"
 			   size="40"
 			   required="true"/>
-		<field name="images" type="ajaximage"
-			   multiple="true"
-			   label="COM_DISCUSSIONS_TOPIC_IMAGES"/>
+		<field name="images" type="images"
+			   label="COM_PROTOTYPE_PLACEMARK_IMAGES"
+			   folder_field="images_folder"
+			   folder="content"
+			   text="false"/>
 		<field name="layout" type="layout"
 			   label="COM_PROTOTYPE_PLACEMARK_LAYOUT"
 			   folder="placemarks"/>
@@ -41,6 +43,7 @@
 			   label="JFIELD_ACCESS_LABEL"
 			   description="JFIELD_ACCESS_DESC"
 			   size="1"/>
-		<field name="imagefolder" type="imagefolder" path="images/prototype/placemarks"/>
+		<field name="images_folder" type="folder"
+			   label="JGLOBAL_FIELD_IMAGES_FOLDER_LABEL"/>
 	</fieldset>
 </form>

@@ -15,34 +15,19 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class PrototypeModelPlacemark extends AdminModel
 {
-	/**
-	 * Imagefolder helper helper
-	 *
-	 * @var    new imageFolderHelper
-	 *
-	 * @since  1.0.0
-	 */
-	protected $imageFolderHelper = null;
 
 	/**
-	 * Constructor.
+	 * Images root path
 	 *
-	 * @param   array $config An optional associative array of configuration settings.
+	 * @var    string
 	 *
-	 * @see     AdminModel
-	 *
-	 * @since   1.0.0
+	 * @since  1.3.0
 	 */
-	public function __construct($config = array())
-	{
-		JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-		$this->imageFolderHelper = new imageFolderHelper('images/prototype/placemarks');
-
-		parent::__construct($config);
-	}
-
+	protected $images_root = 'images/prototype/placemarks';
 
 	/**
 	 * Method to get a single record.
@@ -116,9 +101,8 @@ class PrototypeModelPlacemark extends AdminModel
 			$form->setFieldAttribute('state', 'filter', 'unset');
 		}
 
-		// Set update images link
-		$form->setFieldAttribute('images', 'saveurl',
-			Uri::base(true) . '/index.php?option=com_prototype&task=placemark.updateImages&field=images&id=' . $id);
+		// Set images folder root
+		$form->setFieldAttribute('images_folder', 'root', $this->images_root);
 
 		// Set Palcemark link
 		$form->setFieldAttribute('demo', 'placemarkurl',
@@ -173,18 +157,12 @@ class PrototypeModelPlacemark extends AdminModel
 			$id = $this->getState($this->getName() . '.id');
 
 			// Save images
-			$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
-				$this->imageFolderHelper->getItemImageFolder($id);
-
-			if ($isNew)
+			if ($isNew && !empty($data['images_folder']))
 			{
-				$data['images'] = (isset($data['images'])) ? $data['images'] : array();
+				$filesHelper = new FieldTypesFilesHelper();
+				$filesHelper->moveTemporaryFolder($data['images_folder'], $id, $this->images_root);
 			}
 
-			if (isset($data['images']))
-			{
-				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__prototype_placemarks', 'images', $data['images']);
-			}
 
 			return $id;
 		}
@@ -205,11 +183,14 @@ class PrototypeModelPlacemark extends AdminModel
 	{
 		if (parent::delete($pks))
 		{
+			$filesHelper = new FieldTypesFilesHelper();
+
 			// Delete images
 			foreach ($pks as $pk)
 			{
-				$this->imageFolderHelper->deleteItemImageFolder($pk);
+				$filesHelper->deleteItemFolder($pk, $this->images_root);
 			}
+
 
 			return true;
 		}

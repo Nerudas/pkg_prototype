@@ -17,6 +17,8 @@ use Joomla\CMS\Factory;
 
 jimport('joomla.filesystem.file');
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class PrototypeModelPlacemarks extends ListModel
 {
 	/**
@@ -210,13 +212,18 @@ class PrototypeModelPlacemarks extends ListModel
 		$items = parent::getItems();
 		if (!empty($items))
 		{
+			$imagesHelper   = new FieldTypesFilesHelper();
+
 			foreach ($items as &$item)
 			{
 				// Convert the images field to an array.
 				$registry     = new Registry($item->images);
 				$item->images = $registry->toArray();
-				$item->image  = (!empty($item->images) && !empty(reset($item->images)['src'])) ?
-					reset($item->images)['src'] : false;
+				$imageFolder  = 'images/prototype/placemarks/' . $item->id;
+				$item->images = $imagesHelper->getImages('content', $imageFolder, $item->images,
+					array('text' => true, 'for_field' => false));
+				$item->image  = (!empty($item->images) && !empty(reset($item->images)->src)) ?
+					reset($item->images)->src : false;
 
 				$layout     = $this->getItemLayout($item->layout);
 				$layoutData = array(

@@ -19,6 +19,8 @@ use Joomla\CMS\Layout\FileLayout;
 jimport('joomla.filesystem.file');
 jimport('joomla.filesystem.folder');
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class PrototypeControllerPlacemark extends FormController
 {
 	/**
@@ -30,31 +32,6 @@ class PrototypeControllerPlacemark extends FormController
 	protected $text_prefix = 'COM_PROTOTYPE_PLACEMARK';
 
 	/**
-	 * Method to update item icon
-	 *
-	 * @return  boolean  True if successful, false otherwise.
-	 *
-	 * @since  1.0.0
-	 */
-	public function updateImages()
-	{
-		$app   = Factory::getApplication();
-		$id    = $app->input->get('id', 0, 'int');
-		$value = $app->input->get('value', '', 'raw');
-		$field = $app->input->get('field', '', 'raw');
-		if (!empty($id) & !empty($field))
-		{
-			JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-			$helper = new imageFolderHelper('images/prototype/placemarks');
-			$helper->saveImagesValue($id, '#__prototype_placemarks', $field, $value);
-		}
-
-		$app->close();
-
-		return true;
-	}
-
-	/**
 	 * Method to get Item placemark
 	 *
 	 * @return  boolean  True if successful, false otherwise.
@@ -63,10 +40,16 @@ class PrototypeControllerPlacemark extends FormController
 	 */
 	public function getPlacemark()
 	{
-		$app           = Factory::getApplication();
-		$data          = $this->input->post->get('jform', array(), 'array');
-		$data['image'] = (!empty($data['images']) && !empty(reset($data['images'])['src'])) ?
-			reset($data['images'])['src'] : false;
+		$app  = Factory::getApplication();
+		$data = $this->input->post->get('jform', array(), 'array');
+
+		$imagesHelper   = new FieldTypesFilesHelper();
+		$imageFolder    = $data['images_folder'];
+		$data['images'] = $imagesHelper->getImages('content', $imageFolder, $data['images'],
+			array('text' => true, 'for_field' => false));
+		$data['image']  = (!empty($data['images']) && !empty(reset($data['images'])->src)) ?
+			reset($data['images'])->src : false;
+
 
 		$item         = new Registry($data);
 		$extra        = new Registry(array());
@@ -83,7 +66,7 @@ class PrototypeControllerPlacemark extends FormController
 		$db->setQuery($query);
 		$templates   = $db->loadColumn();
 		$layoutPaths = array();
-		$language = Factory::getLanguage();
+		$language    = Factory::getLanguage();
 		foreach (array_unique($templates) as $template)
 		{
 			$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
