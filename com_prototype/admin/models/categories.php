@@ -279,11 +279,11 @@ class PrototypeModelCategories extends ListModel
 
 				$placemark_layout     = $this->getPlacemarkLayout($item->placemark->get('layout', 'default'));
 				$layoutData           = array(
-					'item'      => new Registry($item),
-					'extra'     => new Registry(array()),
-					'category'  => new Registry($item),
-					'extra_filter'     => new Registry(array()),
-					'placemark' => $item->placemark,
+					'item'         => new Registry($item),
+					'extra'        => new Registry(array()),
+					'category'     => new Registry($item),
+					'extra_filter' => new Registry(array()),
+					'placemark'    => $item->placemark,
 				);
 				$item->placemark_demo = $placemark_layout->render($layoutData);
 			}
@@ -333,14 +333,14 @@ class PrototypeModelCategories extends ListModel
 					$db->setQuery($query);
 					$objects = $db->loadObjectList('id');
 
-					$imagesHelper   = new FieldTypesFilesHelper();
+					$imagesHelper = new FieldTypesFilesHelper();
 
 					foreach ($objects as $object)
 					{
 						// Convert the images field to an array.
 						$registry       = new Registry($object->images);
 						$object->images = $registry->toArray();
-						$imageFolder  = 'images/prototype/placemarks/' . $object->id;
+						$imageFolder    = 'images/prototype/placemarks/' . $object->id;
 						$object->images = $imagesHelper->getImages('content', $imageFolder, $object->images,
 							array('text' => true, 'for_field' => false));
 						$object->image  = (!empty($object->images) && !empty(reset($object->images)->src)) ?
@@ -379,8 +379,8 @@ class PrototypeModelCategories extends ListModel
 				->where('client_id = 0')
 				->order('home DESC');
 			$db->setQuery($query);
-			$templates   = $db->loadColumn();
-			$language = Factory::getLanguage();
+			$templates = $db->loadColumn();
+			$language  = Factory::getLanguage();
 
 			$layoutPaths = array();
 			foreach (array_unique($templates) as $template)

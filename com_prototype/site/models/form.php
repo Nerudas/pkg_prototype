@@ -349,7 +349,7 @@ class PrototypeModelForm extends PrototypeModelItem
 					if ($item)
 					{
 						$imagesHelper = new FieldTypesFilesHelper();
-						$item->icon = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $item->id, false, false);
+						$item->icon   = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $item->id, false, false);
 
 						$item->listLink = Route::_(PrototypeHelperRoute::getListRoute($item->id));
 						$item->mapLink  = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
@@ -439,7 +439,7 @@ class PrototypeModelForm extends PrototypeModelItem
 
 				foreach ($items as &$item)
 				{
-					$item->icon = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $item->id, false, false);
+					$item->icon     = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $item->id, false, false);
 					$item->listLink = Route::_(PrototypeHelperRoute::getListRoute($item->id));
 					$item->mapLink  = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
 					$item->formLink = Route::_(PrototypeHelperRoute::getFormRoute($this->getState('item.id'),

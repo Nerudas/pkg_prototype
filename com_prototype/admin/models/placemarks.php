@@ -212,7 +212,7 @@ class PrototypeModelPlacemarks extends ListModel
 		$items = parent::getItems();
 		if (!empty($items))
 		{
-			$imagesHelper   = new FieldTypesFilesHelper();
+			$imagesHelper = new FieldTypesFilesHelper();
 
 			foreach ($items as &$item)
 			{

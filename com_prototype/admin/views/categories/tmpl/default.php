@@ -186,8 +186,8 @@ $columns = 7;
 
 								<?php foreach ($item->tags->itemTags as $tag): ?>
 									<span class="label" style="margin-bottom: 5px;">
-											<?php echo $tag->title; ?>
-										</span>
+										<?php echo $tag->title; ?>
+									</span>
 								<?php endforeach; ?>
 
 							<?php endif; ?>

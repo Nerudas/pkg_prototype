@@ -343,7 +343,7 @@ class PrototypeModelItems extends ListModel
 			$placemarksItems      = array_unique(ArrayHelper::getColumn($items, 'placemark_id'));
 			$placemarksCategories = array_unique(ArrayHelper::getColumn($categories, 'placemark_id'));
 			$placemarks           = $this->getPlacemarks(array_unique(array_merge($placemarksItems, $placemarksCategories)));
-			$imagesHelper = new FieldTypesFilesHelper();
+			$imagesHelper         = new FieldTypesFilesHelper();
 			foreach ($items as &$item)
 			{
 				$author_avatar       = $imagesHelper->getImage('avatar', 'images/profiles/' . $item->author_id,
@@ -481,14 +481,14 @@ class PrototypeModelItems extends ListModel
 					$db->setQuery($query);
 					$objects = $db->loadObjectList('id');
 
-					$imagesHelper   = new FieldTypesFilesHelper();
+					$imagesHelper = new FieldTypesFilesHelper();
 
 					foreach ($objects as $object)
 					{
 						// Convert the images field to an array.
 						$registry       = new Registry($object->images);
 						$object->images = $registry->toArray();
-						$imageFolder  = 'images/prototype/placemarks/' . $object->id;
+						$imageFolder    = 'images/prototype/placemarks/' . $object->id;
 						$object->images = $imagesHelper->getImages('content', $imageFolder, $object->images,
 							array('text' => true, 'for_field' => false));
 						$object->image  = (!empty($object->images) && !empty(reset($object->images)->src)) ?

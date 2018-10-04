@@ -1109,8 +1109,8 @@ class PrototypeModelItems extends ListModel
 
 					if ($item)
 					{
-						$imagesHelper = new FieldTypesFilesHelper();
-						$item->icon = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $item->id, false, false);
+						$imagesHelper     = new FieldTypesFilesHelper();
+						$item->icon       = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $item->id, false, false);
 						$item->listLink   = Route::_(PrototypeHelperRoute::getListRoute($item->id));
 						$item->addLink    = ($item->front_created > 0) ?
 							Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id)) : false;

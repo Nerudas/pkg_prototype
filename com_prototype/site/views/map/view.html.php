@@ -125,7 +125,7 @@ class PrototypeViewMap extends HtmlView
 		$this->state         = $this->get('State');
 		$this->category      = $this->get('Category');
 		$this->mapParams     = $this->get('mapParams');
-		$this->visitors     = $this->get('visitors');
+		$this->visitors      = $this->get('visitors');
 		$this->items         = false;
 		$this->pagination    = false;
 		$this->parent        = $this->get('Parent');
@@ -260,14 +260,14 @@ class PrototypeViewMap extends HtmlView
 	 */
 	protected function _prepareDocument()
 	{
-		$app      = Factory::getApplication();
-		$pathway  = $app->getPathway();
-		$category = $this->category;
-		$canonical      = rtrim(URI::root(), '/') . $category->mapLink;
-		$sitename = $app->get('sitename');
-		$menus    = $app->getMenu();
-		$menu     = $menus->getActive();
-		$id       = (int) @$menu->query['id'];
+		$app       = Factory::getApplication();
+		$pathway   = $app->getPathway();
+		$category  = $this->category;
+		$canonical = rtrim(URI::root(), '/') . $category->mapLink;
+		$sitename  = $app->get('sitename');
+		$menus     = $app->getMenu();
+		$menu      = $menus->getActive();
+		$id        = (int) @$menu->query['id'];
 
 		if ($menu)
 		{
@@ -348,7 +348,7 @@ class PrototypeViewMap extends HtmlView
 		// Set Meta Image
 		if (!empty($category->metaimage))
 		{
-			$this->document->setMetadata('image', Uri::base() .$category->metaimage);
+			$this->document->setMetadata('image', Uri::base() . $category->metaimage);
 		}
 		elseif ($this->params->get('menu-meta_image', ''))
 		{

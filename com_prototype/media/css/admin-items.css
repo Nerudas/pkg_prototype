@@ -74,6 +74,7 @@
 	content: "\e201";
 	color: #378137;
 }
+
 #toolbar-set_item_payment .icon-set_item_payment::before {
 	content: "\e020";
 }
