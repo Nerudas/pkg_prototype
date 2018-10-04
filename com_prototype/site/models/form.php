@@ -339,7 +339,7 @@ class PrototypeModelForm extends PrototypeModelItem
 				if ($parent > 1)
 				{
 					$query = $db->getQuery(true)
-						->select(array('id', 'title', 'alias', 'parent_id', 'front_created', 'icon'))
+						->select(array('id', 'title', 'alias', 'parent_id', 'front_created'))
 						->from('#__prototype_categories')
 						->where('id = ' . (int) $parent);
 
@@ -348,6 +348,9 @@ class PrototypeModelForm extends PrototypeModelItem
 
 					if ($item)
 					{
+						$imagesHelper = new FieldTypesFilesHelper();
+						$item->icon = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $item->id, false, false);
+
 						$item->listLink = Route::_(PrototypeHelperRoute::getListRoute($item->id));
 						$item->mapLink  = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
 						$item->formLink = Route::_(PrototypeHelperRoute::getFormRoute($this->getState('item.id'),
@@ -404,7 +407,7 @@ class PrototypeModelForm extends PrototypeModelItem
 			{
 				$db    = Factory::getDbo();
 				$query = $db->getQuery(true)
-					->select(array('id', 'title', 'alias', 'front_created', 'icon'))
+					->select(array('id', 'title', 'alias', 'front_created'))
 					->from('#__prototype_categories')
 					->where('parent_id = ' . (int) $pk)
 					->where('front_created > 0')
@@ -432,8 +435,11 @@ class PrototypeModelForm extends PrototypeModelItem
 				$db->setQuery($query);
 				$items = $db->loadObjectList();
 
+				$imagesHelper = new FieldTypesFilesHelper();
+
 				foreach ($items as &$item)
 				{
+					$item->icon = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $item->id, false, false);
 					$item->listLink = Route::_(PrototypeHelperRoute::getListRoute($item->id));
 					$item->mapLink  = Route::_(PrototypeHelperRoute::getMapRoute($item->id));
 					$item->formLink = Route::_(PrototypeHelperRoute::getFormRoute($this->getState('item.id'),

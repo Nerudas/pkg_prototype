@@ -381,8 +381,11 @@ class com_PrototypeInstallerScript
 				$item->images = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 			}
 
-			$registry     = new Registry($item->extra);
+			$registry    = new Registry($item->extra);
 			$item->extra = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+
+			$imagefolder = 'images/prototype/items/' . $item->id . '/content';
+			$item->html  = str_replace('{imageFolder}', $imagefolder, $item->html);
 
 			$db->updateObject($table, $item, array('id'));
 			$oldFolder = JPATH_ROOT . '/images/prototype/items/' . $item->id;
@@ -403,7 +406,7 @@ class com_PrototypeInstallerScript
 		}
 
 		// categories
-		$table = '#__prototype_categories';
+		$table   = '#__prototype_categories';
 		$columns = $db->getTableColumns($table);
 
 		// Remove icon
@@ -429,13 +432,13 @@ class com_PrototypeInstallerScript
 			$registry     = new Registry($item->fields);
 			$item->fields = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 
-			$registry     = new Registry($item->filters);
+			$registry      = new Registry($item->filters);
 			$item->filters = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 
-			$registry     = new Registry($item->attribs);
+			$registry      = new Registry($item->attribs);
 			$item->attribs = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 
-			$registry     = new Registry($item->metadata);
+			$registry       = new Registry($item->metadata);
 			$item->metadata = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 
 			$db->updateObject($table, $item, array('id'));

@@ -14,7 +14,6 @@ use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Layout\FileLayout;
@@ -23,6 +22,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 
 jimport('joomla.filesystem.file');
+
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
 
 class PrototypeModelItems extends ListModel
 {
@@ -285,14 +286,12 @@ class PrototypeModelItems extends ListModel
 		$query->select(array(
 			'author.id as author_id',
 			'author.name as author_name',
-			'author.avatar as author_avatar',
 			'author.status as author_status',
 			'author.contacts as author_contacts',
 			'(session.time IS NOT NULL) AS author_online',
 			'(company.id IS NOT NULL) AS author_job',
 			'company.id as author_job_id',
 			'company.name as author_job_name',
-			'company.logo as author_job_logo',
 			'company.contacts as author_job_contacts',
 			'company.about as author_job_about',
 			'employees.position as  author_position',
@@ -308,7 +307,7 @@ class PrototypeModelItems extends ListModel
 		$query->join('LEFT', '#__prototype_categories AS c ON c.id = i.catid');
 
 		// Join over the regions.
-		$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+		$query->select(array('r.id as region_id', 'r.name as region_name'))
 			->join('LEFT', '#__location_regions AS r ON r.id = i.region');
 
 
@@ -523,7 +522,7 @@ class PrototypeModelItems extends ListModel
 			$placemarksItems      = array_unique(ArrayHelper::getColumn($items, 'placemark_id'));
 			$placemarksCategories = array_unique(ArrayHelper::getColumn($categories, 'placemark_id'));
 			$placemarks           = $this->getPlacemarks(array_unique(array_merge($placemarksItems, $placemarksCategories)));
-
+			$imagesHelper         = new FieldTypesFilesHelper();
 			foreach ($items as &$item)
 			{
 
@@ -549,14 +548,13 @@ class PrototypeModelItems extends ListModel
 					}
 				}
 
-				$author_avatar       = (!empty($item->author_avatar) && JFile::exists(JPATH_ROOT . '/' . $item->author_avatar)) ?
-					$item->author_avatar : 'media/com_profiles/images/no-avatar.jpg';
-				$item->author_avatar = Uri::root(true) . '/' . $author_avatar;
+				$item->author_avatar = $imagesHelper->getImage('avatar', 'images/profiles/' . $item->author_id,
+					'media/com_profiles/images/no-avatar.jpg', false);
 
 				$item->author_link = Route::_(ProfilesHelperRoute::getProfileRoute($item->author_id));
 
-				$item->author_job_logo = (!empty($item->author_job_logo) && JFile::exists(JPATH_ROOT . '/' . $item->author_job_logo)) ?
-					Uri::root(true) . '/' . $item->author_job_logo : false;
+
+				$item->author_job_logo = $imagesHelper->getImage('logo', 'images/companies/' . $item->author_job_id, false, false);
 
 				$item->author_job_link = Route::_(CompaniesHelperRoute::getCompanyRoute($item->author_job_id));
 
@@ -577,24 +575,15 @@ class PrototypeModelItems extends ListModel
 				$item->tags->getItemTags('com_prototype.item', $item->id);
 
 				// Get region
-				$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
-					Uri::root(true) . $item->region_icon : false;
-				if ($item->region == '*')
-				{
-					$item->region_icon = false;
-					$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
-				}
-
-
-				$item->imageFolder = '/images/prototype/items/' . $item->id;
-				$item->html        = str_replace('{imageFolder}', $item->imageFolder, $item->html);
-				$item->extra       = str_replace('{imageFolder}', $item->imageFolder, $item->extra);
+				$item->region_icon = $imagesHelper->getImage('icon', 'images/location/regions/' . $item->region_id, false, false);
 
 				// Convert the images field to an array.
 				$registry     = new Registry($item->images);
 				$item->images = $registry->toArray();
-				$item->image  = (!empty($item->images) && !empty(reset($item->images)['src'])) ?
-					reset($item->images)['src'] : false;
+				$item->images = $imagesHelper->getImages('content', 'images/prototype/items/' . $item->id, $item->images,
+					array('text' => true, 'for_field' => false));
+				$item->image  = (!empty($item->images) && !empty(reset($item->images)->src)) ?
+					reset($item->images)->src : false;
 
 				// Convert the extra field to an array.
 				$item->extra = new Registry($item->extra);
@@ -721,9 +710,12 @@ class PrototypeModelItems extends ListModel
 						->where('c.id IN (' . implode(',', $getCategories) . ')')
 						->order('c.lft ASC');
 					$db->setQuery($query);
-					$objects = $db->loadObjectList('id');
+					$objects      = $db->loadObjectList('id');
+					$imagesHelper = new FieldTypesFilesHelper();
 					foreach ($objects as $object)
 					{
+
+						$object->icon = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $object->id, false, false);
 
 						// Links
 						$object->listLink   = Route::_(PrototypeHelperRoute::getListRoute($object->id));
@@ -790,13 +782,20 @@ class PrototypeModelItems extends ListModel
 						->where('p.id IN (' . implode(',', $getPlacemarks) . ')');
 					$db->setQuery($query);
 					$objects = $db->loadObjectList('id');
+
+					$imagesHelper = new FieldTypesFilesHelper();
+
 					foreach ($objects as $object)
 					{
 						// Convert the images field to an array.
 						$registry       = new Registry($object->images);
 						$object->images = $registry->toArray();
-						$object->image  = (!empty($object->images) && !empty(reset($object->images)['src'])) ?
-							reset($object->images)['src'] : false;
+						$imageFolder    = 'images/prototype/placemarks/' . $object->id;
+						$object->images = $imagesHelper->getImages('content', $imageFolder, $object->images,
+							array('text' => true, 'for_field' => false));
+						$object->image  = (!empty($object->images) && !empty(reset($object->images)->src)) ?
+							reset($object->images)->src : false;
+
 
 						$placemarks[$object->id]        = $object;
 						$this->_placemarks[$object->id] = $object;
@@ -1027,6 +1026,10 @@ class PrototypeModelItems extends ListModel
 				$registry      = new Registry($data->filters);
 				$data->filters = $registry->toArray();
 
+				$imagesHelper = new FieldTypesFilesHelper();
+				$imagesFolder = 'images/prototype/categories/' . $data->id;
+				$data->icon   = $imagesHelper->getImage('icon', $imagesFolder, false, false);
+
 				// Links
 				$data->listLink   = Route::_(PrototypeHelperRoute::getListRoute($data->id));
 				$data->addLink    = ($data->front_created > 0) ?
@@ -1045,6 +1048,7 @@ class PrototypeModelItems extends ListModel
 
 				// Convert metadata fields to objects.
 				$data->metadata = new Registry($data->metadata);
+				$data->metadata->set('image', $imagesHelper->getImage('meta', $imagesFolder, false, false));
 
 				$this->_category[$pk] = $data;
 			}
@@ -1096,7 +1100,7 @@ class PrototypeModelItems extends ListModel
 				if ($parent > 1)
 				{
 					$query = $db->getQuery(true)
-						->select(array('id', 'title', 'alias', 'parent_id', 'front_created', 'icon'))
+						->select(array('id', 'title', 'alias', 'parent_id', 'front_created'))
 						->from('#__prototype_categories')
 						->where('id = ' . (int) $parent);
 
@@ -1105,6 +1109,8 @@ class PrototypeModelItems extends ListModel
 
 					if ($item)
 					{
+						$imagesHelper = new FieldTypesFilesHelper();
+						$item->icon = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $item->id, false, false);
 						$item->listLink   = Route::_(PrototypeHelperRoute::getListRoute($item->id));
 						$item->addLink    = ($item->front_created > 0) ?
 							Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id)) : false;
@@ -1164,7 +1170,7 @@ class PrototypeModelItems extends ListModel
 			{
 				$db    = Factory::getDbo();
 				$query = $db->getQuery(true)
-					->select(array('id', 'title', 'alias', 'front_created', 'icon'))
+					->select(array('id', 'title', 'alias', 'front_created'))
 					->from('#__prototype_categories')
 					->where('parent_id = ' . (int) $pk)
 					->order('lft ASC');
@@ -1191,8 +1197,13 @@ class PrototypeModelItems extends ListModel
 				$db->setQuery($query);
 				$items = $db->loadObjectList();
 
+				$imagesHelper = new FieldTypesFilesHelper();
+
 				foreach ($items as &$item)
 				{
+
+					$item->icon = $imagesHelper->getImage('icon', 'images/prototype/categories/' . $item->id, false, false);
+
 					$item->listLink   = Route::_(PrototypeHelperRoute::getListRoute($item->id));
 					$item->addLink    = ($item->front_created > 0) ?
 						Route::_(PrototypeHelperRoute::getFormRoute(null, $item->id)) : false;
