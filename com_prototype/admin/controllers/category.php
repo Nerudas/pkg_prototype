@@ -16,6 +16,8 @@ use Joomla\CMS\Response\JsonResponse;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Layout\FileLayout;
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class PrototypeControllerCategory extends FormController
 {
 	/**
@@ -25,31 +27,6 @@ class PrototypeControllerCategory extends FormController
 	 * @since  1.0.0
 	 */
 	protected $text_prefix = 'COM_PROTOTYPE_CATEGORY';
-
-	/**
-	 * Method to update item icon
-	 *
-	 * @return  boolean  True if successful, false otherwise.
-	 *
-	 * @since  1.0.0
-	 */
-	public function updateImages()
-	{
-		$app   = Factory::getApplication();
-		$id    = $app->input->get('id', 0, 'int');
-		$value = $app->input->get('value', '', 'raw');
-		$field = $app->input->get('field', '', 'raw');
-		if (!empty($id) & !empty($field))
-		{
-			JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-			$helper = new imageFolderHelper('images/prototype/categories');
-			$helper->saveImagesValue($id, '#__prototype_categories', $field, $value);
-		}
-
-		$app->close();
-
-		return true;
-	}
 
 	/**
 	 * Method to get Item placemark
@@ -75,10 +52,15 @@ class PrototypeControllerCategory extends FormController
 
 			if ($placemark)
 			{
+				$imagesHelper = new FieldTypesFilesHelper();
+
 				$registry          = new Registry($placemark->images);
 				$placemark->images = $registry->toArray();
-				$placemark->image  = (!empty($placemark->images) && !empty(reset($placemark->images)['src'])) ?
-					reset($placemark->images)['src'] : false;
+				$imageFolder       = 'images/prototype/placemarks/' . $placemark->id;
+				$placemark->images = $imagesHelper->getImages('content', $imageFolder, $placemark->images,
+					array('text' => true, 'for_field' => false));
+				$placemark->image  = (!empty($placemark->images) && !empty(reset($placemark->images)->src)) ?
+					reset($placemark->images)->src : false;
 			}
 		}
 
@@ -93,7 +75,7 @@ class PrototypeControllerCategory extends FormController
 		$db->setQuery($query);
 		$templates   = $db->loadColumn();
 		$layoutPaths = array();
-		$language = Factory::getLanguage();
+		$language    = Factory::getLanguage();
 		foreach (array_unique($templates) as $template)
 		{
 			$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';

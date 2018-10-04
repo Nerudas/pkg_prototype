@@ -20,33 +20,18 @@ use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class PrototypeModelCategory extends AdminModel
 {
 	/**
-	 * Imagefolder helper helper
+	 * Images root path
 	 *
-	 * @var    new imageFolderHelper
+	 * @var    string
 	 *
-	 * @since  1.0.0
+	 * @since  1.3.0
 	 */
-	protected $imageFolderHelper = null;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param   array $config An optional associative array of configuration settings.
-	 *
-	 * @see     AdminModel
-	 *
-	 * @since   1.0.0
-	 */
-	public function __construct($config = array())
-	{
-		JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-		$this->imageFolderHelper = new imageFolderHelper('images/prototype/categories');
-
-		parent::__construct($config);
-	}
+	protected $images_root = 'images/prototype/categories';
 
 	/**
 	 * Method to get a single record.
@@ -139,10 +124,8 @@ class PrototypeModelCategory extends AdminModel
 			$form->setFieldAttribute('state', 'filter', 'unset');
 		}
 
-		// Set update icon link
-		$iamgesSaveUrl = 'index.php?option=com_prototype&task=category.updateImages&id=' . $id;
-		$form->setFieldAttribute('icon', 'saveurl', $iamgesSaveUrl . '&field=icon');
-		$form->setFieldAttribute('metaimage', 'saveurl', $iamgesSaveUrl . '&field=metaimage');
+		// Set images folder root
+		$form->setFieldAttribute('images_folder', 'root', $this->images_root);
 
 		// Set Placemark link
 		$form->setFieldAttribute('placemark_demo', 'placemarkurl',
@@ -209,19 +192,19 @@ class PrototypeModelCategory extends AdminModel
 		if (isset($data['metadata']) && is_array($data['metadata']))
 		{
 			$registry         = new Registry($data['metadata']);
-			$data['metadata'] = (string) $registry;
+			$data['metadata'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
 		if (isset($data['fields']) && is_array($data['fields']))
 		{
 			$registry       = new Registry($data['fields']);
-			$data['fields'] = (string) $registry;
+			$data['fields'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
 		if (isset($data['filters']) && is_array($data['filters']))
 		{
 			$registry        = new Registry($data['filters']);
-			$data['filters'] = (string) $registry;
+			$data['filters'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
 		// Load the row if saving an existing type.
@@ -293,7 +276,7 @@ class PrototypeModelCategory extends AdminModel
 		if (isset($data['attribs']) && is_array($data['attribs']))
 		{
 			$registry        = new Registry($data['attribs']);
-			$data['attribs'] = (string) $registry;
+			$data['attribs'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
 		// Bind the data.
@@ -356,24 +339,12 @@ class PrototypeModelCategory extends AdminModel
 		$id = $table->id;
 
 		// Save images
-		$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
-			$this->imageFolderHelper->getItemImageFolder($id);
-
-		if ($isNew)
+		if ($isNew && !empty($data['images_folder']))
 		{
-			$data['icon']      = (isset($data['icon'])) ? $data['icon'] : '';
-			$data['metaimage'] = (isset($data['metaimage'])) ? $data['metaimage'] : '';
+			$filesHelper = new FieldTypesFilesHelper();
+			$filesHelper->moveTemporaryFolder($data['images_folder'], $id, $this->images_root);
 		}
 
-		if (isset($data['icon']))
-		{
-			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__prototype_categories', 'icon', $data['icon']);
-		}
-
-		if (isset($data['metaimage']))
-		{
-			$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__prototype_categories', 'metaimage', $data['metaimage']);
-		}
 
 		return true;
 	}
@@ -446,7 +417,7 @@ class PrototypeModelCategory extends AdminModel
 			// Delete images
 			foreach ($pks as $pk)
 			{
-				$this->imageFolderHelper->deleteItemImageFolder($pk);
+				$filesHelper->deleteItemFolder($pk, $this->images_root);
 			}
 
 			return true;
