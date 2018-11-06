@@ -54,13 +54,9 @@ class PrototypeModelCategory extends AdminModel
 			$registry      = new Registry($item->attribs);
 			$item->attribs = $registry->toArray();
 
-			// Convert the fields field to an array.
-			$registry     = new Registry($item->fields);
-			$item->fields = $registry->toArray();
-
-			// Convert the fields field to an array.
-			$registry      = new Registry($item->filters);
-			$item->filters = $registry->toArray();
+			// Convert the presets field to an array.
+			$registry      = new Registry($item->presets);
+			$item->presets = $registry->toArray();
 
 			// Get Tags
 			$item->tags = new TagsHelper;
@@ -129,7 +125,7 @@ class PrototypeModelCategory extends AdminModel
 
 		// Set Placemark link
 		$form->setFieldAttribute('placemark_demo', 'placemarkurl',
-			Uri::base(true) . '/index.php?option=com_prototype&task=category.getPlacemark&id=' . $id);
+			Uri::base(true) . '/index.php?option=com_prototype&task=category.presetDemo&id=' . $id);
 
 		return $form;
 	}
@@ -185,7 +181,6 @@ class PrototypeModelCategory extends AdminModel
 			$table->newTags = $data['tags'];
 		}
 
-
 		// Include the plugins for the save events.
 		PluginHelper::importPlugin($this->events_map['save']);
 
@@ -195,17 +190,16 @@ class PrototypeModelCategory extends AdminModel
 			$data['metadata'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
 		}
 
-		if (isset($data['fields']) && is_array($data['fields']))
+		if (isset($data['presets']) && is_array($data['presets']))
 		{
-			$registry       = new Registry($data['fields']);
-			$data['fields'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
+			foreach ($data['presets'] as &$preset)
+			{
+				$preset['key'] = trim($preset['price']) . '|' . trim($preset['delivery']) . '|' . trim($preset['object']);
+			}
+			$registry        = new Registry($data['presets']);
+			$data['presets'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 		}
 
-		if (isset($data['filters']) && is_array($data['filters']))
-		{
-			$registry        = new Registry($data['filters']);
-			$data['filters'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));;
-		}
 
 		// Load the row if saving an existing type.
 		if ($pk > 0)

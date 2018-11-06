@@ -2,11 +2,9 @@
 <config>
 	<fieldset name="global" label="JGLOBAL_FIELDSET_OPTIONS">
 		<field name="sef_advanced" type="hidden" default="1"/>
-
 		<field name="admin_email" type="text"
 			   class="input-xxlarge"
 			   label="COM_PROTOTYPE_PARAMS_ADMIN_EMAIL"/>
-
 		<field name="items_limit" type="list"
 			   label="COM_PROTOTYPE_PARAMS_ITEMS_LIMIT"
 			   default="10">
@@ -36,6 +34,14 @@
 			   label="COM_PROTOTYPE_PARAMS_MAP_LAYOUT"
 			   extension="com_prototype"
 			   view="map"/>
+	</fieldset>
+	<fieldset name="presets" label="COM_PROTOTYPE_PRESETS"
+			  addfieldpath="/administrator/components/com_prototype/models/fields">
+		<fields name="presets">
+			<field name="price" type="presetsconfig" label="COM_PROTOTYPE_PRESETS_PRICE"/>
+			<field name="delivery" type="presetsconfig" label="COM_PROTOTYPE_PRESETS_DELIVERY"/>
+			<field name="object" type="presetsconfig" label="COM_PROTOTYPE_PRESETS_OBJECT"/>
+		</fields>
 	</fieldset>
 	<fieldset name="permissions"
 			  label="JCONFIG_PERMISSIONS_LABEL"

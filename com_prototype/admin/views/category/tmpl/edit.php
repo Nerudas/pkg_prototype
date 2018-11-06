@@ -23,6 +23,7 @@ HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
 HTMLHelper::stylesheet('media/com_prototype/css/admin-category.min.css', array('version' => 'auto'));
+HTMLHelper::_('script', 'media/com_prototype/js/admin-category.min.js', array('version' => 'auto'));
 
 $doc->addScriptDeclaration('
 	Joomla.submitbutton = function(task)
@@ -66,17 +67,18 @@ $doc->addScriptDeclaration('
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 		<?php
-		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'fields', Text::_('COM_PROTOTYPE_CATEGORY_FIELDS'));
+		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'presets', Text::_('COM_PROTOTYPE_PRESETS'));
 		?>
 		<div class="row-fluid">
-			<div class="span6">
-				<?php echo $this->form->renderFieldSet('fields'); ?>
+			<div class="span9">
+				<?php echo $this->form->getInput('presets'); ?>
+				<input type="hidden" name="preset_demo" value="">
 			</div>
-			<div class="span6">
-				<?php echo $this->form->renderFieldSet('filters'); ?>
+			<div class="span3">
+				<?php echo $this->form->getInput('placemark_demo'); ?>
+
 			</div>
 		</div>
-
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 		<?php

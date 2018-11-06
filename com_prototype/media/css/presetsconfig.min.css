@@ -1,0 +1,1 @@
+[data-input-presetsconfig] .item[data-key="preset_X"]{display:none}[data-input-presetsconfig] .item{margin:10px 0}[data-input-presetsconfig] .result .item .actions .add{display:none}[data-input-presetsconfig] .result .item:last-child .actions .add{display:inline-block}[data-input-presetsconfig] .result.sortable .item:not(.ui-sortable-helper){opacity:.6}

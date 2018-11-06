@@ -1,0 +1,29 @@
+/*
+ * @package    Prototype Component
+ * @version    1.3.0
+ * @author     Nerudas  - nerudas.ru
+ * @copyright  Copyright (c) 2013 - 2018 Nerudas. All rights reserved.
+ * @license    GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
+ * @link       https://nerudas.ru
+ */
+
+
+[data-input-presetsconfig] .item[data-key="preset_X"] {
+	display: none;
+}
+
+[data-input-presetsconfig] .item {
+	margin: 10px 0;
+}
+
+[data-input-presetsconfig] .result .item .actions .add {
+	display: none;
+}
+
+[data-input-presetsconfig] .result .item:last-child .actions .add {
+	display: inline-block;
+}
+
+[data-input-presetsconfig] .result.sortable .item:not(.ui-sortable-helper) {
+	opacity: 0.6;
+}

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <form>
 	<fieldset>
 		<field name="id" type="text"
@@ -30,6 +29,34 @@
 			   filename="icon"/>
 		<field name="lft" type="hidden" filter="unset"/>
 		<field name="rgt" type="hidden" filter="unset"/>
+		<field name="placemark_demo" type="map"
+			   setplacemark="true"/>
+
+		<field name="presets" type="subform" multiple="true" label="COM_PROTOTYPE_PRESETS"
+			   layout="joomla.form.field.subform.repeatable-table">
+			<form>
+				<field name="title" type="text" label="COM_PROTOTYPE_PRESETS_TITLE" class="input-xlarge"/>
+				<field name="price" type="catpreset" preset="price" class="span12"
+					   label="COM_PROTOTYPE_PRESETS_PRICE"
+					   default="none">
+					<option value="none">COM_PROTOTYPE_PRESETS_PRICE_SELECT</option>
+				</field>
+				<field name="delivery" type="catpreset" preset="delivery" class="span12"
+					   label="COM_PROTOTYPE_PRESETS_DELIVERY"
+					   default="none">
+					<option value="none">COM_PROTOTYPE_PRESETS_DELIVERY_SELECT</option>
+				</field>
+				<field name="object" type="catpreset" preset="object" class="span12"
+					   label="COM_PROTOTYPE_PRESETS_OBJECT"
+					   default="none">
+					<option value="none">COM_PROTOTYPE_PRESETS_OBJECT_SELECT</option>
+				</field>
+				<field name="placemark" type="catpreset" preset="placemark"
+					   label="COM_PROTOTYPE_PRESETS_PLACEMARK"/>
+				<field name="demo" type="catpreset" preset="demo"
+					   label="COM_PROTOTYPE_PRESETS_DEMO"/>
+			</form>
+		</field>
 	</fieldset>
 	<fieldset name="global" label="COM_REMZONA_ATTRIBS_FIELDSET_LABEL">
 		<field name="parent_id" type="prototypecategory"
@@ -55,105 +82,8 @@
 		<field name="images_folder" type="folder"
 			   label="JGLOBAL_FIELD_IMAGES_FOLDER_LABEL"/>
 	</fieldset>
-	<fieldset name="fields" label="COM_PROTOTYPE_CATEGORY_FIELDS">
-		<field type="note" label="COM_PROTOTYPE_CATEGORY_FIELDS"/>
-		<fields name="fields" label="COM_PROTOTYPE_CATEGORY_FIELDS">
-			<field name="price_m3" type="radio"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_M3"
-				   default="0"
-				   class="btn-group btn-group-yesno">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="price_t" type="radio"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_T"
-				   default="0"
-				   class="btn-group btn-group-yesno">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="price_h" type="radio"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_H"
-				   default="0"
-				   class="btn-group btn-group-yesno">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="price_s" type="radio"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_S"
-				   default="0"
-				   class="btn-group btn-group-yesno">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="price_o" type="radio"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_O"
-				   default="0"
-				   class="btn-group btn-group-yesno">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="why_you" type="radio"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_WHY_YOU"
-				   default="0"
-				   class="btn-group btn-group-yesno">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="comment" type="radio"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_COMMENT"
-				   default="0"
-				   class="btn-group btn-group-yesno">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="discussion_link" type="radio"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_DISCUSSION_LINK"
-				   default="0"
-				   class="btn-group btn-group-yesno">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-		</fields>
-	</fieldset>
-	<fieldset name="filters" label="COM_PROTOTYPE_CATEGORY_FILTERS">
-		<field type="note" label="COM_PROTOTYPE_CATEGORY_FILTERS"/>
-		<fields name="filters" label="COM_PROTOTYPE_CATEGORY_FILTERS">
-			<field name="price_m3t" type="radio"
-				   label="COM_PROTOTYPE_CATEGORY_FILTERS_PRICE_M3T"
-				   default="0"
-				   class="btn-group btn-group-yesno">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="price_hs" type="radio"
-				   label="COM_PROTOTYPE_CATEGORY_FILTERS_PRICE_HS"
-				   default="0"
-				   class="btn-group btn-group-yesno">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-		</fields>
-	</fieldset>
 
 	<fieldset name="attribs" label="JGLOBAL_FIELDSET_OPTIONS">
-		<field name="placemark_demo" type="map"
-			   label="COM_PROTOTYPE_PLACEMARK_DEMO"
-			   setplacemark="true"/>
-		<field name="placemark_id" type="sql"
-			   label="COM_PROTOTYPE_PARAMS_PLACEMARK"
-			   query="SELECT id, title FROM #__prototype_placemarks ORDER BY title asc"
-			   key_field="id"
-			   value_field="title">
-		</field>
-		<field name="balloon_layout" type="layout"
-			   label="COM_PROTOTYPE_PARAMS_BALLOON"
-			   folder="balloons">
-		</field>
-		<field name="listitem_layout" type="layout"
-			   label="COM_PROTOTYPE_PARAMS_LISTITEM"
-			   folder="listitems">
-		</field>
 		<field name="front_created" type="list"
 			   label="COM_PROTOTYPE_CATEGORY_FRONT_CREATED"
 			   default="1">
@@ -162,9 +92,6 @@
 			<option value="2">COM_PROTOTYPE_CATEGORY_FRONT_CREATED_PUBLICATION</option>
 		</field>
 		<fields name="attribs" label="JGLOBAL_FIELDSET_OPTIONS">
-			<field name="item_publish_down" type="pluspublishdown"
-				   label="COM_PROTOTYPE_CATEGORY_ITEM_PUBLISH_DOWN"
-				   showon="front_created:2"/>
 			<field name="list_layout" type="componentlayout"
 				   label="COM_PROTOTYPE_PARAMS_LIST_LAYOUT"
 				   useglobal="true"

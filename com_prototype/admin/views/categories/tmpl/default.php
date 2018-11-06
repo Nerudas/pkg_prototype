@@ -71,9 +71,6 @@ $columns = 7;
 					<th style="min-width:100px">
 						<?php echo Text::_('JTAG'); ?>
 					</th>
-					<th width="30%" class="nowrap hidden-phone">
-						<?php echo Text::_('COM_PROTOTYPE_PLACEMARK'); ?>
-					</th>
 					<th width="10%" class="nowrap hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'c.access', $listDirn, $listOrder); ?>
 					</th>
@@ -191,9 +188,6 @@ $columns = 7;
 								<?php endforeach; ?>
 
 							<?php endif; ?>
-						</td>
-						<td class="hidden-phone center">
-							<?php echo $item->placemark_demo; ?>
 						</td>
 						<td class="small hidden-phone">
 							<?php echo $this->escape($item->access_level); ?>

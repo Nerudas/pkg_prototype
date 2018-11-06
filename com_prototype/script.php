@@ -335,4 +335,52 @@ class com_PrototypeInstallerScript
 			}
 		}
 	}
+
+	/**
+	 * Change database structure && delete association
+	 *
+	 * @param  \stdClass $parent - Parent object calling object.
+	 *
+	 * @return void
+	 *
+	 * @since  1.0.0
+	 */
+	public function update($parent)
+	{
+		$db = Factory::getDbo();
+
+		$db->setQuery("DROP TABLE IF EXISTS  #__prototype_placemarks")->execute();
+		if (JFolder::exists(JPATH_ROOT . '/images/prototype/placemarks'))
+		{
+			JFolder::delete(JPATH_ROOT . '/images/prototype/placemarks');
+		}
+
+		$table   = '#__prototype_categories';
+		$columns = $db->getTableColumns($table);
+		if (isset($columns['fields']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP fields")->query();
+		}
+		if (isset($columns['filters']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP filters")->query();
+		}
+		if (isset($columns['placemark_id']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP placemark_id")->query();
+		}
+		if (isset($columns['balloon_layout']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP balloon_layout")->query();
+		}
+		if (isset($columns['listitem_layout']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP listitem_layout")->query();
+		}
+		if (!isset($columns['hits']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `presets` LONGTEXT NOT NULL DEFAULT '' AFTER `attribs`")
+				->query();
+		}
+	}
 }
