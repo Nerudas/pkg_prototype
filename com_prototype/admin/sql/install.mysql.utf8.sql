@@ -57,16 +57,3 @@ CREATE TABLE IF NOT EXISTS `#__prototype_categories` (
 	ENGINE = MyISAM
 	DEFAULT CHARSET = utf8
 	AUTO_INCREMENT = 0;
-
-CREATE TABLE IF NOT EXISTS `#__prototype_placemarks` (
-	`id`     INT(11)      NOT NULL AUTO_INCREMENT,
-	`title`  VARCHAR(255) NOT NULL DEFAULT '',
-	`images` LONGTEXT     NOT NULL DEFAULT '',
-	`layout` TEXT         NOT NULL DEFAULT '',
-	`state`  TINYINT(3)   NOT NULL DEFAULT '0',
-	`access` INT(10)      NOT NULL DEFAULT '0',
-	UNIQUE KEY `id` (`id`)
-)
-	ENGINE = MyISAM
-	DEFAULT CHARSET = utf8
-	AUTO_INCREMENT = 0;
