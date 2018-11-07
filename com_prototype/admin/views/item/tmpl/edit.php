@@ -23,6 +23,7 @@ HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
 HTMLHelper::stylesheet('media/com_prototype/css/admin-item.min.css', array('version' => 'auto'));
+HTMLHelper::script('media/com_prototype/js/admin-item.min.js', array('version' => 'auto'));
 
 $doc->addScriptDeclaration('
 	Joomla.submitbutton = function(task)
@@ -33,12 +34,13 @@ $doc->addScriptDeclaration('
 		}
 	};
 ');
+
 ?>
 <form action="<?php echo Route::_('index.php?option=com_prototype&view=items&id=' . $this->item->id); ?>"
 	  method="post"
 	  name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 	<div class="form-inline form-inline-header">
-		<?php echo $this->form->renderFieldset('title'); ?>
+		<?php echo $this->form->renderFieldset('header'); ?>
 	</div>
 	<div class="form-horizontal">
 		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
@@ -47,12 +49,7 @@ $doc->addScriptDeclaration('
 		<div class="row-fluid">
 			<div class="span9">
 				<fieldset class="adminform">
-					<?php
-					if (!empty($this->form->getGroup('extra')))
-					{
-						echo $this->form->renderFieldset('extra');
-					}
-					?>
+					<?php echo $this->form->renderFieldset('content'); ?>
 				</fieldset>
 			</div>
 			<div class="span3">
@@ -62,12 +59,6 @@ $doc->addScriptDeclaration('
 			</div>
 		</div>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-
-		<?php
-		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'html', Text::_('COM_PROTOTYPE_ITEM_HTML'));
-		echo $this->form->getInput('html');
-		echo HTMLHelper::_('bootstrap.endTab');
-		?>
 
 		<?php
 		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'images', Text::_('COM_PROTOTYPE_ITEM_IMAGES'));

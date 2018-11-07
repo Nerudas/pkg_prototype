@@ -194,7 +194,10 @@ class PrototypeModelCategory extends AdminModel
 		{
 			foreach ($data['presets'] as &$preset)
 			{
-				$preset['key'] = trim($preset['price']) . '|' . trim($preset['delivery']) . '|' . trim($preset['object']);
+				$uri = Uri::getInstance($preset['icon']);
+				$uri->delVar('v');
+				$preset['icon'] = $uri->toString();
+				$preset['key']  = trim($preset['price']) . '|' . trim($preset['delivery']) . '|' . trim($preset['object']);
 			}
 			$registry        = new Registry($data['presets']);
 			$data['presets'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));

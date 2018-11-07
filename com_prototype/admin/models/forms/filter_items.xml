@@ -9,10 +9,10 @@
 			<option value="-2">JTRASHED</option>
 		</field>
 		<field name="publish_down" type="list" onchange="this.form.submit();">
-			<option value="">JGLOBAL_FIELD_PUBLISH_DOWN_LABEL</option>
-			<option value="3 day">COM_PROTOTYPE_FILTER_PUBLISH_DOWN_3DAY</option>
-			<option value="1 week">COM_PROTOTYPE_FILTER_PUBLISH_DOWN_1WEEK</option>
-			<option value="1 month">COM_PROTOTYPE_FILTER_PUBLISH_DOWN_1MONTH</option>
+			<option value="">JGLOBAL_FIELD_PAYMENT_DOWN_LABEL</option>
+			<option value="3 day">COM_PROTOTYPE_FILTER_PAYMENT_DOWN_3DAY</option>
+			<option value="1 week">COM_PROTOTYPE_FILTER_PAYMENT_DOWN_1WEEK</option>
+			<option value="1 month">COM_PROTOTYPE_FILTER_PAYMENT_DOWN_1MONTH</option>
 			<option value="never">JNEVER</option>
 		</field>
 		<field name="payment_number" class="input-xlarge" type="text" hint="COM_PROTOTYPE_ITEM_PAYMENT_NUMBER"/>
@@ -44,8 +44,8 @@
 			<option value="i.created_by DESC">JAUTHOR_DESC</option>
 			<option value="i.created ASC">JDATE_ASC</option>
 			<option value="i.created DESC">JDATE_DESC</option>
-			<option value="i.publish_down ASC">COM_PROTOTYPE_ITEM_PUBLISH_DOWN_ASC</option>
-			<option value="i.publish_down DESC">COM_PROTOTYPE_ITEM_PUBLISH_DOWN_DESC</option>
+			<option value="i.publish_down ASC">COM_PROTOTYPE_ITEM_PAYMENT_DOWN_ASC</option>
+			<option value="i.publish_down DESC">COM_PROTOTYPE_ITEM_PAYMENT_DOWN_DESC</option>
 		</field>
 		<field name="limit" type="limitbox"
 			   class="inputbox input-mini"

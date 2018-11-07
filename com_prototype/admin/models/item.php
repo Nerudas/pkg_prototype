@@ -69,9 +69,7 @@ class PrototypeModelItem extends AdminModel
 			$item->tags = new TagsHelper;
 			$item->tags->getItemTags($item->id, 'com_prototype.item');
 
-			// Convert the extra field to an array.
-			$registry    = new Registry($item->extra);
-			$item->extra = $registry->toArray();
+			$item->preset = trim($item->preset_price) . '|' . trim($item->preset_delivery) . '|' . trim($item->preset_object);
 
 			$item->published = $item->state;
 		}
@@ -198,13 +196,6 @@ class PrototypeModelItem extends AdminModel
 			if ($category->front_created == 2)
 			{
 				$data['state'] = 1;
-
-				$auto_publish_down = $category->attribs->get('item_publish_down', false);
-				if ($auto_publish_down && !empty($auto_publish_down->number))
-				{
-					$data['publish_down'] = Factory::getDate('+ ' . $auto_publish_down->number . ' ' .
-						$auto_publish_down->variable)->toSql();
-				}
 			}
 			elseif ($category->front_created == 0)
 			{
@@ -212,11 +203,11 @@ class PrototypeModelItem extends AdminModel
 			}
 		}
 
-		if (!empty($data['plus_publish_down']) && is_array($data['plus_publish_down'])
-			&& !empty($data['plus_publish_down']['number']))
+		if (!empty($data['plus_payment_down']) && is_array($data['plus_payment_down'])
+			&& !empty($data['plus_payment_down']['number']))
 		{
-			$data['publish_down'] = Factory::getDate('+ ' . $data['plus_publish_down']['number'] . ' ' .
-				$data['plus_publish_down']['variable'])->toSql();
+			$data['payment_down'] = Factory::getDate('+ ' . $data['plus_payment_down']['number'] . ' ' .
+				$data['plus_payment_down']['variable'])->toSql();
 		}
 
 		if (empty($data['created']))
@@ -270,28 +261,6 @@ class PrototypeModelItem extends AdminModel
 			$data['region'] = ($app->isSite()) ? $regionsModel->getVisitorRegion()->id : $regionsModel->getProfileRegion($data['created_by'])->id;
 		}
 		$region = $regionsModel->getRegion($data['region']);
-
-		if (!empty($data['extra']) && $catid > 1 && $category)
-		{
-			$categoryFields = (!empty($category->fields)) ? $category->fields : array();
-			foreach ($data['extra'] as $name => $value)
-			{
-				if (empty($categoryFields[$name]))
-				{
-					unset($data['extra'][$name]);
-				}
-			}
-		}
-		else
-		{
-			$data['extra'] = array();
-		}
-
-		if (isset($data['extra']) && is_array($data['extra']))
-		{
-			$registry      = new Registry($data['extra']);
-			$data['extra'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
-		}
 
 		// Get tags search
 		$data['tags'] = (!empty($category) && !empty($category->items_tags)) ? explode(',', $category->items_tags) : array();
@@ -503,7 +472,7 @@ class PrototypeModelItem extends AdminModel
 			$table = '#__prototype_items';
 			$db    = Factory::getDbo();
 			$query = $db->getQuery(true)
-				->select(array('id', 'publish_down'))
+				->select(array('id', 'payment_down'))
 				->from($table)
 				->where('id IN(' . implode(',', $pks) . ')');
 			$db->setQuery($query);
@@ -511,9 +480,9 @@ class PrototypeModelItem extends AdminModel
 
 			foreach ($items as $item)
 			{
-				$publish_down       = ($item->publish_down > 0 && $item->publish_down > Factory::getDate()->toSql()) ?
-					$item->publish_down : Factory::getDate()->toSql();
-				$item->publish_down = Factory::getDate($publish_down . ' +' . $plus)->toSql();
+				$payment_down       = ($item->payment_down > 0 && $item->payment_down > Factory::getDate()->toSql()) ?
+					$item->payment_down : Factory::getDate()->toSql();
+				$item->payment_down = Factory::getDate($payment_down . ' +' . $plus)->toSql();
 
 				$db->updateObject($table, $item, array('id'));
 			}

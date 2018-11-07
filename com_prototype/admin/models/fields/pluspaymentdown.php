@@ -16,7 +16,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 
 FormHelper::loadFieldClass('list');
 
-class JFormFieldPlusPublishDown extends JFormFieldList
+class JFormFieldPlusPaymentDown extends JFormFieldList
 {
 	/**
 	 * The form field type.
@@ -24,7 +24,7 @@ class JFormFieldPlusPublishDown extends JFormFieldList
 	 * @var    string
 	 * @since  1.0.3
 	 */
-	protected $type = 'PlusPublishDown';
+	protected $type = 'plusPaymentDown';
 
 	/**
 	 * Method to get the field input markup for a generic list.
@@ -76,7 +76,7 @@ class JFormFieldPlusPublishDown extends JFormFieldList
 		{
 			$option           = new stdClass();
 			$option->value    = $date;
-			$option->text     = Text::_('COM_PROTOTYPE_FILED_PLUS_PUBLISH_DOWN_' . $date);
+			$option->text     = Text::_('COM_PROTOTYPE_FILED_PLUS_PAYMENT_DOWN_' . $date);
 			$option->selected = ($value['variable'] == $date);
 
 			$options[] = $option;

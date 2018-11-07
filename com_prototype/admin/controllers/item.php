@@ -15,6 +15,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Component\ComponentHelper;
 
 class PrototypeControllerItem extends FormController
 {
@@ -56,83 +57,66 @@ class PrototypeControllerItem extends FormController
 	 */
 	public function getPlacemark()
 	{
-		$app           = Factory::getApplication();
-		$data          = $this->input->post->get('jform', array(), 'array');
-		$data['image'] = (!empty($data['images']) && !empty(reset($data['images'])['src'])) ?
-			reset($data['images'])['src'] : false;
+		$data = $this->input->post->get('jform', array(), 'array');
 
-		$item          = new Registry($data);
-		$data['extra'] = (isset($data['extra'])) ? $data['extra'] : array();
-		$extra         = new Registry($data['extra']);
-
-		$category = array();
-		if (!empty($data['catid']))
+		if (empty($data['catid']) || empty($data['preset']))
 		{
-			$category = $this->getModel('Category')->getItem($data['catid']);
-			if ($category && empty($data['placemark_id']))
+			return $this->returnDefaultPlacemark();
+		}
+
+		$category = $this->getModel('Category')->getItem($data['catid']);
+		if (empty($category) || empty($category->presets))
+		{
+			return $this->returnDefaultPlacemark();
+		}
+
+		$registry = new Registry(ComponentHelper::getParams('com_prototype')->get('presets', array()));
+		$configs  = $registry->toArray();
+
+		$configPresets = array();
+		foreach ($configs as $key => $config)
+		{
+			if (!isset($configPresets[$key]))
 			{
-				$data['placemark_id'] = $category->placemark_id;
+				$configPresets[$key] = array();
+			}
+			foreach ($config as $conf)
+			{
+				$configPresets[$key][$conf['value']] = new Registry($conf);
 			}
 		}
-		$category     = new Registry($category);
-		$extra_filter = new Registry(array());
 
-		$placemark = array();
-		if (!empty($data['placemark_id']))
+		$presets = array();
+		foreach ($category->presets as &$preset)
 		{
-			$placemark = $this->getModel('Placemark')->getItem($data['placemark_id']);
-
-			if ($placemark)
-			{
-				$imagesHelper = new FieldTypesFilesHelper();
-
-				$registry          = new Registry($placemark->images);
-				$placemark->images = $registry->toArray();
-				$imageFolder       = 'images/prototype/placemarks/' . $placemark->id;
-				$placemark->images = $imagesHelper->getImages('content', $imageFolder, $placemark->images,
-					array('text' => true, 'for_field' => false));
-				$placemark->image  = (!empty($placemark->images) && !empty(reset($placemark->images)->src)) ?
-					reset($placemark->images)->src : false;
-			}
-		}
-		$placemark = new Registry($placemark);
-
-		$db    = Factory::getDbo();
-		$query = $db->getQuery(true)
-			->select('template')
-			->from('#__template_styles')
-			->where('client_id = 0')
-			->order('home DESC ');
-		$db->setQuery($query);
-		$templates   = $db->loadColumn();
-		$layoutPaths = array();
-		$language    = Factory::getLanguage();
-		foreach (array_unique($templates) as $template)
-		{
-			$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
-			$language->load('tpl_' . $template, JPATH_SITE, $language->getTag(), true);
-		}
-		$layoutPaths[] = JPATH_ROOT . '/layouts';
-
-		$layoutName = $placemark->get('layout', 'default');
-		if (!JPath::find($layoutPaths, 'components/com_prototype/placemarks/' . $layoutName . '.php'))
-		{
-			$layoutName = 'default';
+			$preset['price_title']    = (!empty($configPresets['price'][$preset['price']])) ?
+				$configPresets['price'][$preset['price']]->get('title', $preset['price']) : $preset['price'];
+			$preset['delivery_title'] = (!empty($configPresets['delivery'][$preset['delivery']])) ?
+				$configPresets['delivery'][$preset['delivery']]->get('title', $preset['delivery']) : $preset['delivery'];
+			$preset['object_title']   = (!empty($configPresets['object'][$preset['object']])) ?
+				$configPresets['object'][$preset['object']]->get('title', $preset['object']) : $preset['object'];
+			$presets[$preset['key']]  = $preset;
 		}
 
-		$layoutID = 'components.com_prototype.placemarks.' . $layoutName;
-		$layout   = new FileLayout($layoutID);
-		$layout->setIncludePaths($layoutPaths);
+		if (empty($presets[$data['preset']]))
+		{
+			return $this->returnDefaultPlacemark();
+		}
+		$preset = $presets[$data['preset']];
 
-		$displayData = array(
-			'item'         => $item,
-			'extra'        => $extra,
-			'category'     => $category,
-			'extra_filter' => $extra_filter,
-			'placemark'    => $placemark
-		);
+		$presetPrice = (!empty($configPresets['price'][$preset['price']])) ? $configPresets['price'][$preset['price']] : false;
+		$presetIcon  = (!empty($preset['icon'])) ? $preset['icon'] : '';
 
-		$html = $layout->render($displayData);
+		$placemark = new Registry();
+		$placemark->set('id', $data['id']);
+		$placemark->set('title', $data['title']);
+		$placemark->set('price', $data['price']);
+		$placemark->set('preset_price', $presetPrice);
+		$placemark->set('preset_icon', $presetIcon);
+		$placemark->set('show_price', (!empty($data['price'])));
+
+		$layout = new FileLayout('components.com_prototype.map.placemark');
+		$html   = $layout->render(array('placemark' => $placemark));
 		preg_match('/data-placemark-coordinates="([^"]*)"/', $html, $matches);
 		$coordinates = '[]';
 		if (!empty($matches[1]))
@@ -150,9 +134,51 @@ class PrototypeControllerItem extends FormController
 		$options['iconShape']   = $iconShape;
 
 		echo new JsonResponse($options);
-		$app->close();
+		Factory::getApplication()->close();
 
 		return true;
+	}
+
+	/**
+	 * Method to return default placemark
+	 *
+	 * @return bool
+	 *
+	 * @since 1.3.0
+	 */
+	protected function returnDefaultPlacemark()
+	{
+		$data      = $this->input->post->get('jform', array(), 'array');
+		$placemark = new Registry();
+		$placemark->set('id', $data['id']);
+		$placemark->set('title', $data['title']);
+		$placemark->set('price', $data['price']);
+		$placemark->set('preset_price');
+		$placemark->set('preset_icon');
+		$placemark->set('show_price', (!empty($data['price'])));
+
+		$layout = new FileLayout('components.com_prototype.map.placemark');
+		$html   = $layout->render(array('placemark' => $placemark));
+		preg_match('/data-placemark-coordinates="([^"]*)"/', $html, $matches);
+		$coordinates = '[]';
+		if (!empty($matches[1]))
+		{
+			$coordinates = $matches[1];
+			$html        = str_replace($matches[0], '', $html);
+		}
+
+		$options                 = array();
+		$options['customLayout'] = $html;
+
+		$iconShape              = new stdClass();
+		$iconShape->type        = 'Polygon';
+		$iconShape->coordinates = json_decode($coordinates);
+		$options['iconShape']   = $iconShape;
+
+		echo new JsonResponse($options);
+		Factory::getApplication()->close();
+
+		return false;
 	}
 
 	/**
@@ -164,7 +190,7 @@ class PrototypeControllerItem extends FormController
 	 */
 	public function prolong_3d()
 	{
-		$this->prolong('3 day');
+		$this->prolong(array(3, 'day'));
 	}
 
 	/**
@@ -176,7 +202,7 @@ class PrototypeControllerItem extends FormController
 	 */
 	public function prolong_1w()
 	{
-		$this->prolong('1 week');
+		$this->prolong(array(1, 'week'));
 	}
 
 	/**
@@ -188,26 +214,29 @@ class PrototypeControllerItem extends FormController
 	 */
 	public function prolong_1m()
 	{
-		$this->prolong('1 month');
+		$this->prolong(array(1, 'month'));
 	}
 
 	/**
 	 * Method to prolong items.
 	 *
-	 * @param string $plus date plus publish_down
+	 * @param array$plus date plus publish_down
 	 *
 	 * @return  bool
 	 *
 	 * @since  1.0.0
 	 */
-	public function prolong($plus = '')
+	public function prolong($plus = array())
 	{
 		$data = $this->input->post->get('jform', array(), 'array');
 
-		$publish_down         = ($data['publish_down'] > 0 &&
-			Factory::getDate($data['publish_down'])->toSql() > Factory::getDate()->toSql()) ? $data['publish_down'] :
-			Factory::getDate()->format('d-m-Y h:i:s');
-		$data['publish_down'] = Factory::getDate($publish_down . ' +' . $plus)->format('d-m-Y h:i:s');
+		if (!empty($plus))
+		{
+			$data['plus_payment_down'] = array(
+				'number'   => $plus[0],
+				'variable' => $plus[1],
+			);
+		}
 
 		$this->input->post->set('jform', $data);
 		$this->task = 'apply';

@@ -61,8 +61,8 @@ $columns = 9;
 					<th width="15%" class="nowrap hidden-phone">
 						<?php echo Text::_('COM_PROTOTYPE_ITEM_PAYMENT_NUMBER'); ?>
 					</th>
-					<th width="15%" class="nowrap hidden-phone">
-						<?php echo Text::_('COM_PROTOTYPE_PLACEMARK'); ?>
+					<th width="10%" class="nowrap hidden-phone">
+						<?php echo HTMLHelper::_('searchtools.sort', 'COM_PROTOTYPE_ITEM_PAYMENT_DOWN', 'i.payment_down', $listDirn, $listOrder); ?>
 					</th>
 					<th width="10%" class="nowrap hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JAUTHOR', 'i.created_by', $listDirn, $listOrder); ?>
@@ -72,9 +72,6 @@ $columns = 9;
 					</th>
 					<th width="10%" class="nowrap hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_CREATED_DATE', 'i.created', $listDirn, $listOrder); ?>
-					</th>
-					<th width="10%" class="nowrap hidden-phone">
-						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_FIELD_PUBLISH_DOWN_LABEL', 'i.publish_down', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%" class="nowrap hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_HITS', 'i.hits', $listDirn, $listOrder); ?>
@@ -107,7 +104,7 @@ $columns = 9;
 								   href="<?php echo Route::_('index.php?option=com_prototype&task=item.edit&id=' . $item->id); ?>">
 									<span class="icon-apply icon-white"></span>
 								</a>
-								<?php echo HTMLHelper::_('jgrid.published', $item->state, $i, 'items.', $canChange, 'cb', $item->created, $item->publish_down); ?>
+								<?php echo HTMLHelper::_('jgrid.published', $item->state, $i, 'items.', $canChange, 'cb', $item->created); ?>
 								<?php
 								if ($canChange)
 								{
@@ -141,8 +138,9 @@ $columns = 9;
 								<?php echo $this->escape($item->payment_number); ?>
 							</a>
 						</td>
-						<td class="hidden-phone center">
-							<?php echo $item->placemark_demo; ?>
+						<td class="small hidden-phone">
+							<?php echo $item->payment_down > 0 ? HTMLHelper::_('date', $item->payment_down,
+								Text::_('DATE_FORMAT_LC2')) : '-' ?>
 						</td>
 						<td class="hidden-phone">
 							<?php if ((int) $item->created_by != 0) : ?>
@@ -182,10 +180,7 @@ $columns = 9;
 							<?php echo $item->created > 0 ? HTMLHelper::_('date', $item->created,
 								Text::_('DATE_FORMAT_LC2')) : '-' ?>
 						</td>
-						<td class="small hidden-phone">
-							<?php echo $item->publish_down > 0 ? HTMLHelper::_('date', $item->publish_down,
-								Text::_('DATE_FORMAT_LC2')) : '-' ?>
-						</td>
+
 						<td class="hidden-phone center">
 							<span class="badge badge-info">
 								<?php echo (int) $item->hits; ?>

@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
 
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
@@ -377,10 +378,110 @@ class com_PrototypeInstallerScript
 		{
 			$db->setQuery("ALTER TABLE " . $table . " DROP listitem_layout")->query();
 		}
-		if (!isset($columns['hits']))
+		if (!isset($columns['presets']))
 		{
 			$db->setQuery("ALTER TABLE " . $table . " ADD `presets` LONGTEXT NOT NULL DEFAULT '' AFTER `attribs`")
 				->query();
+		}
+
+		// Items
+		$table   = '#__prototype_items';
+		$columns = $db->getTableColumns($table);
+		if (!isset($columns['text']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `text` TEXT NOT NULL DEFAULT '' AFTER `title`")
+				->query();
+		}
+		if (!isset($columns['location']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `location` TEXT NOT NULL DEFAULT '' AFTER `text`")
+				->query();
+		}
+		if (!isset($columns['price']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `price` BIGINT NOT NULL DEFAULT '0' AFTER `location`")
+				->query();
+		}
+		if (!isset($columns['preset_price']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `preset_price` TEXT NOT NULL DEFAULT '' AFTER `price`")
+				->query();
+		}
+		if (!isset($columns['preset_delivery']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `preset_delivery` TEXT NOT NULL DEFAULT '' AFTER `preset_price`")
+				->query();
+		}
+		if (!isset($columns['preset_object']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `preset_object` TEXT NOT NULL DEFAULT '' AFTER `preset_delivery`")
+				->query();
+		}
+		if (!isset($columns['external_link']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `external_link` TEXT NOT NULL DEFAULT '' AFTER `preset_object`")
+				->query();
+		}
+		if (!isset($columns['payment_down']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `payment_down`  DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `payment_number`")
+				->query();
+		}
+		if (isset($columns['extra']))
+		{
+			$query = $db->getQuery(true)
+				->select('*')
+				->from($db->quoteName($table));
+			$db->setQuery($query);
+			$items = $db->loadObjectList('id');
+
+			foreach ($items as &$item)
+			{
+				$extra = new Registry($item->extra);
+
+				$item->text            = $extra->get('why_you', $extra->get('comment'));
+				$item->external_link   = $extra->get('discussion_link');
+				$item->price           =
+					$extra->get('price_m3',
+						$extra->get('price_t',
+							$extra->get('price_h',
+								$extra->get('price_s',
+									$extra->get('price_o')
+								)
+							)
+						)
+					);
+				$item->preset_price    = 'null';
+				$item->preset_delivery = 'null';
+				$item->preset_object   = 'null';
+
+				$db->updateObject($table, $item, array('id'));
+			}
+		}
+
+		if (isset($columns['html']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP html")->query();
+		}
+		if (isset($columns['publish_down']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP publish_down")->query();
+		}
+		if (isset($columns['placemark_id']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP placemark_id")->query();
+		}
+		if (isset($columns['balloon_layout']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP balloon_layout")->query();
+		}
+		if (isset($columns['listitem_layout']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP listitem_layout")->query();
+		}
+		if (isset($columns['extra']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP extra")->query();
 		}
 	}
 }
