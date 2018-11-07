@@ -51,8 +51,8 @@
 					   default="none">
 					<option value="none">COM_PROTOTYPE_PRESETS_OBJECT_SELECT</option>
 				</field>
-				<field name="placemark" type="catpreset" preset="placemark"
-					   label="COM_PROTOTYPE_PRESETS_PLACEMARK"/>
+				<field name="icon" type="catpreset" preset="icon"
+					   label="COM_PROTOTYPE_PRESETS_ICON"/>
 				<field name="demo" type="catpreset" preset="demo"
 					   label="COM_PROTOTYPE_PRESETS_DEMO"/>
 			</form>

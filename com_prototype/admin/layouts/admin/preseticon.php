@@ -10,15 +10,11 @@
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Filesystem\File;
 
 extract($displayData);
 
-HTMLHelper::_('jquery.framework');
-HTMLHelper::_('stylesheet', 'media/com_prototype/css/presetpalcemark.min.css', array('version' => 'auto'));
-HTMLHelper::_('script', 'media/com_prototype/js/presetpalcemark.min.js', array('version' => 'auto'));
 
 $filename = '';
 if (!empty($value)) {
@@ -27,7 +23,7 @@ if (!empty($value)) {
 
 ?>
 
-<div id="<?php echo $id; ?>" class="<?php echo $class; ?>" data-input-preset-palcemark="<?php echo $id; ?>"
+<div id="<?php echo $id; ?>" class="<?php echo $class; ?>" data-input-preset-icon="<?php echo $id; ?>"
 	 data-filename="<?php echo $filename; ?>">
 	<div class="form">
 		<div class="action preview">

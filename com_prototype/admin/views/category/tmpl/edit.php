@@ -19,6 +19,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 $app = Factory::getApplication();
 $doc = Factory::getDocument();
 
+HTMLHelper::_('jquery.framework');
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');

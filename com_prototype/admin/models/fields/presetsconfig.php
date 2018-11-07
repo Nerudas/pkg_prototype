@@ -31,7 +31,7 @@ class JFormFieldPresetsConfig extends FormField
 	 *
 	 * @since  1.0.0
 	 */
-	protected $layout = 'components.com_prototype.fields.presetsconfig';
+	protected $layout = 'components.com_prototype.admin.presetsconfig';
 
 	/**
 	 * Method to attach a JForm object to the field.

@@ -57,9 +57,9 @@ class JFormFieldCatPreset extends JFormFieldList
 		{
 			$this->preset = (!empty($this->element['preset'])) ? (string) $this->element['preset'] : null;
 		}
-		if ($this->preset == 'placemark')
+		if ($this->preset == 'icon')
 		{
-			$this->layout = 'components.com_prototype.fields.presetpalcemark';
+			$this->layout = 'components.com_prototype.admin.preseticon';
 		}
 
 		return $return;
@@ -72,7 +72,7 @@ class JFormFieldCatPreset extends JFormFieldList
 			return '<div class="center span12"><a data-preset-demo="' . $this->name . '" class="icon-eye" href="#"></a></div>';
 		}
 
-		if ($this->preset == 'placemark')
+		if ($this->preset == 'icon')
 		{
 			return $this->getRenderer($this->layout)->render($this->getLayoutData());
 		}
@@ -89,9 +89,8 @@ class JFormFieldCatPreset extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		if ($this->preset == 'demo' || $this->preset == 'placemark')
+		if ($this->preset == 'demo' || $this->preset == 'icon')
 		{
-
 			return array();
 		}
 

@@ -10,17 +10,17 @@
 
 (function ($) {
 	$(document).ready(function () {
-		var filenames = [];
+		var presetsIcon = [];
 
-		function presetPlacemarks() {
-			$('[data-input-preset-palcemark]').each(function () {
+		function presets() {
+			$('[data-input-preset-icon]').each(function () {
 				var filename = $(this).data('filename');
 				if (filename == '') {
 					filename = generatePresetPlacemarkFilename($(this).data('filename'));
 				}
 				$(this).data('filename', filename);
 				$(this).attr('data-filename', filename);
-				filenames.push(filename);
+				presetsIcon.push(filename);
 
 
 				let field = $(this),
@@ -182,7 +182,7 @@
 		}
 
 		function generatePresetPlacemarkFilename(filename) {
-			if (filename == '' || jQuery.inArray(filename, filenames) >= 0) {
+			if (filename == '' || jQuery.inArray(filename, presetsIcon) >= 0) {
 				let a = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
 					b = [];
 				for (let i = 0; i < 7; i++) {
@@ -196,16 +196,17 @@
 			return filename;
 		}
 
-		presetPlacemarks();
+		presets();
 
 		$(document).on('subform-row-add', function (event, row) {
 			if ($(row).data('base-name') == 'presets') {
-				presetPlacemarks();
+				presets();
 			}
 		});
 		$(document).on('subform-row-remove', function (event, row) {
-			$(row).find('[data-input-preset-palcemark]').find('a.remove').trigger('click');
+			if ($(row).data('base-name') == 'presets') {
+				$(row).find('[data-input-preset-icon]').find('a.remove').trigger('click');
+			}
 		});
-
 	});
 })(jQuery);
