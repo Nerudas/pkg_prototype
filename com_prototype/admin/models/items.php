@@ -12,13 +12,9 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Registry\Registry;
-
-JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
 
 class PrototypeModelItems extends ListModel
 {
@@ -44,28 +40,29 @@ class PrototypeModelItems extends ListModel
 			$config['filter_fields'] = array(
 				'id', 'i.id',
 				'title', 'i.title',
-				'html', 'i.html',
+				'text', 'i.text',
+				'location', 'i.location',
+				'price', 'i.price',
+				'preset_price', 'i.preset_price',
+				'preset_delivery', 'i.preset_delivery',
+				'preset_object', 'i.preset_object',
+				'external_link', 'i.external_link',
 				'images', 'i.images',
 				'state', 'i.state',
+				'catid', 'i.catid',
 				'created', 'i.created',
 				'created_by', 'i.created_by',
-				'publish_down', 'i.publish_down',
 				'payment_number', 'i.payment_number',
-				'placemark_id', 'i.placemark_id',
-				'balloon_layout', 'i.balloon_layout',
+				'payment_down', 'i.payment_down',
 				'map', 'i.map',
 				'latitude', 'i.latitude',
 				'longitude', 'i.longitude',
 				'attribs', 'i.attribs',
-				'metakey',
-				'metadesc', 'i.metadesc',
 				'access', 'i.access',
 				'hits', 'i.hits',
 				'region', 'i.region',
-				'metadata', 'i.metadata',
 				'tags_search', 'i.tags_search',
 				'tags_map', 'i.tags_map',
-				'extra', 'i.extra',
 			);
 		}
 		parent::__construct($config);
@@ -104,8 +101,8 @@ class PrototypeModelItems extends ListModel
 		$category = $this->getUserStateFromRequest($this->context . '.filter.category', 'filter_category', '');
 		$this->setState('filter.category', $category);
 
-		$publish_down = $this->getUserStateFromRequest($this->context . '.filter.publish_down', 'filter_publish_down', '');
-		$this->setState('filter.publish_down', $publish_down);
+		$payment_down = $this->getUserStateFromRequest($this->context . '.filter.payment_down', 'filter_payment_down', '');
+		$this->setState('filter.payment_down', $payment_down);
 
 		$payment_number = $this->getUserStateFromRequest($this->context . '.filter.payment_number', 'filter_payment_number', '');
 		$this->setState('filter.payment_number', $payment_number);
@@ -137,7 +134,7 @@ class PrototypeModelItems extends ListModel
 		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.region');
 		$id .= ':' . $this->getState('filter.category');
-		$id .= ':' . $this->getState('filter.publish_down');
+		$id .= ':' . $this->getState('filter.payment_down');
 		$id .= ':' . $this->getState('filter.payment_number');
 
 		return parent::getStoreId($id);
@@ -218,22 +215,21 @@ class PrototypeModelItems extends ListModel
 			$query->where($db->quoteName('i.payment_number') . ' = ' . $db->quote($payment_number));
 		}
 
-		$publish_down = $this->getState('filter.publish_down');
-		if (!empty($publish_down))
+		$payment_down = $this->getState('filter.payment_down');
+		if (!empty($payment_down))
 		{
 			$nullDate = $db->getNullDate();
-			if ($publish_down == 'never')
+			if ($payment_down == 'never')
 			{
-				$query->where($db->quoteName('i.publish_down') . ' = ' . $db->Quote($nullDate));
+				$query->where($db->quoteName('i.payment_down') . ' = ' . $db->Quote($nullDate));
 			}
 			else
 			{
-				$now = Factory::getDate($publish_down)->toSql();
-				$query->where($db->quoteName('i.publish_down') . ' != ' . $db->Quote($nullDate));
-				$query->where($db->quoteName('i.publish_down') . '  < ' . $db->Quote($now));
+				$now = Factory::getDate($payment_down)->toSql();
+				$query->where($db->quoteName('i.payment_down') . ' != ' . $db->Quote($nullDate));
+				$query->where($db->quoteName('i.payment_down') . '  < ' . $db->Quote($now));
 			}
 		}
-
 
 		// Filter by created_by
 		$created_by = $this->getState('filter.created_by');
@@ -314,18 +310,15 @@ class PrototypeModelItems extends ListModel
 		if (!empty($items))
 		{
 			$categories = $this->getCategories(array_unique(ArrayHelper::getColumn($items, 'catid')));
-			$imagesHelper         = new FieldTypesFilesHelper();
 			foreach ($items as &$item)
 			{
-				$author_avatar       = $imagesHelper->getImage('avatar', 'images/profiles/' . $item->author_id,
-					'media/com_profiles/images/no-avatar.jpg', false);
-				$item->author_avatar = Uri::root(true) . '/' . $author_avatar;
-
-				// Get Tags
-				$item->tags = new TagsHelper;
-				$item->tags->getItemTags('com_prototype.item', $item->id);
 				// Get Category
-				$item->category = new Registry((!empty($categories[$item->catid])) ? $categories[$item->catid] : array());
+				$category       = (!empty($categories[$item->catid])) ? $categories[$item->catid] : false;
+				$item->category = $category;
+
+				$item_preset = trim($item->preset_price) . '|' . trim($item->preset_delivery) . '|' . trim($item->preset_object);
+
+				$item->preset = (!empty($category) && !empty($category->presets[$item_preset])) ? $category->presets[$item_preset] : false;
 			}
 		}
 
@@ -378,6 +371,12 @@ class PrototypeModelItems extends ListModel
 					$objects = $db->loadObjectList('id');
 					foreach ($objects as $object)
 					{
+						$registry        = new Registry($object->presets);
+						$object->presets = array();
+						foreach ($registry->toArray() as $preset)
+						{
+							$object->presets[$preset['key']] = $preset;
+						}
 						$categories[$object->id]        = $object;
 						$this->_categories[$object->id] = $object;
 					}

@@ -52,8 +52,11 @@ $columns = 9;
 					<th width="1%" class="center">
 						<?php echo HTMLHelper::_('grid.checkall'); ?>
 					</th>
-					<th width="2%" style="min-width:100px" class="center">
+					<th width="2%" style="min-width:100px" class="center hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'i.state', $listDirn, $listOrder); ?>
+					</th>
+					<th width="1%" style="min-width:100px" class="center">
+						<?php echo Text::_('COM_PROTOTYPE_PRESETS_ICON'); ?>
 					</th>
 					<th style="min-width:100px" class="nowrap">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'i.title', $listDirn, $listOrder); ?>
@@ -74,7 +77,7 @@ $columns = 9;
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_CREATED_DATE', 'i.created', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%" class="nowrap hidden-phone">
-						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_HITS', 'i.hits', $listDirn, $listOrder); ?>
+						<?php echo HTMLHelper::_('searchtools.sort', 'COM_PROTOTYPE_ITEMS_HITS', 'i.hits', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%" class="nowrap hidden-phone center">
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'i.id', $listDirn, $listOrder); ?>
@@ -114,6 +117,11 @@ $columns = 9;
 								?>
 							</div>
 						</td>
+						<td class="center hidden-phone">
+							<?php if ($item->preset && !empty($item->preset['icon'])): ?>
+								<?php echo HTMLHelper::image($item->preset['icon'], $item->title); ?>
+							<?php endif; ?>
+						</td>
 						<td>
 							<div>
 								<?php if ($canEdit) : ?>
@@ -127,10 +135,11 @@ $columns = 9;
 							</div>
 							<div class="small">
 								<span><?php echo Text::_('JCATEGORY'); ?>: </span>
-								<?php if ($item->category->get('parent_level') > 1) : ?>
-									<span><?php echo $item->category->get('parent_title'); ?></span>
+								<?php if ($item->category->parent_level > 1) : ?>
+									<span><?php echo $item->category->parent_title; ?></span>
 								<?php endif; ?>
-								<span><?php echo $item->category->get('title', Text::_('JROOT')); ?></span>
+								<span><?php echo(!empty($item->category->title) ? $item->category->title : Text::_('JROOT')); ?></span>
+								<span><?php echo $item->location; ?></span>
 							</div>
 						</td>
 						<td class="hidden-phone">
@@ -138,16 +147,13 @@ $columns = 9;
 								<?php echo $this->escape($item->payment_number); ?>
 							</a>
 						</td>
-						<td class="small hidden-phone">
+						<td class="hidden-phone">
 							<?php echo $item->payment_down > 0 ? HTMLHelper::_('date', $item->payment_down,
-								Text::_('DATE_FORMAT_LC2')) : '-' ?>
+								Text::_('DATE_FORMAT_LC1')) : '' ?>
 						</td>
 						<td class="hidden-phone">
 							<?php if ((int) $item->created_by != 0) : ?>
 								<div class="author">
-									<div class="avatar<?php echo ($item->author_online) ? ' online' : '' ?>"
-										 style="background-image: url('<?php echo $item->author_avatar; ?>')">
-									</div>
 									<div>
 										<div class="name">
 											<a class="hasTooltip nowrap" title="<?php echo Text::_('JACTION_EDIT'); ?>"

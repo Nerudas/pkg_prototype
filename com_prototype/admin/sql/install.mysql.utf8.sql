@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS `#__prototype_items` (
 	`region`          CHAR(7)          NOT NULL DEFAULT '*',
 	`tags_search`     MEDIUMTEXT       NOT NULL DEFAULT '',
 	`tags_map`        MEDIUMTEXT       NOT NULL DEFAULT '',
-	`extra`           LONGTEXT         NOT NULL DEFAULT '',
 	UNIQUE KEY `id` (`id`)
 )
 	ENGINE = MyISAM

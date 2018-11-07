@@ -153,8 +153,6 @@ class PrototypeControllerItem extends FormController
 		$placemark->set('id', $data['id']);
 		$placemark->set('title', $data['title']);
 		$placemark->set('price', $data['price']);
-		$placemark->set('preset_price');
-		$placemark->set('preset_icon');
 		$placemark->set('show_price', (!empty($data['price'])));
 
 		$layout = new FileLayout('components.com_prototype.map.placemark');
