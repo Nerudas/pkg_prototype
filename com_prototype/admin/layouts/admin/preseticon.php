@@ -15,7 +15,6 @@ use Joomla\CMS\Filesystem\File;
 
 extract($displayData);
 
-
 $filename = '';
 if (!empty($value)) {
 	$filename = str_replace('.'.File::getExt($value), '', File::getName($value));
