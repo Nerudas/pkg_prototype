@@ -16,8 +16,9 @@ use Joomla\CMS\Filesystem\File;
 extract($displayData);
 
 $filename = '';
-if (!empty($value)) {
-	$filename = str_replace('.'.File::getExt($value), '', File::getName($value));
+if (!empty($value))
+{
+	$filename = str_replace('.' . File::getExt($value), '', File::getName($value));
 }
 
 ?>
@@ -25,19 +26,15 @@ if (!empty($value)) {
 <div id="<?php echo $id; ?>" class="<?php echo $class; ?>" data-input-preset-icon="<?php echo $id; ?>"
 	 data-filename="<?php echo $filename; ?>">
 	<div class="form">
-		<div class="action preview">
-			<i class="icon-eye"></i>
-			<div class="preview-modal">
-				<img src="/<?php echo $value; ?>"/>
-			</div>
-		</div>
-		<input type="text" name="<?php echo $name; ?>" id="<?php echo $id; ?>_value" value="<?php echo $value; ?>"
+		<img src="/<?php echo $value; ?>"/>
+		<input type="hidden" name="<?php echo $name; ?>" id="<?php echo $id; ?>_value" value="<?php echo $value; ?>"
 			   class="value" readonly="readonly">
 		<input id="<?php echo $id; ?>_field" class="file" type="file" accept="image/*"/>
-		<label for="<?php echo $id; ?>_field" class="action select btn hasTooltip"
-			   title="<?php echo Text::_('JLIB_FORM_BUTTON_SELECT'); ?>">
-			<?php echo Text::_('JLIB_FORM_BUTTON_SELECT'); ?>
-		</label>
-		<a class="action remove btn icon-remove"></a>
+		<div class="actions">
+			<label for="<?php echo $id; ?>_field" class="action select btn hasTooltip"
+				   title="<?php echo Text::_('JLIB_FORM_BUTTON_SELECT'); ?>">
+				<?php echo Text::_('JLIB_FORM_BUTTON_SELECT'); ?>
+			</label><a class="action remove btn icon-remove"></a>
+		</div>
 	</div>
 </div>

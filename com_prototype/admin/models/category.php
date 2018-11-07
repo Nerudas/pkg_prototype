@@ -125,7 +125,7 @@ class PrototypeModelCategory extends AdminModel
 
 		// Set Placemark link
 		$form->setFieldAttribute('placemark_demo', 'placemarkurl',
-			Uri::base(true) . '/index.php?option=com_prototype&task=category.presetDemo&id=' . $id);
+			Uri::base(true) . '/index.php?option=com_prototype&task=category.getPlacemark&id=' . $id);
 
 		return $form;
 	}
@@ -199,7 +199,6 @@ class PrototypeModelCategory extends AdminModel
 			$registry        = new Registry($data['presets']);
 			$data['presets'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 		}
-
 
 		// Load the row if saving an existing type.
 		if ($pk > 0)

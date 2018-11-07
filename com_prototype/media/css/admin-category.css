@@ -24,6 +24,9 @@
 	min-width: 250px !important;
 }
 
+#presets th:nth-last-child(3) {
+	width: 210px;
+}
 #presets th:nth-last-child(2) {
 	text-align: center;
 }
@@ -42,6 +45,8 @@
 
 [data-input-preset-icon] .form {
 	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 [data-input-preset-icon] .form.disable {
@@ -52,12 +57,8 @@
 	display: none;
 }
 
-[data-input-preset-icon] .form .value {
-	flex: 1;
-	width: auto;
-	min-width: 10px;
-	border-radius: 0;
-	border-left: none;
+[data-input-preset-icon] .form img {
+	height: 28px;
 }
 
 [data-input-preset-icon] .form .action {
@@ -75,38 +76,8 @@
 	border: 1px solid #ccc;
 }
 
-[data-input-preset-icon] .form .action.preview {
-	position: relative;
-	border-radius: 3px 0 0 3px;
-}
-
-[data-input-preset-icon] .form .action.preview > i {
-	margin: 0;
-}
-
-[data-input-preset-icon] .form .action.preview .preview-modal {
-	display: none;
-	position: absolute;
-	left: -2px;
-	bottom: 30px;
-	width: 90px;
-	height: 90px;
-	padding: 5px;
-	justify-content: center;
-	align-items: center;
-	background: rgba(255, 255, 255, 0.9);
-	border: 1px solid #e5e5e5;
-	z-index: 7;
-	box-sizing: border-box;
-}
-
-[data-input-preset-icon] .form .action.preview:hover .preview-modal {
-	display: flex;
-}
-
 [data-input-preset-icon] .form .action.select {
-	border-radius: 0;
-	border-left: none;
+	border-radius: 3px 0 0 3px;
 	border-right: none;
 }
 

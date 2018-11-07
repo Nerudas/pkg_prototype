@@ -179,6 +179,12 @@
 					});
 				});
 			});
+			$('[data-preset-demo]').on('click', function () {
+				var preset = $(this).closest('[data-group]').data('group');
+				$('#jform_preset_demo').val(preset);
+				$('#jform_preset_demo').trigger('change');
+			});
+
 		}
 
 		function generatePresetPlacemarkFilename(filename) {

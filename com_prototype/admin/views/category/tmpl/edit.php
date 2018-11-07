@@ -73,11 +73,10 @@ $doc->addScriptDeclaration('
 		<div class="row-fluid">
 			<div class="span9">
 				<?php echo $this->form->getInput('presets'); ?>
-				<input type="hidden" name="preset_demo" value="">
 			</div>
 			<div class="span3">
 				<?php echo $this->form->getInput('placemark_demo'); ?>
-
+				<?php echo $this->form->getInput('preset_demo'); ?>
 			</div>
 		</div>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>

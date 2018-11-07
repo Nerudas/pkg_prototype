@@ -29,6 +29,7 @@
 			   filename="icon"/>
 		<field name="lft" type="hidden" filter="unset"/>
 		<field name="rgt" type="hidden" filter="unset"/>
+		<field name="preset_demo" type="hidden"/>
 		<field name="placemark_demo" type="map"
 			   setplacemark="true"/>
 
@@ -36,24 +37,24 @@
 			   layout="joomla.form.field.subform.repeatable-table">
 			<form>
 				<field name="title" type="text" label="COM_PROTOTYPE_PRESETS_TITLE" class="input-xlarge"/>
-				<field name="price" type="catpreset" preset="price" class="span12"
+				<field name="price" type="presetscategory" preset="price" class="span12"
 					   label="COM_PROTOTYPE_PRESETS_PRICE"
 					   default="none">
 					<option value="none">COM_PROTOTYPE_PRESETS_PRICE_SELECT</option>
 				</field>
-				<field name="delivery" type="catpreset" preset="delivery" class="span12"
+				<field name="delivery" type="presetscategory" preset="delivery" class="span12"
 					   label="COM_PROTOTYPE_PRESETS_DELIVERY"
 					   default="none">
 					<option value="none">COM_PROTOTYPE_PRESETS_DELIVERY_SELECT</option>
 				</field>
-				<field name="object" type="catpreset" preset="object" class="span12"
+				<field name="object" type="presetscategory" preset="object" class="span12"
 					   label="COM_PROTOTYPE_PRESETS_OBJECT"
 					   default="none">
 					<option value="none">COM_PROTOTYPE_PRESETS_OBJECT_SELECT</option>
 				</field>
-				<field name="icon" type="catpreset" preset="icon"
+				<field name="icon" type="presetscategory" preset="icon"
 					   label="COM_PROTOTYPE_PRESETS_ICON"/>
-				<field name="demo" type="catpreset" preset="demo"
+				<field name="demo" type="presetscategory" preset="demo"
 					   label="COM_PROTOTYPE_PRESETS_DEMO"/>
 			</form>
 		</field>

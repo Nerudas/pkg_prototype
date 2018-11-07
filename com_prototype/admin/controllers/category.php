@@ -15,8 +15,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Layout\FileLayout;
-
-JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Uri\Uri;
 
 class PrototypeControllerCategory extends FormController
 {
@@ -37,71 +37,37 @@ class PrototypeControllerCategory extends FormController
 	 */
 	public function getPlacemark()
 	{
-		$app  = Factory::getApplication();
-		$data = $this->input->post->get('jform', array(), 'array');
+		$data   = $this->input->post->get('jform', array(), 'array');
+		$preset = (!empty($data['preset_demo'])) ? $data['presets'][$data['preset_demo']] : array_shift($data['presets']);
 
-		$item         = new Registry($data);
-		$extra        = new Registry(array());
-		$category     = new Registry($data);
-		$extra_filter = new Registry(array());
+		$registry = new Registry(ComponentHelper::getParams('com_prototype')->get('presets', array()));
+		$configs  = $registry->toArray();
 
-		$placemark = array();
-		if (!empty($data['placemark_id']))
+		$configPresets = array();
+		foreach ($configs as $key => $config)
 		{
-			$placemark = $this->getModel('Placemark')->getItem($data['placemark_id']);
-
-			if ($placemark)
+			if (!isset($configPresets[$key]))
 			{
-				$imagesHelper = new FieldTypesFilesHelper();
-
-				$registry          = new Registry($placemark->images);
-				$placemark->images = $registry->toArray();
-				$imageFolder       = 'images/prototype/placemarks/' . $placemark->id;
-				$placemark->images = $imagesHelper->getImages('content', $imageFolder, $placemark->images,
-					array('text' => true, 'for_field' => false));
-				$placemark->image  = (!empty($placemark->images) && !empty(reset($placemark->images)->src)) ?
-					reset($placemark->images)->src : false;
+				$configPresets[$key] = array();
+			}
+			foreach ($config as $conf)
+			{
+				$configPresets[$key][$conf['value']] = new Registry($conf);
 			}
 		}
 
-		$placemark = new Registry($placemark);
+		$presetPrice = (!empty($configPresets['price'][$preset['price']])) ? $configPresets['price'][$preset['price']] : false;
 
-		$db    = Factory::getDbo();
-		$query = $db->getQuery(true)
-			->select('template')
-			->from('#__template_styles')
-			->where('client_id = 0')
-			->order('home DESC ');
-		$db->setQuery($query);
-		$templates   = $db->loadColumn();
-		$layoutPaths = array();
-		$language    = Factory::getLanguage();
-		foreach (array_unique($templates) as $template)
-		{
-			$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
-			$language->load('tpl_' . $template, JPATH_SITE, $language->getTag(), true);
-		}
-		$layoutPaths[] = JPATH_ROOT . '/layouts';
+		$placemark = new Registry();
+		$placemark->set('id', $data['id']);
+		$placemark->set('title', $preset['title']);
+		$placemark->set('price', '----');
+		$placemark->set('preset_price', $presetPrice);
+		$placemark->set('preset_icon', $preset['icon']);
+		$placemark->set('show_price', ($preset['price'] != 'none'));
 
-		$layoutName = $placemark->get('layout', 'default');
-		if (!JPath::find($layoutPaths, 'components/com_prototype/placemarks/' . $layoutName . '.php'))
-		{
-			$layoutName = 'default';
-		}
-
-		$layoutID = 'components.com_prototype.placemarks.' . $layoutName;
-		$layout   = new FileLayout($layoutID);
-		$layout->setIncludePaths($layoutPaths);
-
-		$displayData = array(
-			'item'         => $item,
-			'extra'        => $extra,
-			'category'     => $category,
-			'extra_filter' => $extra_filter,
-			'placemark'    => $placemark
-		);
-
-		$html = $layout->render($displayData);
+		$layout = new FileLayout('components.com_prototype.map.placemark');
+		$html   = $layout->render(array('placemark' => $placemark));
 		preg_match('/data-placemark-coordinates="([^"]*)"/', $html, $matches);
 		$coordinates = '[]';
 		if (!empty($matches[1]))
@@ -119,7 +85,7 @@ class PrototypeControllerCategory extends FormController
 		$options['iconShape']   = $iconShape;
 
 		echo new JsonResponse($options);
-		$app->close();
+		Factory::getApplication()->close();
 
 		return true;
 	}

@@ -16,7 +16,7 @@ use Joomla\Registry\Registry;
 
 FormHelper::loadFieldClass('list');
 
-class JFormFieldCatPreset extends JFormFieldList
+class JFormFieldPresetsCategory extends JFormFieldList
 {
 	/**
 	 * The form field type.
@@ -24,7 +24,7 @@ class JFormFieldCatPreset extends JFormFieldList
 	 * @var    string
 	 * @since  1.0.0
 	 */
-	protected $type = 'catPreset';
+	protected $type = 'presetsCategory';
 
 	/**
 	 * Preset
@@ -69,7 +69,7 @@ class JFormFieldCatPreset extends JFormFieldList
 	{
 		if ($this->preset == 'demo')
 		{
-			return '<div class="center span12"><a data-preset-demo="' . $this->name . '" class="icon-eye" href="#"></a></div>';
+			return '<div class="center span12"><a data-preset-demo="' . $this->name . '" class="icon-eye" href="javascript:void(0);"></a></div>';
 		}
 
 		if ($this->preset == 'icon')
