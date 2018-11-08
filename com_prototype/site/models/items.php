@@ -522,11 +522,8 @@ class PrototypeModelItems extends ListModel
 				{
 					$author->contacts = $siteContacts;
 				}
-				else
-				{
-					$author->contacts->set('phones',
-						ArrayHelper::fromObject($author->contacts->get('phones', new stdClass())));
-				}
+				$author->contacts = $author->contacts->toArray();
+
 				$item->author = $author;
 
 				// Set map
