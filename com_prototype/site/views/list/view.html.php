@@ -15,7 +15,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Layout\LayoutHelper;
 
 class PrototypeViewList extends HtmlView
 {
@@ -233,10 +232,6 @@ class PrototypeViewList extends HtmlView
 		$this->pageclass_sfx = htmlspecialchars($this->category->params->get('pageclass_sfx'));
 
 		$this->_prepareDocument();
-
-		$this->document->addScriptOptions('prototypeList', array(
-			'balloonBlock' => LayoutHelper::render('components.com_prototype.list.balloon'),
-			'authorBlock'  => LayoutHelper::render('components.com_prototype.list.author')));
 
 		return parent::display($tpl);
 	}

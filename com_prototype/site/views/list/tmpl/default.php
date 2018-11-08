@@ -12,22 +12,10 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Layout\LayoutHelper;
 
-HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::_('script', 'media/com_prototype/js/list.min.js', array('version' => 'auto'));
-
+LayoutHelper::render('components.com_prototype.list.scripts');
 ?>
-<script>
-	function showPrototypeListBalloon() {
-		jQuery(('[data-prototype-list-balloon]')).show();
-	}
-
-	function showPrototypeListAuthor() {
-		jQuery(('[data-prototype-list-author]')).show();
-	}
-</script>
-
 <div>
 	<form action="<?php echo htmlspecialchars(Factory::getURI()->toString()); ?>" method="get" name="adminForm">
 		<?php foreach (array_keys($this->filterForm->getGroup('filter')) as $filter): ?>
@@ -47,5 +35,7 @@ HTMLHelper::_('script', 'media/com_prototype/js/list.min.js', array('version' =>
 		<div>
 			<?php echo $this->pagination->getPagesLinks(); ?>
 		</div>
+		<?php echo LayoutHelper::render('components.com_prototype.list.balloon'); ?>
+		<?php echo LayoutHelper::render('components.com_prototype.list.author'); ?>
 	<?php endif; ?>
 </div>

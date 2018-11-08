@@ -9,7 +9,6 @@
 
 (function ($) {
 	$(document).ready(function () {
-		var joomlaParams = Joomla.getOptions('prototypeList', '');
 		// Balloon
 		$('body').on('click', '[data-prototype-show-balloon]', function () {
 			var item = $(this),
@@ -20,9 +19,6 @@
 		});
 
 		function getBalloon(id) {
-			if ($('body').find('[data-prototype-list-balloon]').length == 0) {
-				$(joomlaParams.balloonBlock).appendTo($('body'));
-			}
 			var ajaxData = [];
 			ajaxData.push({name: 'item_id', value: id});
 			var container = $('[data-prototype-list-balloon]'),
@@ -58,7 +54,8 @@
 				}
 			});
 		}
-// Author
+
+		// Author
 		$('body').on('click', '[data-prototype-show-author]', function () {
 			var item = $(this),
 				id = $(item).data('prototype-show-author'),
@@ -68,9 +65,6 @@
 		});
 
 		function getAuthor(id) {
-			if ($('body').find('[data-prototype-list-author]').length == 0) {
-				$(joomlaParams.authorBlock).appendTo($('body'));
-			}
 			var ajaxData = [];
 			ajaxData.push({name: 'item_id', value: id});
 			var container = $('[data-prototype-list-author]'),
