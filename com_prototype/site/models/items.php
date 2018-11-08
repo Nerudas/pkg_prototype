@@ -445,6 +445,9 @@ class PrototypeModelItems extends ListModel
 			$imagesHelper = new FieldTypesFilesHelper();
 			foreach ($items as &$item)
 			{
+				// Set text
+				$item->text = nl2br($item->text);
+
 				// Set payment down
 				$paymentDownDate = $item->payment_down;
 				if ($paymentDownDate == '0000-00-00 00:00:00')
@@ -495,6 +498,7 @@ class PrototypeModelItems extends ListModel
 				$author         = new stdClass();
 				$author->type   = ($item->author_company) ? 'legal' : 'natural';
 				$author->online = $item->author_online;
+				$author->status = $item->author_status;
 				if (!$item->author_company)
 				{
 					$author->id        = $item->author_id;
@@ -577,7 +581,7 @@ class PrototypeModelItems extends ListModel
 				$render->listItem = $layout->render($displayData);
 
 				// Balloon layout
-				$layout       = new FileLayout('components.com_prototype.balloon.default');
+				$layout          = new FileLayout('components.com_prototype.balloon.default');
 				$render->balloon = $layout->render($displayData);
 
 				// Author layout
@@ -589,7 +593,7 @@ class PrototypeModelItems extends ListModel
 				$render->mapPlacemark = $layout->render($displayData);
 
 				// Map List item layout
-				$layout          = new FileLayout('components.com_prototype.map.list.item.default');
+				$layout              = new FileLayout('components.com_prototype.map.list.item.default');
 				$render->mapListItem = $layout->render($displayData);
 
 				$item->render = $render;
