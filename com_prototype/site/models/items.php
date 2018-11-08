@@ -593,7 +593,8 @@ class PrototypeModelItems extends ListModel
 				$layout              = new FileLayout('components.com_prototype.map.list.item.default');
 				$render->mapListItem = $layout->render($displayData);
 
-				$item->render = $render;
+				$item->displayData = $displayData;
+				$item->render      = $render;
 			}
 		}
 
