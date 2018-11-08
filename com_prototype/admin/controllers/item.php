@@ -82,20 +82,14 @@ class PrototypeControllerItem extends FormController
 			}
 			foreach ($config as $conf)
 			{
-				$configPresets[$key][$conf['value']] = new Registry($conf);
+				$configPresets[$key][$conf['value']] = (object) $conf;
 			}
 		}
 
 		$presets = array();
 		foreach ($category->presets as &$preset)
 		{
-			$preset['price_title']    = (!empty($configPresets['price'][$preset['price']])) ?
-				$configPresets['price'][$preset['price']]->get('title', $preset['price']) : $preset['price'];
-			$preset['delivery_title'] = (!empty($configPresets['delivery'][$preset['delivery']])) ?
-				$configPresets['delivery'][$preset['delivery']]->get('title', $preset['delivery']) : $preset['delivery'];
-			$preset['object_title']   = (!empty($configPresets['object'][$preset['object']])) ?
-				$configPresets['object'][$preset['object']]->get('title', $preset['object']) : $preset['object'];
-			$presets[$preset['key']]  = $preset;
+			$presets[$preset['key']] = $preset;
 		}
 
 		if (empty($presets[$data['preset']]))
@@ -111,11 +105,11 @@ class PrototypeControllerItem extends FormController
 		$placemark->set('id', $data['id']);
 		$placemark->set('title', $data['title']);
 		$placemark->set('price', $data['price']);
-		$placemark->set('preset_price', $presetPrice);
+		$placemark->set('preset_price', ($presetPrice)? $presetPrice->title : '');
 		$placemark->set('preset_icon', $presetIcon);
 		$placemark->set('show_price', (!empty($data['price'])));
 
-		$layout = new FileLayout('components.com_prototype.map.placemark');
+		$layout = new FileLayout('components.com_prototype.map.placemark.default');
 		$html   = $layout->render(array('placemark' => $placemark));
 		preg_match('/data-placemark-coordinates="([^"]*)"/', $html, $matches);
 		$coordinates = '[]';
@@ -155,7 +149,7 @@ class PrototypeControllerItem extends FormController
 		$placemark->set('price', $data['price']);
 		$placemark->set('show_price', (!empty($data['price'])));
 
-		$layout = new FileLayout('components.com_prototype.map.placemark');
+		$layout = new FileLayout('components.com_prototype.map.placemark.default');
 		$html   = $layout->render(array('placemark' => $placemark));
 		preg_match('/data-placemark-coordinates="([^"]*)"/', $html, $matches);
 		$coordinates = '[]';
@@ -218,7 +212,7 @@ class PrototypeControllerItem extends FormController
 	/**
 	 * Method to prolong items.
 	 *
-	 * @param array$plus date plus publish_down
+	 * @param array $plus date plus publish_down
 	 *
 	 * @return  bool
 	 *

@@ -15,19 +15,14 @@ extract($displayData);
 /**
  * Layout variables
  * -----------------
- * @var   Registry $item      Item data
- * @var   Registry $extra     Item extra data
- * @var   Registry $category  Category data
- * @var   Registry $placemark Placemark data
+ * @var   Registry $item   Item data
+ * @var   Registry $author Author data
  */
-
-//echo '<pre>', print_r($item, true), '</pre>';
-//echo '<pre>', print_r($extra, true), '</pre>';
-//echo '<pre>', print_r($category, true), '</pre>';
-//echo '<pre>', print_r($placemark, true), '</pre>';
 ?>
-
 <div class="item" data-prototype-item="<?php echo $item->get('id'); ?>">
-	<h2><a data-prototype-show="<?php echo $item->get('id'); ?>"><?php echo $item->get('title'); ?></a></h2>
+	<h2><a data-prototype-show-balloon="<?php echo $item->get('id'); ?>"><?php echo $item->get('title'); ?></a></h2>
+	<div>
+		<a data-prototype-show-author="<?php echo $item->get('id'); ?>"><?php echo $author->get('name'); ?></a>
+	</div>
 </div>
 <hr data-prototype-item="<?php echo $item->get('id'); ?>">

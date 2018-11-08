@@ -5,6 +5,9 @@
 		<field name="admin_email" type="text"
 			   class="input-xxlarge"
 			   label="COM_PROTOTYPE_PARAMS_ADMIN_EMAIL"/>
+		<field name="site_phones" type="phones"
+			   limit="3"
+			   label="COM_PROTOTYPE_PARAMS_SITE_PHONES"/>
 		<field name="items_limit" type="list"
 			   label="COM_PROTOTYPE_PARAMS_ITEMS_LIMIT"
 			   default="10">

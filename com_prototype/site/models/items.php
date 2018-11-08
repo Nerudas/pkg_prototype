@@ -44,46 +44,6 @@ class PrototypeModelItems extends ListModel
 	protected $_categories = array();
 
 	/**
-	 * Placemarks
-	 *
-	 * @var    array
-	 * @since  1.0.0
-	 */
-	protected $_placemarks = array();
-
-	/**
-	 * Placemarks layouts
-	 *
-	 * @var    array
-	 * @since  1.0.0
-	 */
-	protected $_placemarksLayouts = array();
-
-	/**
-	 * Balloon layouts
-	 *
-	 * @var    array
-	 * @since  1.0.0
-	 */
-	protected $_balloonLayouts = array();
-
-	/**
-	 * Balloon layouts
-	 *
-	 * @var    array
-	 * @since  1.0.0
-	 */
-	protected $_listItemLayouts = array();
-
-	/**
-	 * Palcemarks Layouts path
-	 *
-	 * @var    array
-	 * @since  1.0.0
-	 */
-	protected $_layoutsPaths = null;
-
-	/**
 	 * Current Category data
 	 *
 	 * @var    object
@@ -125,26 +85,28 @@ class PrototypeModelItems extends ListModel
 				'id', 'i.id',
 				'title', 'i.title',
 				'text', 'i.text',
+				'location', 'i.location',
+				'price', 'i.price',
+				'preset_price', 'i.preset_price',
+				'preset_delivery', 'i.preset_delivery',
+				'preset_object', 'i.preset_object',
+				'external_link', 'i.external_link',
 				'images', 'i.images',
 				'state', 'i.state',
+				'catid', 'i.catid',
 				'created', 'i.created',
 				'created_by', 'i.created_by',
-				'publish_down', 'i.publish_down',
-				'placemark_id', 'i.placemark_id',
-				'balloon_layout', 'i.balloon_layout',
+				'payment_number', 'i.payment_number',
+				'payment_down', 'i.payment_down',
 				'map', 'i.map',
 				'latitude', 'i.latitude',
 				'longitude', 'i.longitude',
 				'attribs', 'i.attribs',
-				'metakey',
-				'metadesc', 'i.metadesc',
 				'access', 'i.access',
 				'hits', 'i.hits',
 				'region', 'i.region',
-				'metadata', 'i.metadata',
 				'tags_search', 'i.tags_search',
 				'tags_map', 'i.tags_map',
-				'extra', 'i.extra',
 			);
 		}
 		parent::__construct($config);
@@ -193,8 +155,6 @@ class PrototypeModelItems extends ListModel
 		$category = $this->getUserStateFromRequest($this->context . '.filter.category', 'filter_category', '');
 		$this->setState('filter.category', $category);
 
-		$extra = $this->getUserStateFromRequest($this->context . '.extra', 'extra');
-		$this->setState('extra_filter', $extra);
 
 		if ((!$user->authorise('core.edit.state', 'com_prototype.item'))
 			&& (!$user->authorise('core.edit', 'com_prototype.item')))
@@ -260,7 +220,6 @@ class PrototypeModelItems extends ListModel
 		$id .= ':' . serialize($this->getState('filter.item_id'));
 		$id .= ':' . $this->getState('filter.item_id.include');
 		$id .= ':' . serialize($this->getState('filter.coordinates'));
-		$id .= ':' . serialize($this->getState('extra'));
 
 		return parent::getStoreId($id);
 	}
@@ -355,21 +314,14 @@ class PrototypeModelItems extends ListModel
 			$query->where('i.id ' . $type . ' (' . $item_id . ')');
 		}
 
-
 		// Filter by published state.
 		$published = $this->getState('filter.published');
 		if (!empty($published))
 		{
-			$nullDate = $db->getNullDate();
-			$now      = Factory::getDate()->toSql();
-
 			if (is_numeric($published))
 			{
 				$query->where('( i.state = ' . (int) $published .
 					' OR ( i.created_by = ' . $user->id . ' AND i.state IN (0,1)))');
-				$query->where('(' . $db->quoteName('i.publish_down') . ' = ' . $db->Quote($nullDate) . ' OR '
-					. $db->quoteName('i.publish_down') . '  >= ' . $db->Quote($now)
-					. 'OR i.created_by = ' . $user->id . ')');
 				$query->where('c.state = ' . (int) $published);
 			}
 			elseif (is_array($published))
@@ -432,7 +384,7 @@ class PrototypeModelItems extends ListModel
 		$search = $this->getState('filter.search');
 		if (!empty($search))
 		{
-			$cols = array('i.title', 'r.name', 'i.html', 'i.tags_search', 'i.extra');
+			$cols = array('i.title', 'r.name', 'i.text', 'i.tags_search');
 			$sql  = array();
 			foreach ($cols as $col)
 			{
@@ -451,38 +403,6 @@ class PrototypeModelItems extends ListModel
 		$query->order($db->escape($ordering) . ' ' . $db->escape($direction));
 
 		return $query;
-	}
-
-	/**
-	 * Get the filter form
-	 *
-	 * @param   array   $data     data
-	 * @param   boolean $loadData load current data
-	 *
-	 * @return  \Joomla\CMS\Form\Form|boolean  The \JForm object or false on error
-	 *
-	 * @since   1.0.0
-	 */
-	public function getFilterForm($data = array(), $loadData = true)
-	{
-		$form = parent::getFilterForm($data, $loadData);
-		if ($form)
-		{
-			$category     = $this->getCategory();
-			$extraFilters = $form->getGroup('extra');
-
-			$categoryFilters = (!empty($category->filters)) ? $category->filters : array();
-			foreach ($extraFilters as $extraFilter)
-			{
-				$name = $extraFilter->getAttribute('name');
-				if (empty($categoryFilters[$name]))
-				{
-					$form->removeField($name, 'extra');
-				}
-			}
-		}
-
-		return $form;
 	}
 
 	/**
@@ -513,25 +433,41 @@ class PrototypeModelItems extends ListModel
 	 */
 	public function getItems()
 	{
-		$items = parent::getItems();
+		$items        = parent::getItems();
+		$siteContacts = new Registry();
+		$siteContacts->set('phones', $this->getState('params')->get('site_phones', array()));
+
 		if (!empty($items))
 		{
 			$user       = Factory::getUser();
 			$categories = $this->getCategories(array_unique(ArrayHelper::getColumn($items, 'catid')));
 
-			$placemarksItems      = array_unique(ArrayHelper::getColumn($items, 'placemark_id'));
-			$placemarksCategories = array_unique(ArrayHelper::getColumn($categories, 'placemark_id'));
-			$placemarks           = $this->getPlacemarks(array_unique(array_merge($placemarksItems, $placemarksCategories)));
-			$imagesHelper         = new FieldTypesFilesHelper();
+			$imagesHelper = new FieldTypesFilesHelper();
 			foreach ($items as &$item)
 			{
+				// Set payment down
+				$paymentDownDate = $item->payment_down;
+				if ($paymentDownDate == '0000-00-00 00:00:00')
+				{
+					$paymentDown     = false;
+					$paymentDownDate = Text::_('JNEVER');
+				}
+				else
+				{
+					$paymentDown = (Factory::getDate($paymentDownDate)->toUnix() < Factory::getDate()->toUnix());
+				}
+				$item->payment_down       = new stdClass();
+				$item->payment_down->end  = $paymentDown;
+				$item->payment_down->date = $paymentDownDate;
 
+				// Set Edit
 				$item->editLink = false;
 				if (!$user->guest)
 				{
 					$userId   = $user->id;
 					$asset    = 'com_prototype.item.' . $item->id;
-					$editLink = Route::_(PrototypeHelperRoute::getFormRoute($item->id, $item->catid, $this->getState('return_view')));
+					$editLink = Route::_(PrototypeHelperRoute::getFormRoute($item->id, $item->catid,
+						$this->getState('return_view')));
 					// Check general edit permission first.
 					if ($user->authorise('core.edit', $asset))
 					{
@@ -547,21 +483,51 @@ class PrototypeModelItems extends ListModel
 						}
 					}
 				}
+				// Set Images
+				$registry     = new Registry($item->images);
+				$item->images = $registry->toArray();
+				$item->images = $imagesHelper->getImages('content', 'images/prototype/items/' . $item->id, $item->images,
+					array('text' => true, 'for_field' => false));
+				$item->image  = (!empty($item->images) && !empty(reset($item->images)->src)) ?
+					reset($item->images)->src : false;
 
-				$item->author_avatar = $imagesHelper->getImage('avatar', 'images/profiles/' . $item->author_id,
-					'media/com_profiles/images/no-avatar.jpg', false);
+				// Set author
+				$author         = new stdClass();
+				$author->type   = ($item->author_company) ? 'legal' : 'natural';
+				$author->online = $item->author_online;
+				if (!$item->author_company)
+				{
+					$author->id        = $item->author_id;
+					$author->name      = $item->author_name;
+					$author->signature = (!empty($item->author_job_name)) ? $item->author_job_name : '';
+					$author->avatar    = $imagesHelper->getImage('avatar', 'images/profiles/' . $item->author_id,
+						'media/com_profiles/images/no-avatar.jpg', false);
+					$author->link      = Route::_(ProfilesHelperRoute::getProfileRoute($item->author_id));
+					$author->contacts  = new Registry($item->author_contacts);
+				}
+				else
+				{
+					$author->id        = $item->author_job_id;
+					$author->name      = $item->author_job_name;
+					$author->signature = (!empty($item->author_position)) ? $item->author_position : $item->author_name;
+					$author->avatar    = $imagesHelper->getImage('logo', 'images/companies/' . $item->author_job_id, false, false);
+					$author->link      = Route::_(CompaniesHelperRoute::getCompanyRoute($item->author_job_id));
+					$author->contacts  = new Registry($item->author_job_contacts);
+				}
+				if ($paymentDown)
+				{
+					$author->contacts = $siteContacts;
+				}
+				else
+				{
+					$author->contacts->set('phones',
+						ArrayHelper::fromObject($author->contacts->get('phones', new stdClass())));
+				}
+				$item->author = $author;
 
-				$item->author_link = Route::_(ProfilesHelperRoute::getProfileRoute($item->author_id));
-
-
-				$item->author_job_logo = $imagesHelper->getImage('logo', 'images/companies/' . $item->author_job_id, false, false);
-
-				$item->author_job_link = Route::_(CompaniesHelperRoute::getCompanyRoute($item->author_job_id));
-
-				// Convert the map field from json.
+				// Set map
 				$item->map = (!empty($item->latitude) && !empty($item->longitude) &&
 					$item->latitude !== '0.000000' && $item->longitude !== '0.000000') ? new Registry($item->map) : false;
-
 				if ($item->map)
 				{
 					$item->map->set('link', Route::_(PrototypeHelperRoute::getMapRoute($item->catid) .
@@ -570,96 +536,63 @@ class PrototypeModelItems extends ListModel
 						'&item_id=' . $item->id));
 				}
 
-				// Get Tags
+				// Set Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_prototype.item', $item->id);
 
-				// Get region
+				// Set region
 				$item->region_icon = $imagesHelper->getImage('icon', 'images/location/regions/' . $item->region_id, false, false);
 
-				// Convert the images field to an array.
-				$registry     = new Registry($item->images);
-				$item->images = $registry->toArray();
-				$item->images = $imagesHelper->getImages('content', 'images/prototype/items/' . $item->id, $item->images,
-					array('text' => true, 'for_field' => false));
-				$item->image  = (!empty($item->images) && !empty(reset($item->images)->src)) ?
-					reset($item->images)->src : false;
+				// Set Category
+				$category       = !empty($categories[$item->catid]) ? $categories[$item->catid] : false;
+				$item->category = $category;
 
-				// Convert the extra field to an array.
-				$item->extra = new Registry($item->extra);
+				// Set Preset
+				$presetKey    = trim($item->preset_price) . '|' . trim($item->preset_delivery) . '|' . trim($item->preset_object);
+				$preset       = (!empty($category) && !empty($category->presets[$presetKey])) ? $category->presets[$presetKey] : false;
+				$item->preset = $preset;
 
-				// Get Category
-				$item->category = new Registry((!empty($categories[$item->catid])) ? $categories[$item->catid] : array());
+				// Set placemark
+				$placemark               = new stdClass();
+				$placemark->id           = $item->id;
+				$placemark->title        = $item->title;
+				$placemark->price        = $item->price;
+				$placemark->preset_price = ($preset && $preset->price && !empty($preset->price->title)) ? $preset->price->title : '';
+				$placemark->preset_icon  = ($preset && !empty($preset->icon)) ? $preset->icon : '';
+				$placemark->show_price   = (!empty($item->price));
+				$item->placemark         = $placemark;
 
-				// Get balloon layout
-				$item->balloon_layout = (!empty($item->balloon_layout)) ? $item->balloon_layout :
-					$item->category->get('balloon_layout', 'default');
-
-				// Get list item layout
-				$item->listitem_layout = (!empty($item->listitem_layout)) ? $item->listitem_layout :
-					$item->category->get('listitem_layout', 'default');
-
-				// Layout data
-				$layoutData = array(
-					'item'         => new Registry($item),
-					'extra'        => $item->extra,
-					'category'     => $item->category,
-					'extra_filter' => new Registry($this->getState('extra_filter')),
-					'placemark'    => new Registry(array())
+				// Set render
+				$render      = new stdClass();
+				$displayData = array(
+					'item'      => new Registry($item),
+					'author'    => new Registry($author),
+					'category'  => ($category) ? new Registry($category) : new  Registry(),
+					'preset'    => ($preset) ? new Registry($preset) : new  Registry(),
+					'placemark' => ($placemark) ? new Registry($placemark) : new  Registry(),
 				);
 
-				// Get placemark
-				$item->placemark = ($item->map) ? $item->map->get('placemark') : false;
-				if ($item->placemark)
-				{
-					$placemark_id   = (!empty($item->placemark_id)) ? $item->placemark_id : $item->category->get('placemark_id');
-					$placemark_data = new Registry((!empty($placemarks[$placemark_id])) ?
-						$placemarks[$placemark_id] : array());
+				// List layout
+				$layout           = new FileLayout('components.com_prototype.list.item.default');
+				$render->listItem = $layout->render($displayData);
 
-					$layoutData['placemark'] = $placemark_data;
+				// Balloon layout
+				$layout       = new FileLayout('components.com_prototype.balloon.default');
+				$render->balloon = $layout->render($displayData);
 
-					$placemark_layout = $this->getPlacemarkLayout($placemark_data->get('layout', 'default'));
+				// Author layout
+				$layout         = new FileLayout('components.com_prototype.author.default');
+				$render->author = $layout->render($displayData);
 
-					$placemark_html = $placemark_layout->render($layoutData);
+				// Map Placemark layout
+				$layout               = new FileLayout('components.com_prototype.map.placemark.default');
+				$render->mapPlacemark = $layout->render($displayData);
 
-					preg_match('/data-placemark-coordinates="([^"]*)"/', $placemark_html, $matches);
-					$coordinates = '[]';
-					if (!empty($matches[1]))
-					{
-						$coordinates    = $matches[1];
-						$placemark_html = str_replace($matches[0], '', $placemark_html);
-					}
+				// Map List item layout
+				$layout          = new FileLayout('components.com_prototype.map.list.item.default');
+				$render->mapListItem = $layout->render($displayData);
 
-					preg_match('/data-placemark-coordinates-viewed="([^"]*)"/', $placemark_html, $matches);
-					$coordinates_viewed = $coordinates;
-					if (!empty($matches[1]))
-					{
-						$coordinates_viewed = $matches[1];
-						$placemark_html     = str_replace($matches[0], '', $placemark_html);
-					}
-
-					$iconShape                     = new stdClass();
-					$iconShape->type               = 'Polygon';
-					$iconShape->coordinates        = json_decode($coordinates);
-					$iconShape->coordinates_viewed = json_decode($coordinates_viewed);
-
-					$item->placemark->id                      = $item->id;
-					$item->placemark->options                 = array();
-					$item->placemark->options['customLayout'] = $placemark_html;
-					$item->placemark->options['iconShape']    = $iconShape;
-					$item->map->set('placemark', $item->placemark);
-				}
-
-				// Get balloon
-				$item->balloon  = false;
-				$balloon_layout = $this->getBalloonLayout($item->balloon_layout);
-				$item->balloon  = $balloon_layout->render($layoutData);
-
-				// Get list item
-				$layoutData['map'] = $item->map;
-				$item->listitem    = false;
-				$listitem_layout   = $this->getListItemLayout($item->listitem_layout);
-				$item->listitem    = $listitem_layout->render($layoutData);
+				$item->render = $render;
 			}
 		}
 
@@ -712,6 +645,21 @@ class PrototypeModelItems extends ListModel
 					$db->setQuery($query);
 					$objects      = $db->loadObjectList('id');
 					$imagesHelper = new FieldTypesFilesHelper();
+
+					$registry      = new Registry(ComponentHelper::getParams('com_prototype')->get('presets', array()));
+					$configs       = $registry->toArray();
+					$configPresets = array();
+					foreach ($configs as $key => $config)
+					{
+						if (!isset($configPresets[$key]))
+						{
+							$configPresets[$key] = array();
+						}
+						foreach ($config as $conf)
+						{
+							$configPresets[$key][$conf['value']] = $conf;
+						}
+					}
 					foreach ($objects as $object)
 					{
 
@@ -729,6 +677,20 @@ class PrototypeModelItems extends ListModel
 						$object->parent_listLink = Route::_(PrototypeHelperRoute::getListRoute($object->parent_id));
 						$object->parent_mapLink  = Route::_(PrototypeHelperRoute::getMapRoute($object->parent_id));
 
+						$registry        = new Registry($object->presets);
+						$object->presets = array();
+						foreach ($registry->toArray() as $preset)
+						{
+							$preset['price']    = (!empty($configPresets['price'][$preset['price']])) ?
+								(object) $configPresets['price'][$preset['price']] : false;
+							$preset['delivery'] = (!empty($configPresets['delivery'][$preset['delivery']])) ?
+								(object) $configPresets['delivery'][$preset['delivery']] : false;
+							$preset['object']   = (!empty($configPresets['object'][$preset['object']])) ?
+								(object) $configPresets['object'][$preset['object']] : false;
+
+							$object->presets[$preset['key']] = (object) $preset;
+						}
+
 						$categories[$object->id]        = $object;
 						$this->_categories[$object->id] = $object;
 					}
@@ -741,210 +703,6 @@ class PrototypeModelItems extends ListModel
 		}
 
 		return $categories;
-	}
-
-	/**
-	 * Method to get Placemarks
-	 *
-	 * @param array $pks PlaceMarks Ids
-	 *
-	 * @return  array;
-	 *
-	 * @since 1.0.0
-	 */
-	protected function getPlacemarks($pks = array())
-	{
-		$pks = (!is_array($pks)) ? (array) $pks : array_unique($pks);
-
-		$placemarks = array();
-		if (!empty($pks))
-		{
-			$getPlacemarks = array();
-			foreach ($pks as $pk)
-			{
-				if (isset($this->_placemarks[$pk]))
-				{
-					$placemarks[$pk] = $this->_placemarks[$pk];
-				}
-				elseif (!empty($pk))
-				{
-					$getPlacemarks[] = $pk;
-				}
-			}
-			if (!empty($getPlacemarks))
-			{
-				try
-				{
-					$db    = Factory::getDbo();
-					$query = $db->getQuery(true)
-						->select('*')
-						->from($db->quoteName('#__prototype_placemarks', 'p'))
-						->where('p.id IN (' . implode(',', $getPlacemarks) . ')');
-					$db->setQuery($query);
-					$objects = $db->loadObjectList('id');
-
-					$imagesHelper = new FieldTypesFilesHelper();
-
-					foreach ($objects as $object)
-					{
-						// Convert the images field to an array.
-						$registry       = new Registry($object->images);
-						$object->images = $registry->toArray();
-						$imageFolder    = 'images/prototype/placemarks/' . $object->id;
-						$object->images = $imagesHelper->getImages('content', $imageFolder, $object->images,
-							array('text' => true, 'for_field' => false));
-						$object->image  = (!empty($object->images) && !empty(reset($object->images)->src)) ?
-							reset($object->images)->src : false;
-
-
-						$placemarks[$object->id]        = $object;
-						$this->_placemarks[$object->id] = $object;
-					}
-				}
-				catch (Exception $e)
-				{
-					$this->setError($e);
-				}
-			}
-		}
-
-
-		return $placemarks;
-	}
-
-	/**
-	 * Method to get Layouts paths
-	 *
-	 * @return array
-	 *
-	 * @since 1.0.0
-	 */
-	public function getLayoutsPaths()
-	{
-		if (!is_array($this->_layoutsPaths))
-		{
-			$db    = Factory::getDbo();
-			$query = $db->getQuery(true)
-				->select('template')
-				->from('#__template_styles')
-				->where('client_id = 0')
-				->order('home DESC');
-			$db->setQuery($query);
-			$templates = $db->loadColumn();
-
-			$language = Factory::getLanguage();
-
-			$layoutPaths = array();
-			foreach (array_unique($templates) as $template)
-			{
-				$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
-				$language->load('tpl_' . $template, JPATH_SITE, $language->getTag(), true);
-			}
-			$layoutPaths[] = JPATH_ROOT . '/layouts';
-
-			$this->_layoutsPaths = $layoutPaths;
-		}
-
-		return $this->_layoutsPaths;
-	}
-
-	/**
-	 * Method to get Placemarks Layout
-	 *
-	 * @param string $layoutName Layout name
-	 *
-	 * @return  FileLayout;
-	 *
-	 * @since 1.0.0
-	 */
-	protected function getPlacemarkLayout($layoutName)
-	{
-		if (isset($this->_placemarkLayouts[$layoutName]))
-		{
-			return $this->_placemarkLayouts[$layoutName];
-		}
-
-		$key = $layoutName;
-
-		$layoutPaths = $this->getlayoutsPaths();
-		if (!JPath::find($layoutPaths, 'components/com_prototype/placemarks/' . $layoutName . '.php'))
-		{
-			$layoutName = 'default';
-		}
-
-		$layoutID = 'components.com_prototype.placemarks.' . $layoutName;
-		$layout   = new FileLayout($layoutID);
-		$layout->setIncludePaths($layoutPaths);
-
-		$this->_placemarkLayouts[$key] = $layout;
-
-		return $this->_placemarkLayouts[$key];
-	}
-
-	/**
-	 * Method to get balloon Layout
-	 *
-	 * @param string $layoutName Layout name
-	 *
-	 * @return  FileLayout;
-	 *
-	 * @since 1.0.0
-	 */
-	protected function getBalloonLayout($layoutName)
-	{
-		if (isset($this->_balloonLayouts[$layoutName]))
-		{
-			return $this->_balloonLayouts[$layoutName];
-		}
-
-		$key = $layoutName;
-
-		$layoutPaths = $this->getlayoutsPaths();
-		if (!JPath::find($layoutPaths, 'components/com_prototype/balloons/' . $layoutName . '.php'))
-		{
-			$layoutName = 'default';
-		}
-
-		$layoutID = 'components.com_prototype.balloons.' . $layoutName;
-		$layout   = new FileLayout($layoutID);
-		$layout->setIncludePaths($layoutPaths);
-
-		$this->_balloonLayouts[$key] = $layout;
-
-		return $this->_balloonLayouts[$key];
-	}
-
-	/**
-	 * Method to get list item Layout
-	 *
-	 * @param string $layoutName Layout name
-	 *
-	 * @return  FileLayout;
-	 *
-	 * @since 1.0.0
-	 */
-	protected function getListItemLayout($layoutName)
-	{
-		if (isset($this->_listItemLayouts[$layoutName]))
-		{
-			return $this->_listItemLayouts[$layoutName];
-		}
-
-		$key = $layoutName;
-
-		$layoutPaths = $this->getlayoutsPaths();
-		if (!JPath::find($layoutPaths, 'components/com_prototype/listitems/' . $layoutName . '.php'))
-		{
-			$layoutName = 'default';
-		}
-
-		$layoutID = 'components.com_prototype.listitems.' . $layoutName;
-		$layout   = new FileLayout($layoutID);
-		$layout->setIncludePaths($layoutPaths);
-
-		$this->_listItemLayouts[$key] = $layout;
-
-		return $this->_listItemLayouts[$key];
 	}
 
 	/**
@@ -1022,9 +780,6 @@ class PrototypeModelItems extends ListModel
 
 				// Root
 				$data->root = ($data->id == 1);
-
-				$registry      = new Registry($data->filters);
-				$data->filters = $registry->toArray();
 
 				$imagesHelper = new FieldTypesFilesHelper();
 				$imagesFolder = 'images/prototype/categories/' . $data->id;

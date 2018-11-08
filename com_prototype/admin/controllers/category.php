@@ -16,7 +16,6 @@ use Joomla\CMS\Response\JsonResponse;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Uri\Uri;
 
 class PrototypeControllerCategory extends FormController
 {
@@ -52,7 +51,7 @@ class PrototypeControllerCategory extends FormController
 			}
 			foreach ($config as $conf)
 			{
-				$configPresets[$key][$conf['value']] = new Registry($conf);
+				$configPresets[$key][$conf['value']] = (object) $conf;
 			}
 		}
 
@@ -62,11 +61,11 @@ class PrototypeControllerCategory extends FormController
 		$placemark->set('id', $data['id']);
 		$placemark->set('title', $preset['title']);
 		$placemark->set('price', '----');
-		$placemark->set('preset_price', $presetPrice);
+		$placemark->set('preset_price', ($presetPrice) ? $presetPrice->title : '');
 		$placemark->set('preset_icon', $preset['icon']);
 		$placemark->set('show_price', ($preset['price'] != 'none'));
 
-		$layout = new FileLayout('components.com_prototype.map.placemark');
+		$layout = new FileLayout('components.com_prototype.map.placemark.default');
 		$html   = $layout->render(array('placemark' => $placemark));
 		preg_match('/data-placemark-coordinates="([^"]*)"/', $html, $matches);
 		$coordinates = '[]';

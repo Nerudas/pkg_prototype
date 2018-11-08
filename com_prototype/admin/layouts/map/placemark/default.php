@@ -11,7 +11,6 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 extract($displayData);
@@ -22,7 +21,6 @@ extract($displayData);
  * @var   Registry $placemark Placemark data
  */
 
-$presetPrice = ($placemark->get('preset_price', false)) ? $placemark->get('preset_price')->get('title') : '';
 
 ?>
 
@@ -158,7 +156,7 @@ $presetPrice = ($placemark->get('preset_price', false)) ? $placemark->get('prese
 	<?php if ($placemark->get('show_price')): ?>
 		<div class="price">
 			<?php ?>
-			<div class="type"><?php echo $presetPrice; ?></div>
+			<div class="type"><?php echo $placemark->get('preset_price', ''); ?></div>
 			<div class="number">
 				<?php echo $placemark->get('price', '---'); ?>
 			</div>

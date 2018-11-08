@@ -99,12 +99,44 @@ class PrototypeControllerItems extends AdminController
 		if ($item_id && $items = $model->getItems())
 		{
 			$item = (!empty($items[$item_id])) ? $items[$item_id] : false;
-			if ($item && $item->balloon)
+			if ($item)
 			{
-				$success             = true;
-				$response            = new stdClass();
-				$response->placemark = $item->placemark;
-				$response->balloon   = $item->balloon;
+				$success        = true;
+				$response       = new stdClass();
+				$response->html = $item->render->balloon;
+
+				$model->hit();
+			}
+
+		}
+		echo new JsonResponse($response, '', !$success);
+		Factory::getApplication()->close();
+	}
+
+	/**
+	 * Method to item author
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function getAuthor()
+	{
+		$app      = Factory:: getApplication();
+		$success  = false;
+		$response = '';
+		$item_id  = $app->input->get('item_id');
+		$model    = $this->getModel();
+
+		$model->setState('filter.item_id', $item_id);
+		if ($item_id && $items = $model->getItems())
+		{
+			$item = (!empty($items[$item_id])) ? $items[$item_id] : false;
+			if ($item)
+			{
+				$success        = true;
+				$response       = new stdClass();
+				$response->html = $item->render->author;
 
 				$model->hit();
 			}

@@ -223,7 +223,7 @@
 				});
 
 				// Item Click
-				$('body').on('click', '[data-prototype-show]', function () {
+				$('body').on('click', '[data-prototype-show-balloon]', function () {
 					var item = $(this),
 						id = $(item).data('prototype-show'),
 						mapElement = $('[data-prototype-placemark="' + id + '"]');
