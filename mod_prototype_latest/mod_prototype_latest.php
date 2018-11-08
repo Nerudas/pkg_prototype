@@ -28,7 +28,7 @@ $language->load('com_prototype', JPATH_SITE, $language->getTag(), false);
 BaseDatabaseModel::addIncludePath(JPATH_ROOT . '/components/com_prototype/models');
 $model = BaseDatabaseModel::getInstance('Items', 'PrototypeModel', array('ignore_request' => true));
 $model->setState('list.limit', $params->get('limit', 5));
-$model->setState('filter.category', $params->get('category', 1));
+$model->setState('category.id', $params->get('category', 1));
 if ((!Factory::getUser()->authorise('core.edit.state', 'com_prototype.item')) &&
 	(!Factory::getUser()->authorise('core.edit', 'com_prototype.item')))
 {

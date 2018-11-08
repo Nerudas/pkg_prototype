@@ -435,7 +435,7 @@ class PrototypeModelItems extends ListModel
 	{
 		$items        = parent::getItems();
 		$siteContacts = new Registry();
-		$siteContacts->set('phones', $this->getState('params')->get('site_phones', array()));
+		$siteContacts->set('phones', ComponentHelper::getParams('com_prototype')->get('site_phones', array()));
 
 		if (!empty($items))
 		{
