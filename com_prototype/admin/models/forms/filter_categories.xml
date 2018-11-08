@@ -14,14 +14,9 @@
 			<option value="1">COM_PROTOTYPE_CATEGORY_FRONT_CREATED_PREMODERATION</option>
 			<option value="2">COM_PROTOTYPE_CATEGORY_FRONT_CREATED_PUBLICATION</option>
 		</field>
-		<field name="access" type="accesslevel" onchange="this.form.submit();">
-			<option value="">JOPTION_SELECT_ACCESS</option>
+		<field name="parent" type="prototypecategory" onchange="this.form.submit();">
+			<option value="">COM_PROTOTYPE_CATEGORY_PARENT</option>
 		</field>
-		<field name="tags" type="advtags"
-			   layout="joomla.form.field.advtags.select"
-			   multiple="true"
-			   class="multipleTags"
-			   onchange="this.form.submit();"/>
 	</fields>
 
 	<fields name="list">

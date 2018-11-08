@@ -81,6 +81,10 @@ class PrototypeModelCategories extends ListModel
 		$tags = $this->getUserStateFromRequest($this->context . '.filter.tags', 'filter_tags', '');
 		$this->setState('filter.tags', $tags);
 
+		$tags = $this->getUserStateFromRequest($this->context . '.filter.tags', 'filter_tags', '');
+		$this->setState('filter.parent', $tags);
+
+
 		// List state information.
 		$ordering  = empty($ordering) ? 'c.lft' : $ordering;
 		$direction = empty($direction) ? 'asc' : $direction;
@@ -106,6 +110,7 @@ class PrototypeModelCategories extends ListModel
 		$id .= ':' . $this->getState('filter.access');
 		$id .= ':' . $this->getState('filter.published');
 		$id .= ':' . $this->getState('filter.front_created');
+		$id .= ':' . $this->getState('filter.parent');
 		$id .= ':' . serialize($this->getState('filter.tag'));
 
 		return parent::getStoreId($id);
@@ -156,6 +161,21 @@ class PrototypeModelCategories extends ListModel
 			$query->where('c.front_created = ' . (int) $front_created);
 		}
 
+		// Filter by parent state
+		$parent = $this->getState('filter.parent');
+		if (is_numeric($parent))
+		{
+			// Create a subquery for the sub-items list
+			$subQuery = $db->getQuery(true)
+				->select('sub.id')
+				->from('#__prototype_categories as sub')
+				->join('INNER', '#__prototype_categories as this ON sub.lft > this.lft AND sub.rgt < this.rgt')
+				->where('this.id = ' . (int) $parent);
+
+			// Add the subquery to the main query
+			$query->where('(c.parent_id = ' . (int) $parent . ' OR ' . 'c.id =' . (int) $parent .
+				' OR c.parent_id IN (' . (string) $subQuery . '))');
+		}
 
 		// Filter by a single or group of tags.
 		$tags = $this->getState('filter.tags');
