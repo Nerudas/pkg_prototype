@@ -18,4 +18,7 @@ Component for the preparation of the remaining sections of the site
 Module for displaying the latest Prototype items
 
 * **Sitemap - Prototype Plugin**  
-Plugin for adding the Prototype section to sitemap
+Plugin for adding the Prototype section to sitemap* 
+
+**System - Prototype Shortcodes Plugin**  
+Plugin for displaying prototype items via shortcodes

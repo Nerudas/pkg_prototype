@@ -18,6 +18,7 @@
 		<folder type="component" id="com_prototype">com_prototype</folder>
 		<folder type="module" id="mod_prototype_latest" client="site">mod_prototype_latest</folder>
 		<folder type="plugin" id="prototype" group="sitemap">plg_sitemap_prototype</folder>
+		<folder type="plugin" id="prototype" group="system">plg_system_prototype_shortcodes</folder>
 	</files>
 	<updateservers>
 		<server type="extension" priority="1" name="Prototype Package">
