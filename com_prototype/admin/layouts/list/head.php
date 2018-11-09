@@ -28,6 +28,6 @@ $item_id   = $app->input->get('item_id', 0);
 if ($component == 'com_prototype' && $view == 'list' && !empty($item_id))
 {
 	$doc->addScriptDeclaration('	jQuery(document).ready(function () {
-		jQuery(\'[data-prototype-show-balloon="' . $item_id . '"]\').trigger(\'click\');
+		jQuery(\'[data-prototype-list-show-balloon="' . $item_id . '"]\').trigger(\'click\');
 	});');
 }

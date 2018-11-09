@@ -20,9 +20,9 @@ extract($displayData);
  */
 ?>
 <div class="item" data-prototype-item="<?php echo $item->get('id'); ?>">
-	<h2><a data-prototype-show-balloon="<?php echo $item->get('id'); ?>"><?php echo $item->get('title'); ?></a></h2>
+	<h2><a data-prototype-list-show-balloon="<?php echo $item->get('id'); ?>"><?php echo $item->get('title'); ?></a></h2>
 	<div>
-		<a data-prototype-show-author="<?php echo $item->get('id'); ?>"><?php echo $author->get('name'); ?></a>
+		<a data-prototype-list-show-author="<?php echo $item->get('id'); ?>"><?php echo $author->get('name'); ?></a>
 	</div>
 </div>
 <hr data-prototype-item="<?php echo $item->get('id'); ?>">

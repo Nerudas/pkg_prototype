@@ -10,9 +10,9 @@
 (function ($) {
 	$(document).ready(function () {
 		// Balloon
-		$('body').on('click', '[data-prototype-show-balloon]', function () {
+		$('body').on('click', '[data-prototype-list-show-balloon]', function () {
 			var item = $(this),
-				id = $(item).data('prototype-show-balloon'),
+				id = $(item).data('prototype-list-show-balloon'),
 				listElement = $('[data-prototype-item="' + id + '"]');
 			$(listElement).attr('data-viewed', 'true');
 			getBalloon(id);
@@ -56,9 +56,9 @@
 		}
 
 		// Author
-		$('body').on('click', '[data-prototype-show-author]', function () {
+		$('body').on('click', '[data-prototype-list-show-author]', function () {
 			var item = $(this),
-				id = $(item).data('prototype-show-author'),
+				id = $(item).data('prototype-list-show-author'),
 				listElement = $('[data-prototype-item="' + id + '"]');
 			$(listElement).attr('data-viewed', 'true');
 			getAuthor(id);
