@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <form>
+	<fieldset>
+		<field name="payment" type="radio"
+			   label="COM_PROTOTYPE_ITEM_PAYMENT"
+			   class="btn-group btn-group-yesno"
+			   default="0">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+	</fieldset>
 	<fieldset name="main">
 		<field name="title" type="text"
 			   label="JGLOBAL_TITLE"

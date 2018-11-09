@@ -73,6 +73,15 @@ class PrototypeViewForm extends HtmlView
 	protected $children;
 
 	/**
+	 * The Author object
+	 *
+	 * @var  array
+	 *
+	 * @since  1.0.0
+	 */
+	protected $author;
+
+	/**
 	 * The actions the user is authorised to perform
 	 *
 	 * @var  JObject
@@ -99,6 +108,7 @@ class PrototypeViewForm extends HtmlView
 		// Get model data.
 		$this->form     = $this->get('Form');
 		$this->item     = $this->get('Item');
+		$this->author   = $this->get('Author');
 		$this->state    = $this->get('State');
 		$this->category = $this->get('Category');
 		$this->presets  = (!empty($this->category)) ? $this->category->presets : array();

@@ -422,6 +422,11 @@ class com_PrototypeInstallerScript
 			$db->setQuery("ALTER TABLE " . $table . " ADD `external_link` TEXT NOT NULL DEFAULT '' AFTER `preset_object`")
 				->query();
 		}
+		if (!isset($columns['payment']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `payment` TINYINT(3) NOT NULL DEFAULT '0' AFTER `created_by`")
+				->query();
+		}
 		if (!isset($columns['payment_down']))
 		{
 			$db->setQuery("ALTER TABLE " . $table . " ADD `payment_down`  DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `payment_number`")

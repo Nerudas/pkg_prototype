@@ -20,9 +20,19 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Uri\Uri;
 
 JLoader::register('PrototypeModelItem', JPATH_ADMINISTRATOR . '/components/com_prototype/models/item.php');
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
 
 class PrototypeModelForm extends PrototypeModelItem
 {
+
+	/**
+	 * Author data
+	 *
+	 * @var    object
+	 *
+	 * @since  1.0.0
+	 */
+	protected $_author = array();
 
 	/**
 	 * Category children data
@@ -492,4 +502,105 @@ class PrototypeModelForm extends PrototypeModelItem
 
 		return $this->_children[$pk];
 	}
+
+	/**
+	 * Method to get Author data
+	 *
+	 * @param   integer $pk The id of the author.
+	 *
+	 * @return  mixed object|false
+	 *
+	 * @since  1.0.0
+	 */
+	public function getAuthor($pk = null)
+	{
+		if (empty($pk))
+		{
+			$item = $this->getItem();
+			$pk   = (!empty($item->id)) ? $item->created_by : Factory::getUser()->id;
+		}
+
+		if (!isset($this->_author[$pk]))
+		{
+			try
+			{
+				$db           = $this->getDbo();
+				$offline      = (int) ComponentHelper::getParams('com_profiles')->get('offline_time', 5) * 60;
+				$offline_time = Factory::getDate()->toUnix() - $offline;
+				$siteContacts = new Registry();
+				$siteContacts->set('phones', ComponentHelper::getParams('com_prototype')->get('site_phones', array()));
+				$imagesHelper = new FieldTypesFilesHelper();
+
+				$query = $db->getQuery(true)
+					->select(array(
+						'author.id as author_id',
+						'author.name as author_name',
+						'author.status as author_status',
+						'author.contacts as author_contacts',
+						'(session.time IS NOT NULL) AS author_online',
+						'(company.id IS NOT NULL) AS author_job',
+						'company.id as author_job_id',
+						'company.name as author_job_name',
+						'company.contacts as author_job_contacts',
+						'company.about as author_job_about',
+						'employees.position as  author_position',
+						'(employees.as_company > 0 AND company.id IS NOT NULL) as author_company',))
+					->from($db->quoteName('#__profiles', 'author'))
+					->where('author.id = ' . (int) $pk)
+					->join('LEFT', '#__session AS session ON session.userid = author.id AND session.time > ' . $offline_time)
+					->join('LEFT', '#__companies_employees AS employees ON employees.user_id = author.id AND ' .
+						$db->quoteName('employees.key') . ' = ' . $db->quote(''))
+					->join('LEFT', '#__companies AS company ON company.id = employees.company_id AND company.state = 1');
+
+				$db->setQuery($query);
+
+				$data = $db->loadObject();
+				if (empty($data))
+				{
+					$this->_author[$pk] = false;
+
+					return false;
+				}
+
+				// Set author
+				$author         = new stdClass();
+				$author->type   = ($data->author_company) ? 'legal' : 'natural';
+				$author->online = $data->author_online;
+				$author->status = $data->author_status;
+				if (!$data->author_company)
+				{
+					$author->id        = $data->author_id;
+					$author->name      = $data->author_name;
+					$author->signature = (!empty($data->author_job_name)) ? $data->author_job_name : '';
+					$author->avatar    = $imagesHelper->getImage('avatar', 'images/profiles/' . $data->author_id,
+						'media/com_profiles/images/no-avatar.jpg', false);
+					$author->link      = Route::_(ProfilesHelperRoute::getProfileRoute($data->author_id));
+					$author->contacts  = new Registry($data->author_contacts);
+				}
+				else
+				{
+					$author->id        = $data->author_job_id;
+					$author->name      = $data->author_job_name;
+					$author->signature = (!empty($data->author_position)) ? $data->author_position : $data->author_name;
+					$author->avatar    = $imagesHelper->getImage('logo', 'images/companies/' . $data->author_job_id, false, false);
+					$author->link      = Route::_(CompaniesHelperRoute::getCompanyRoute($data->author_job_id));
+					$author->contacts  = new Registry($data->author_job_contacts);
+				}
+				$author->contacts     = $author->contacts->toArray();
+				$author->siteContacts = $siteContacts->toArray();
+
+				$this->_author[$pk] = new Registry($author);
+			}
+			catch (Exception $e)
+			{
+
+				$this->setError($e);
+				$this->_author[$pk] = false;
+
+			}
+		}
+
+		return $this->_author[$pk];
+	}
+
 }

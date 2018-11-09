@@ -45,6 +45,8 @@ $doc->addScriptDeclaration('
 			</a>
 		</div>
 		<?php echo $this->form->renderFieldSet('main'); ?>
+		<?php echo LayoutHelper::render('components.com_prototype.form.author',
+			array('form' => $this->form, 'author' => $this->author)); ?>
 		<?php echo $this->form->renderFieldSet('hidden'); ?>
 		<input type="hidden" name="task" value=""/>
 		<input type="hidden" name="return" value="<?php echo $app->input->getCmd('return'); ?>"/>
