@@ -20,7 +20,6 @@ extract($displayData);
  * -----------------
  * @var   \Joomla\Registry\Registry $author Author data
  * @var   \Joomla\CMS\Form\Form     $form   Author data
- * @var int                         $isNew  New item
  */
 
 HTMLHelper::_('jquery.framework');
