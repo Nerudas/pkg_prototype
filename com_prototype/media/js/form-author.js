@@ -10,8 +10,19 @@
 (function ($) {
 	$(document).ready(function () {
 		$('[name="jform[payment]"]:radio').change(function () {
-			console.log('change');
 			showAuthorPhones();
+		});
+		$('[name="jform[payment]"]:radio').on('click', function() {
+			showAuthorPhones();
+		});
+		$('[name="jform[payment]"]:radio').on('change', function() {
+			console.log('change2');
+			showAuthorPhones();
+		});
+		$('body').on('change', '[name="jform[payment]"]:radio',  function() {
+			$('[name="jform[payment]"]:radio').change(function () {
+				showAuthorPhones();
+			});
 		});
 		showAuthorPhones();
 
@@ -21,8 +32,6 @@
 				value = $('[name="jform[payment]"]:checked').val();
 			$(payment).hide();
 			$(free).hide();
-
-			console.log(value);
 
 			if (value == 1) {
 				$(payment).show();
