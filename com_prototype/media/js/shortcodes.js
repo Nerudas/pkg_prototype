@@ -9,8 +9,6 @@
 
 (function ($) {
 	$(document).ready(function () {
-
-		console.log('script');
 		// Balloon
 		$('body').on('click', '[data-prototype-shortcodes-show-balloon]', function () {
 			var item = $(this),
