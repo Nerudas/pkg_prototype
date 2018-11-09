@@ -20,3 +20,14 @@ HTMLHelper::_('script', 'media/com_prototype/js/list.min.js', array('version' =>
 $doc = Factory::getDocument();
 $doc->addScriptDeclaration("function showPrototypeListBalloon() {jQuery(('[data-prototype-list-balloon]')).show();}");
 $doc->addScriptDeclaration("function showPrototypeListAuthor() {jQuery(('[data-prototype-list-author]')).show();}");
+
+$app       = Factory::getApplication();
+$component = $app->input->get('option', '');
+$view      = $app->input->get('view', '');
+$item_id   = $app->input->get('item_id', 0);
+if ($component == 'com_prototype' && $view == 'list' && !empty($item_id))
+{
+	$doc->addScriptDeclaration('	jQuery(document).ready(function () {
+		jQuery(\'[data-prototype-show-balloon="' . $item_id . '"]\').trigger(\'click\');
+	});');
+}

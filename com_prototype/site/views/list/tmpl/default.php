@@ -14,7 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 
-LayoutHelper::render('components.com_prototype.list.scripts');
+LayoutHelper::render('components.com_prototype.list.head');
 ?>
 <div>
 	<form action="<?php echo htmlspecialchars(Factory::getURI()->toString()); ?>" method="get" name="adminForm">
