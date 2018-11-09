@@ -31,7 +31,7 @@
 				delivery_title = preset.data('preset-delivery_title'),
 				object = preset.data('preset-object'),
 				object_title = preset.data('preset-object_title');
-			
+
 			if (title != undefined && title != '') {
 				$('[data-preset-title="label"]').text(title);
 			}
@@ -85,6 +85,9 @@
 			else {
 				$('[data-prototype-form="form"]').hide();
 				$('[data-prototype-form="presets"]').show();
+			}
+			if ($('#jform_title').val() == '') {
+				$('#jform_title').val(title);
 			}
 
 			$('#jform_preset').trigger('change');

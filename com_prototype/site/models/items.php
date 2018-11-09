@@ -453,7 +453,7 @@ class PrototypeModelItems extends ListModel
 				if ($paymentDownDate == '0000-00-00 00:00:00')
 				{
 					$paymentDown     = false;
-					$paymentDownDate = Text::_('JNEVER');
+					$paymentDownDate = 'never';
 				}
 				else
 				{
