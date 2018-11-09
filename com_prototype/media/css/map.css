@@ -42,9 +42,9 @@
 	z-index: 999;
 }
 
-[data-prototype-zoom="plus"],
-[data-prototype-zoom="current"],
-[data-prototype-zoom="minus"] {
+[data-prototype-map-zoom="plus"],
+[data-prototype-map-zoom="current"],
+[data-prototype-map-zoom="minus"] {
 	display: block;
 	width: 32px;
 	height: 32px;
@@ -56,11 +56,11 @@
 }
 
 [data-afterInit="show"],
-[data-prototype-itemlist="back"] {
+[data-prototype-map-list="back"] {
 	display: none;
 }
 
-[data-prototype-filter] {
+[data-prototype-map-filter] {
 	background: #fff;
 	position: absolute;
 	top: 0;
@@ -96,8 +96,8 @@
 	opacity: 0.3;
 }
 
-[data-prototype-balloon],
-[data-prototype-balloon-error],
-[data-prototype-balloon-loading] {
+[data-prototype-map-balloon],
+[data-prototype-map-balloon-error],
+[data-prototype-map-balloon-loading] {
 	display: none;
 }

@@ -531,10 +531,13 @@ class PrototypeModelItems extends ListModel
 					$item->latitude !== '0.000000' && $item->longitude !== '0.000000') ? new Registry($item->map) : false;
 				if ($item->map)
 				{
-					$item->map->set('link', Route::_(PrototypeHelperRoute::getMapRoute($item->catid) .
+					$map       = $item->map->toObject();
+					$map->link = Route::_(PrototypeHelperRoute::getMapRoute($item->catid) .
 						'&center=' . $item->latitude . ',' . $item->longitude .
-						'&zoom=' . $item->map->get('params')->zoom .
-						'&item_id=' . $item->id));
+						'&zoom=' . $map->params->zoom .
+						'&item_id=' . $item->id);
+
+					$item->map = $map;
 				}
 
 				// Set Tags
@@ -568,6 +571,7 @@ class PrototypeModelItems extends ListModel
 				$displayData = array(
 					'item'      => new Registry($item),
 					'author'    => new Registry($author),
+					'map'       => ($map) ? new Registry($map) : new  Registry(),
 					'category'  => ($category) ? new Registry($category) : new  Registry(),
 					'preset'    => ($preset) ? new Registry($preset) : new  Registry(),
 					'placemark' => ($placemark) ? new Registry($placemark) : new  Registry(),

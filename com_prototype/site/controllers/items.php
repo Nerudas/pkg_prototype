@@ -13,7 +13,6 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Response\JsonResponse;
-use Joomla\Registry\Registry;
 
 class PrototypeControllerItems extends AdminController
 {
@@ -52,28 +51,43 @@ class PrototypeControllerItems extends AdminController
 			$response             = new stdClass();
 			$response->count      = count($items);
 			$response->placemarks = array();
+			$response->listItems  = array();
 			foreach ($items as $id => $item)
 			{
-				if ($item->placemark)
+				if ($item->map)
 				{
-					$response->placemarks[$id] = $item->placemark;
+					$html = $item->render->mapPlacemark;
+					preg_match('/data-placemark-coordinates="([^"]*)"/', $html, $matches);
+					$coordinates = '[]';
+					if (!empty($matches[1]))
+					{
+						$coordinates = $matches[1];
+						$html        = str_replace($matches[0], '', $html);
+					}
+
+					preg_match('/data-placemark-coordinates-viewed="([^"]*)"/', $html, $matches);
+					$coordinates_viewed = $coordinates;
+					if (!empty($matches[1]))
+					{
+						$coordinates_viewed = $matches[1];
+						$html               = str_replace($matches[0], '', $html);
+					}
+
+					$iconShape                     = new stdClass();
+					$iconShape->type               = 'Polygon';
+					$iconShape->coordinates        = json_decode($coordinates);
+					$iconShape->coordinates_viewed = json_decode($coordinates_viewed);
+
+					$placemark                          = $item->map->placemark;
+					$placemark->id                      = $item->id;
+					$placemark->options                 = array();
+					$placemark->options['customLayout'] = $html;
+					$placemark->options['iconShape']    = $iconShape;
+
+					$response->placemarks[$id] = $placemark;
+					$response->listItems[$id]  = $item->render->mapListItem;
 				}
 			}
-
-			// Get items view
-			$name   = $this->input->get('view', 'map');
-			$type   = Factory::getDocument()->getType();
-			$path   = $this->basePath;
-			$layout = $this->input->get('layout', 'default', 'string');
-			$view   = $this->getView($name, $type, '', array('base_path' => $path, 'layout' => $layout));
-
-			$view->setModel($this->getModel($name), true);
-			$view->document     = Factory::getDocument();
-			$view->items        = $items;
-			$view->extra_filter = new Registry($model->getState('extra_filter'));
-			$view->category     = $model->getCategory();
-
-			$response->html = $view->loadTemplate('items');
 		}
 
 		echo new JsonResponse($response, '', !$success);

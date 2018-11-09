@@ -78,9 +78,9 @@
 					totalRequest = false,
 					itemsRequest = false,
 					itemsViewed = [],
-					itemList = $('[data-prototype-itemlist="items"]'),
-					counterCurrent = $('[data-prototype-counter="current"]'),
-					counterTotal = $('[data-prototype-counter="total"]');
+					itemList = $('[data-prototype-map-itemlist="items"]'),
+					counterCurrent = $('[data-prototype-map-counter="current"]'),
+					counterTotal = $('[data-prototype-map-counter="total"]');
 
 				function startItemsRequests() {
 					if (totalRequest) {
@@ -140,9 +140,10 @@
 							success: function (response) {
 								if (response.success) {
 									var data = response.data,
-										placemarks = data.placemarks;
+										placemarks = data.placemarks,
+										listItems = data.listItems;
 
-									$.each(placemarks, function (key, placemark) {
+									$.each(placemarks, function (p, placemark) {
 										var object = {
 											type: 'Feature',
 											id: placemark.id,
@@ -152,37 +153,40 @@
 											},
 											options: {}
 										};
-										$.each(placemark.options, function (key, value) {
-											if (key == 'customLayout') {
+										$.each(placemark.options, function (v, value) {
+											if (v == 'customLayout') {
 												if ($.inArray(placemark.id * 1, itemsViewed) !== -1) {
 													var clone = $(value).clone(),
 														html = '';
 													clone.filter('[data-prototype-placemark]').attr('data-viewed', 'true');
-													$.each(clone, function (key) {
-														var outerHTML = clone[key].outerHTML;
+													$.each(clone, function (v) {
+														var outerHTML = clone[v].outerHTML;
 														if (outerHTML != '' && outerHTML != undefined) {
-															html += clone[key].outerHTML;
+															html += clone[v].outerHTML;
 														}
 													});
 													value = html;
 												}
-												object.options[key] = value;
-												key = 'iconLayout';
+												object.options[v] = value;
+												v = 'iconLayout';
 												value = ymaps.templateLayoutFactory.createClass(value);
 											}
 
-											if ($.inArray(placemark.id * 1, itemsViewed) !== -1 && key == 'iconShape') {
+											if ($.inArray(placemark.id * 1, itemsViewed) !== -1 && v == 'iconShape') {
 												value.coordinates = value.coordinates_viewed;
 											}
 
-											object.options[key] = value;
+											object.options[v] = value;
 										});
 										objectManager.add(object);
 
 									});
 
-									$(data.html).appendTo($(itemList));
-									$(itemsViewed).each(function (key, value) {
+									$.each(listItems, function (i, item) {
+										$(item).appendTo($(itemList));
+									});
+
+									$(itemsViewed).each(function (v, value) {
 										$('[data-prototype-item="' + value + '"]').attr('data-viewed', 'true');
 									});
 
@@ -205,7 +209,7 @@
 				}
 
 				// Filter
-				var filter = $('[data-prototype-filter]');
+				var filter = $('[data-prototype-map-filter]');
 				$(filter).on('submit', function () {
 					startItemsRequests();
 
@@ -223,9 +227,9 @@
 				});
 
 				// Item Click
-				$('body').on('click', '[data-prototype-show-balloon]', function () {
+				$('body').on('click', '[data-prototype-map-show-balloon]', function () {
 					var item = $(this),
-						id = $(item).data('prototype-show'),
+						id = $(item).data('prototype-map-show-balloon'),
 						mapElement = $('[data-prototype-placemark="' + id + '"]');
 
 					var maxScale = 1.4,
@@ -325,10 +329,10 @@
 					ajaxData.push({name: 'id', value: joomlaParams.catid});
 					ajaxData.push({name: 'item_id', value: id});
 					ajaxData.push({name: 'return_view', value: 'map'});
-					var container = $('[data-prototype-balloon]'),
-						content = $(container).find('[data-prototype-balloon-content]'),
-						loading = $(container).find('[data-prototype-balloon-loading]'),
-						error = $(container).find('[data-prototype-balloon-error]');
+					var container = $('[data-prototype-map-balloon]'),
+						content = $(container).find('[data-prototype-map-balloon-content]'),
+						loading = $(container).find('[data-prototype-map-balloon-loading]'),
+						error = $(container).find('[data-prototype-map-balloon-error]');
 					$.ajax({
 						type: 'GET',
 						dataType: 'json',
@@ -347,7 +351,7 @@
 						success: function (response) {
 							if (response.success) {
 								var data = response.data;
-								$(content).html(data.balloon);
+								$(content).html(data.html);
 							}
 							else {
 								$(error).show();

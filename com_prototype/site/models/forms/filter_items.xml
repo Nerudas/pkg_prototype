@@ -6,22 +6,4 @@
 			   hint="JSEARCH_FILTER"/>
 		<field name="onlymy" type="checkbox" label="COM_PROTOTYPE_ONLYMY" value="1"/>
 	</fields>
-	<fieldset name="extra">
-		<fields name="extra">
-			<field name="price_m3t" type="radio"
-				   class="btn-group"
-				   label="COM_PROTOTYPE_FILTER_EXTRA_PRICE_M3T"
-				   default="m3">
-				<option value="m3">COM_PROTOTYPE_FILTER_EXTRA_PRICE_M3T_M3</option>
-				<option value="t">COM_PROTOTYPE_FILTER_EXTRA_PRICE_M3T_T</option>
-			</field>
-			<field name="price_hs" type="radio"
-				   class="btn-group"
-				   label="COM_PROTOTYPE_FILTER_EXTRA_PRICE_HS"
-				   default="h">
-				<option value="h">COM_PROTOTYPE_FILTER_EXTRA_PRICE_HS_H</option>
-				<option value="s">COM_PROTOTYPE_FILTER_EXTRA_PRICE_HS_S</option>
-			</field>
-		</fields>
-	</fieldset>
 </form>

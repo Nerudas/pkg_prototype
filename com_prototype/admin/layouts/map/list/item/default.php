@@ -12,12 +12,17 @@ defined('_JEXEC') or die;
 
 extract($displayData);
 
-
-echo '<pre>', print_r('map.list.item', true), '</pre>';
 /**
  * Layout variables
  * -----------------
- * @var   Registry $item      Item data
+ * @var  \Joomla\Registry\Registry $item Item data
  */
-
-echo '<pre>', print_r($item, true), '</pre>';
+?>
+<div data-prototype-item="<?php echo $item->get('id'); ?>">
+	<h3>
+		<a data-prototype-map-show-balloon="<?php echo $item->get('id'); ?>">
+			<?php echo $item->get('title'); ?>
+		</a>
+	</h3>
+</div>
+<hr data-prototype-item="<?php echo $item->get('id'); ?>">
