@@ -16,7 +16,6 @@
 			showAuthorPhones();
 		});
 		$('[name="jform[payment]"]:radio').on('change', function() {
-			console.log('change2');
 			showAuthorPhones();
 		});
 		$('body').on('change', '[name="jform[payment]"]:radio',  function() {
