@@ -101,6 +101,7 @@ class PrototypeViewForm extends HtmlView
 		$this->item     = $this->get('Item');
 		$this->state    = $this->get('State');
 		$this->category = $this->get('Category');
+		$this->presets  = (!empty($this->category)) ? $this->category->presets : array();
 		$this->parent   = $this->get('Parent');
 		$this->children = $this->get('Children');
 		$this->link     = $this->category->formLink;
@@ -146,18 +147,6 @@ class PrototypeViewForm extends HtmlView
 				$app->setHeader('status', 403, true);
 
 				return false;
-			}
-		}
-
-		$category       = $this->category;
-		$extraFields    = $this->form->getGroup('extra');
-		$categoryFields = (!empty($category->fields)) ? $category->fields : array();
-		foreach ($extraFields as $extraField)
-		{
-			$name = $extraField->getAttribute('name');
-			if (empty($categoryFields[$name]))
-			{
-				$this->form->removeField($name, 'extra');
 			}
 		}
 

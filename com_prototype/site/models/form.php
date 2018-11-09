@@ -51,7 +51,6 @@ class PrototypeModelForm extends PrototypeModelItem
 	 */
 	protected $_parent = array();
 
-
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -291,8 +290,42 @@ class PrototypeModelForm extends PrototypeModelItem
 				$data->formLink   = Route::_(PrototypeHelperRoute::getFormRoute($this->getState('item.id'),
 					$data->id, $returnView));
 
-				$registry     = new Registry($data->fields);
-				$data->fields = $registry->toArray();
+				$registry      = new Registry(ComponentHelper::getParams('com_prototype')->get('presets', array()));
+				$configs       = $registry->toArray();
+				$configPresets = array();
+				foreach ($configs as $key => $config)
+				{
+					if (!isset($configPresets[$key]))
+					{
+						$configPresets[$key] = array();
+					}
+					foreach ($config as $conf)
+					{
+						$configPresets[$key][$conf['value']] = new Registry($conf);
+					}
+				}
+
+				$presets = array();
+
+
+				if (!empty($data->presets))
+				{
+					$registry = new Registry($data->presets);
+					$rows     = $registry->toArray();
+
+					foreach ($rows as $preset)
+					{
+						$preset['price_title']    = (!empty($configPresets['price'][$preset['price']])) ?
+							$configPresets['price'][$preset['price']]->get('title', $preset['price']) : $preset['price'];
+						$preset['delivery_title'] = (!empty($configPresets['delivery'][$preset['delivery']])) ?
+							$configPresets['delivery'][$preset['delivery']]->get('title', $preset['delivery']) : $preset['delivery'];
+						$preset['object_title']   = (!empty($configPresets['object'][$preset['object']])) ?
+							$configPresets['object'][$preset['object']]->get('title', $preset['object']) : $preset['object'];
+						$presets[$preset['key']]  = $preset;
+					}
+				}
+
+				$data->presets = $presets;
 
 				$this->_category[$pk] = $data;
 			}

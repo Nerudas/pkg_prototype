@@ -18,6 +18,7 @@ use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Component\ComponentHelper;
 
 class PrototypeControllerItem extends FormController
 {
@@ -30,31 +31,6 @@ class PrototypeControllerItem extends FormController
 	protected $text_prefix = 'COM_PROTOTYPE_ITEM';
 
 	/**
-	 * Method to update item icon
-	 *
-	 * @return  boolean  True if successful, false otherwise.
-	 *
-	 * @since  1.0.0
-	 */
-	public function updateImages()
-	{
-		$app   = Factory::getApplication();
-		$id    = $app->input->get('id', 0, 'int');
-		$value = $app->input->get('value', '', 'raw');
-		$field = $app->input->get('field', '', 'raw');
-		if (!empty($id) & !empty($field))
-		{
-			JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-			$helper = new imageFolderHelper('images/prototype/items');
-			$helper->saveImagesValue($id, '#__prototype_items', $field, $value);
-		}
-
-		$app->close();
-
-		return true;
-	}
-
-	/**
 	 * Method to get Item placemark
 	 *
 	 * @return  boolean  True if successful, false otherwise.
@@ -63,75 +39,60 @@ class PrototypeControllerItem extends FormController
 	 */
 	public function getPlacemark()
 	{
-		$app           = Factory::getApplication();
-		$data          = $this->input->post->get('jform', array(), 'array');
-		$data['image'] = (!empty($data['images']) && !empty(reset($data['images'])['src'])) ?
-			reset($data['images'])['src'] : false;
+		$data = $this->input->post->get('jform', array(), 'array');
 
-		$item  = new Registry($data);
-		$extra = new Registry($data['extra']);
-
-		$category = array();
-		if (!empty($data['catid']))
+		if (empty($data['catid']) || empty($data['preset']))
 		{
-			$category = $this->getModel('Category')->getItem($data['catid']);
-			if ($category && empty($data['placemark_id']))
+			return $this->returnDefaultPlacemark();
+		}
+
+		$category = $this->getModel('Category')->getItem($data['catid']);
+		if (empty($category) || empty($category->presets))
+		{
+			return $this->returnDefaultPlacemark();
+		}
+
+		$registry = new Registry(ComponentHelper::getParams('com_prototype')->get('presets', array()));
+		$configs  = $registry->toArray();
+
+		$configPresets = array();
+		foreach ($configs as $key => $config)
+		{
+			if (!isset($configPresets[$key]))
 			{
-				$data['placemark_id'] = $category->placemark_id;
+				$configPresets[$key] = array();
+			}
+			foreach ($config as $conf)
+			{
+				$configPresets[$key][$conf['value']] = (object) $conf;
 			}
 		}
-		$category     = new Registry($category);
-		$extra_filter = new Registry(array());
 
-		$placemark = array();
-		if (!empty($data['placemark_id']))
+		$presets = array();
+		foreach ($category->presets as &$preset)
 		{
-			$placemark = $this->getModel('Placemark')->getItem($data['placemark_id']);
-
-			if ($placemark)
-			{
-				$registry          = new Registry($placemark->images);
-				$placemark->images = $registry->toArray();
-				$placemark->image  = (!empty($placemark->images) && !empty(reset($placemark->images)['src'])) ?
-					reset($placemark->images)['src'] : false;
-			}
-		}
-		$placemark = new Registry($placemark);
-
-		$db    = Factory::getDbo();
-		$query = $db->getQuery(true)
-			->select('template')
-			->from('#__template_styles')
-			->where('client_id = 0')
-			->order('home DESC ');
-		$db->setQuery($query);
-		$templates   = $db->loadColumn();
-		$layoutPaths = array();
-		foreach (array_unique($templates) as $template)
-		{
-			$layoutPaths[] = JPATH_ROOT . '/templates/' . $template . '/html/layouts';
-		}
-		$layoutPaths[] = JPATH_ROOT . '/layouts';
-
-		$layoutName = $placemark->get('layout', 'default');
-		if (!JPath::find($layoutPaths, 'components/com_prototype/placemarks/' . $layoutName . '.php'))
-		{
-			$layoutName = 'default';
+			$presets[$preset['key']] = $preset;
 		}
 
-		$layoutID = 'components.com_prototype.placemarks.' . $layoutName;
-		$layout   = new FileLayout($layoutID);
-		$layout->setIncludePaths($layoutPaths);
+		if (empty($presets[$data['preset']]))
+		{
+			return $this->returnDefaultPlacemark();
+		}
+		$preset = $presets[$data['preset']];
 
-		$displayData = array(
-			'item'         => $item,
-			'extra'        => $extra,
-			'category'     => $category,
-			'extra_filter' => $extra_filter,
-			'placemark'    => $placemark
-		);
+		$presetPrice = (!empty($configPresets['price'][$preset['price']])) ? $configPresets['price'][$preset['price']] : false;
+		$presetIcon  = (!empty($preset['icon'])) ? $preset['icon'] : '';
 
-		$html = $layout->render($displayData);
+		$placemark = new Registry();
+		$placemark->set('id', $data['id']);
+		$placemark->set('title', $data['title']);
+		$placemark->set('price', $data['price']);
+		$placemark->set('preset_price', ($presetPrice)? $presetPrice->title : '');
+		$placemark->set('preset_icon', $presetIcon);
+		$placemark->set('show_price', (!empty($data['price'])));
+
+		$layout = new FileLayout('components.com_prototype.map.placemark.default');
+		$html   = $layout->render(array('placemark' => $placemark));
 		preg_match('/data-placemark-coordinates="([^"]*)"/', $html, $matches);
 		$coordinates = '[]';
 		if (!empty($matches[1]))
@@ -149,9 +110,49 @@ class PrototypeControllerItem extends FormController
 		$options['iconShape']   = $iconShape;
 
 		echo new JsonResponse($options);
-		$app->close();
+		Factory::getApplication()->close();
 
 		return true;
+	}
+
+	/**
+	 * Method to return default placemark
+	 *
+	 * @return bool
+	 *
+	 * @since 1.3.0
+	 */
+	protected function returnDefaultPlacemark()
+	{
+		$data      = $this->input->post->get('jform', array(), 'array');
+		$placemark = new Registry();
+		$placemark->set('id', $data['id']);
+		$placemark->set('title', $data['title']);
+		$placemark->set('price', $data['price']);
+		$placemark->set('show_price', (!empty($data['price'])));
+
+		$layout = new FileLayout('components.com_prototype.map.placemark.default');
+		$html   = $layout->render(array('placemark' => $placemark));
+		preg_match('/data-placemark-coordinates="([^"]*)"/', $html, $matches);
+		$coordinates = '[]';
+		if (!empty($matches[1]))
+		{
+			$coordinates = $matches[1];
+			$html        = str_replace($matches[0], '', $html);
+		}
+
+		$options                 = array();
+		$options['customLayout'] = $html;
+
+		$iconShape              = new stdClass();
+		$iconShape->type        = 'Polygon';
+		$iconShape->coordinates = json_decode($coordinates);
+		$options['iconShape']   = $iconShape;
+
+		echo new JsonResponse($options);
+		Factory::getApplication()->close();
+
+		return false;
 	}
 
 	/**

@@ -1,11 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <form>
-	<fieldset>
+	<fieldset name="main">
 		<field name="title" type="text"
 			   label="JGLOBAL_TITLE"
 			   description="JFIELD_TITLE_DESC"
 			   class="input-xxlarge input-large-text"
 			   size="40"
 			   required="true"/>
+		<field name="price" type="text" label="COM_PROTOTYPE_PRESETS_PRICE_LABEL"/>
+		<field name="text" type="textarea"
+			   label="COM_PROTOTYPE_ITEM_TEXT"
+			   class="span12"
+			   rows="3"/>
 		<field name="images" type="images"
 			   label="COM_PROTOTYPE_ITEM_IMAGES"
 			   folder_field="images_folder"
@@ -17,55 +24,24 @@
 			   description="JGLOBAL_FIELD_MAP_DESC"
 			   setplacemark="true"/>
 	</fieldset>
-
-	<fieldset name="extra" label="COM_PROTOTYPE_ITEM_EXTRA">
-		<fields name="extra">
-			<field name="price_m3" type="price"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_M3"
-				   contract_price="false"/>
-			<field name="price_t" type="price"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_T"
-				   contract_price="false"/>
-			<field name="price_h" type="price"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_H"
-				   contract_price="false"/>
-			<field name="price_s" type="price"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_S"
-				   contract_price="false"/>
-			<field name="price_o" type="price"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_PRICE_O"
-				   contract_price="false"/>
-			<field name="why_you" type="textarea"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_WHY_YOU"
-				   rows="10"
-				   cols="5"/>
-			<field name="comment" type="textarea"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_COMMENT"
-				   rows="10"
-				   cols="5"/>
-			<field name="discussion_link" type="text"
-				   label="COM_PROTOTYPE_ITEM_EXTRA_DISCUSSION_LINK"
-				   class="input-xxlarge"/>
-		</fields>
-	</fieldset>
-
-
 	<fieldset name="hidden">
 		<field name="images_folder" type="folder"
 			   label="JGLOBAL_FIELD_IMAGES_FOLDER_LABEL"/>
 		<field name="region" type="hidden"/>
 		<field name="state" type="hidden" default="1"/>
-		<field name="html" type="hidden" readonly="true"/>
-		<field name="placemark_id" type="hidden" readonly="true"/>
-		<field name="balloon_layout" type="hidden" readonly="true"/>
-		<field name="listitem_layout" type="hidden" readonly="true"/>
 		<field name="access" type="hidden" readonly="true"/>
 		<field name="created" type="hidden" readonly="true"/>
-		<field name="publish_down" type="hidden" readonly="true"/>
+		<field name="payment_down" type="hidden" readonly="true"/>
 		<field name="payment_number" type="hidden" readonly="true"/>
 		<field name="created_by" type="hidden" readonly="true"/>
 		<field name="hits" type="hidden" readonly="true"/>
 		<field name="id" type="hidden" default="0" readonly="true"/>
 		<field name="catid" type="hidden" default="0"/>
+		<field name="preset" type="hidden" required=" true"/>
+		<field name="preset_price" type="hidden" required="true"/>
+		<field name="preset_delivery" type="hidden" required="true"/>
+		<field name="preset_object" type="hidden" required="true"/>
+		<field name="external_link" type="hidden"/>
+		<field name="location" type="hidden"/>
 	</fieldset>
 </form>

@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 
+HTMLHelper::_('jquery.framework');
 HTMLHelper::_('formbehavior.chosen', 'select');
 HTMLHelper::_('script', '//api-maps.yandex.ru/2.1/?lang=ru-RU', array('version' => 'auto', 'relative' => true));
 HTMLHelper::_('script', 'media/com_prototype/js/balloon.min.js', array('version' => 'auto'));
