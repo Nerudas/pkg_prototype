@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Prototype Component
- * @version    1.3.0
+ * @version    1.3.1
  * @author     Nerudas  - nerudas.ru
  * @copyright  Copyright (c) 2013 - 2018 Nerudas. All rights reserved.
  * @license    GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
@@ -107,7 +107,7 @@ $columns = 9;
 								   href="<?php echo Route::_('index.php?option=com_prototype&task=item.edit&id=' . $item->id); ?>">
 									<span class="icon-apply icon-white"></span>
 								</a>
-								<?php echo HTMLHelper::_('jgrid.published', $item->state, $i, 'items.', $canChange, 'cb', $item->created); ?>
+								<?php echo HTMLHelper::_('jgrid.published', $item->state, $i, 'items.', $canChange, 'cb'); ?>
 								<?php
 								if ($canChange)
 								{

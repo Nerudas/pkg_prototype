@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Prototype Component
- * @version    1.3.0
+ * @version    1.3.1
  * @author     Nerudas  - nerudas.ru
  * @copyright  Copyright (c) 2013 - 2018 Nerudas. All rights reserved.
  * @license    GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
@@ -172,12 +172,14 @@ class PrototypeModelItem extends AdminModel
 	 */
 	public function save($data)
 	{
-		$app    = Factory::getApplication();
-		$pk     = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
-		$filter = InputFilter::getInstance();
-		$table  = $this->getTable();
-		$db     = Factory::getDbo();
-		$isNew  = true;
+		$app         = Factory::getApplication();
+		$pk          = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
+		$filter      = InputFilter::getInstance();
+		$table       = $this->getTable();
+		$db          = Factory::getDbo();
+		$isNew       = true;
+		$filesHelper = new FieldTypesFilesHelper();
+		$currentID   = $app->input->getInt('id');
 
 		$catid             = $data['catid'];
 		$category          = $this->getCategory($catid);
@@ -298,8 +300,9 @@ class PrototypeModelItem extends AdminModel
 		// Alter the title for save as copy
 		if ($app->input->get('task') == 'save2copy')
 		{
+
 			$origTable = clone $this->getTable();
-			$origTable->load($app->input->getInt('id'));
+			$origTable->load($currentID);
 
 			// Change title
 			if ($data['title'] == $origTable->title)
@@ -311,17 +314,8 @@ class PrototypeModelItem extends AdminModel
 			$data['published'] = 0;
 
 			// Copy images
-			$data['imagefolder'] = $this->imageFolderHelper->createTemporaryFolder();
-			if (!empty($data['images']))
-			{
-				foreach ($data['images'] as &$image)
-				{
-					$old          = JPATH_ROOT . '/' . $image['src'];
-					$image['src'] = $data['imagefolder'] . '/' . $image['file'];
-					$new          = JPATH_ROOT . '/' . $image['src'];
-					JFile::copy($old, $new);
-				}
-			}
+			$data['images_folder'] = $filesHelper->copyItemFolder($currentID, $this->images_root);
+
 		}
 
 		if (parent::save($data))
@@ -331,7 +325,6 @@ class PrototypeModelItem extends AdminModel
 			// Save images
 			if ($isNew && !empty($data['images_folder']))
 			{
-				$filesHelper = new FieldTypesFilesHelper();
 				$filesHelper->moveTemporaryFolder($data['images_folder'], $id, $this->images_root);
 			}
 
@@ -417,26 +410,16 @@ class PrototypeModelItem extends AdminModel
 			throw new Exception(Text::_('JERROR_CORE_CREATE_NOT_PERMITTED'));
 		}
 
+		$filesHelper = new FieldTypesFilesHelper();
+
 		foreach ($pks as $pk)
 		{
 			if ($item = $this->getItem($pk))
 			{
 				unset($item->id);
-				$item->title       = $item->title . ' ' . Text::_('JGLOBAL_COPY');
-				$item->published   = $item->state = 0;
-				$item->imagefolder = $this->imageFolderHelper->createTemporaryFolder();
-				if (!empty($item->images))
-				{
-					$registry     = new Registry($item->images);
-					$item->images = $registry->toArray();
-					foreach ($item->images as &$image)
-					{
-						$old          = JPATH_ROOT . '/' . $image['src'];
-						$image['src'] = $item->imagefolder . '/' . $image['file'];
-						$new          = JPATH_ROOT . '/' . $image['src'];
-						JFile::copy($old, $new);
-					}
-				}
+				$item->title         = $item->title . ' ' . Text::_('JGLOBAL_COPY');
+				$item->published     = $item->state = 0;
+				$item->images_folder = $filesHelper->copyItemFolder($pk, $this->images_root);
 
 				$this->save(ArrayHelper::fromObject($item));
 			}
