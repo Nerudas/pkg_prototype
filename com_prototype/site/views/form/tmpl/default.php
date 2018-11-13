@@ -35,15 +35,19 @@ $doc->addScriptDeclaration('
 ?>
 <form action="<?php echo Route::_(PrototypeHelperRoute::getFormRoute($this->item->id, $this->category->id, $app->input->getCmd('return_view'))); ?>"
 	  method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
-	<?php echo LayoutHelper::render('components.com_prototype.form.presets',
-		array('form' => $this->form, 'presets' => $this->presets)); ?>
-	<div data-prototype-form="form" style="display: none">
-		<div>
-			<span data-preset-title="label"></span>
-			<a data-prototype-form="change-preset">
-				<?php echo Text::_('COM_PROTOTYPE_PRESETS_CHANGE'); ?>
-			</a>
-		</div>
+	<?php if (!empty($this->presets)): ?>
+		<?php echo LayoutHelper::render('components.com_prototype.form.presets',
+			array('form' => $this->form, 'presets' => $this->presets)); ?>
+	<?php endif; ?>
+	<div data-prototype-form="form" <?php echo (!empty($this->presets)) ? 'style="display: none"' : ''; ?>>
+		<?php if (!empty($this->presets)): ?>
+			<div>
+				<span data-preset-title="label"></span>
+				<a data-prototype-form="change-preset">
+					<?php echo Text::_('COM_PROTOTYPE_PRESETS_CHANGE'); ?>
+				</a>
+			</div>
+		<?php endif; ?>
 		<?php echo $this->form->renderFieldSet('main'); ?>
 		<?php echo LayoutHelper::render('components.com_prototype.form.author',
 			array('form' => $this->form, 'author' => $this->author, 'isNew' => (!empty($this->item->id)))); ?>
