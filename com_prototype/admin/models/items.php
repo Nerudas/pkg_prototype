@@ -256,7 +256,7 @@ class PrototypeModelItems extends ListModel
 			}
 			else
 			{
-				$cols = array('i.title', 'r.name', 'i.text', 'author.name', 'i.extra');
+				$cols = array('i.title', 'r.name', 'i.text', 'author.name');
 				$sql  = array();
 				foreach ($cols as $col)
 				{
