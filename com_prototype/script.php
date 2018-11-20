@@ -302,13 +302,15 @@ class com_PrototypeInstallerScript
 	}
 
 	/**
-	 * Method to fix tables
+	 * Remove categories
 	 *
-	 * @param string $path path to component directory
+	 * @param  \stdClass $parent - Parent object calling object.
 	 *
-	 * @since 1.0.0
+	 * @return void
+	 *
+	 * @since  1.2.0
 	 */
-	protected function update()
+	public function update($parent)
 	{
 		Factory::getDbo()->setQuery("ALTER TABLE #__prototype_items MODIFY payment TEXT NOT NULL DEFAULT '';")->execute();
 	}
