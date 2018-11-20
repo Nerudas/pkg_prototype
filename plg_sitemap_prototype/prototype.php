@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sitemap - Prototype Plugin
- * @version    1.3.3
+ * @version    1.3.5
  * @author     Nerudas  - nerudas.ru
  * @copyright  Copyright (c) 2013 - 2018 Nerudas. All rights reserved.
  * @license    GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
