@@ -39,8 +39,6 @@ class JFormFieldPayment extends JFormFieldList
 		$registry = new Registry(ComponentHelper::getParams('com_prototype')->get('payment', array()));
 		$payments = $registry->toArray();
 
-		echo '<pre>', print_r($this->value, true), '</pre>';
-
 		$options = parent::getOptions();
 		foreach ($payments as $i => $payment)
 		{

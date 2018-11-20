@@ -50,19 +50,12 @@ extract($displayData);
 				<?php endif; ?>
 			</td>
 		</tr>
-		<?php if (!empty($item->extra)): ?>
-			<?php $i = 0;
-			foreach ($item->extra as $key => $value): ?>
-				<tr <?php echo ($i % 2) ? '' : 'style="background: #fafafa;"'; ?>>
-					<td style="padding: 8px 8px; border-bottom: 1px solid #ddd; text-align: left; vertical-align: top;">
-						<?php echo Text::_('COM_PROTOTYPE_ITEM_EXTRA_' . $key); ?>
-					</td>
-					<td style="padding: 8px 8px; border-bottom: 1px solid #ddd; text-align: left; vertical-align: top;">
-						<?php echo $value; ?>
-					</td>
-				</tr>
-				<?php $i++;
-			endforeach; ?>
-		<?php endif; ?>
+		<tr style="background: #fafafa;">
+			<td style="padding: 8px 8px; border-bottom: 1px solid #ddd; text-align: left; vertical-align: top;">
+				<?php echo Text::_('COM_PROTOTYPE_ITEM_PAYMENT'); ?></td>
+			<td style="padding: 8px 8px; border-bottom: 1px solid #ddd; text-align: left; vertical-align: top;">
+				<?php echo $item->payment; ?>
+			</td>
+		</tr>
 	</table>
 </div>
