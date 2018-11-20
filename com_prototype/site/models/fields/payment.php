@@ -14,9 +14,9 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Component\ComponentHelper;
 
-FormHelper::loadFieldClass('checkboxes');
+FormHelper::loadFieldClass('radio');
 
-class JFormFieldPayment extends JFormFieldCheckboxes
+class JFormFieldPayment extends JFormFieldRadio
 {
 	/**
 	 * The form field type.

@@ -14,9 +14,9 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Component\ComponentHelper;
 
-FormHelper::loadFieldClass('radio');
+FormHelper::loadFieldClass('list');
 
-class JFormFieldPayment extends JFormRadio
+class JFormFieldPayment extends JFormFieldList
 {
 	/**
 	 * The form field type.
