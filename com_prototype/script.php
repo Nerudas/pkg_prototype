@@ -301,19 +301,6 @@ class com_PrototypeInstallerScript
 		JFolder::delete(JPATH_ROOT . '/layouts/components/com_prototype');
 	}
 
-	/**
-	 * Remove categories
-	 *
-	 * @param  \stdClass $parent - Parent object calling object.
-	 *
-	 * @return void
-	 *
-	 * @since  1.2.0
-	 */
-	public function update($parent)
-	{
-		Factory::getDbo()->setQuery("ALTER TABLE #__prototype_items MODIFY payment TEXT NOT NULL DEFAULT '';")->execute();
-	}
 
 	/**
 	 * Method to fix tables
