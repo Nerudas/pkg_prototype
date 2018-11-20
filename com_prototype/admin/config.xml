@@ -46,6 +46,25 @@
 			<field name="object" type="presetsconfig" label="COM_PROTOTYPE_PRESETS_OBJECT"/>
 		</fields>
 	</fieldset>
+	<fieldset name="payment" label="COM_PROTOTYPE_PARAMS_PAYMENT">
+		<field name="payment" type="subform"
+			   label="COM_PROTOTYPE_PARAMS_PAYMENT"
+			   multiple="true">
+			<form>
+				<field name="value" type="text"
+					   label="COM_PROTOTYPE_PARAMS_PAYMENT_VALUE"/>
+				<field name="title" type="text"
+					   label="COM_PROTOTYPE_PARAMS_PAYMENT_TITLE"
+					   class="input-xlarge"/>
+				<field name="description" type="textarea"
+					   label="COM_PROTOTYPE_PARAMS_PAYMENT_DESCRIPTION"
+					   class="input-xlarge"
+					   rows="3"/>
+				<field name="price" type="text"
+					   label="COM_PROTOTYPE_PARAMS_PAYMENT_PRICE"/>
+			</form>
+		</field>
+	</fieldset>
 	<fieldset name="permissions"
 			  label="JCONFIG_PERMISSIONS_LABEL"
 			  description="JCONFIG_PERMISSIONS_DESC">

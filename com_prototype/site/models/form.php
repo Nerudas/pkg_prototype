@@ -173,6 +173,9 @@ class PrototypeModelForm extends PrototypeModelItem
 
 		$data['created'] = Factory::getDate()->toSql();
 
+		$data['payment'] = (!empty($data['payment'][0])) ? $data['payment'][0] : '';
+
+
 		if ($id = parent::save($data))
 		{
 

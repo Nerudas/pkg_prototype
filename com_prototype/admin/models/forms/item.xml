@@ -77,12 +77,11 @@
 			   showtime="true"
 			   size="22"
 			   filter="user_utc"/>
-		<field name="payment" type="radio"
+		<field name="payment" type="payment"
 			   label="COM_PROTOTYPE_ITEM_PAYMENT"
 			   class="btn-group btn-group-yesno"
-			   default="0">
-			<option value="1">JYES</option>
-			<option value="0">JNO</option>
+			   default="">
+			<option value="">JNONE</option>
 		</field>
 		<field name="payment_down" type="calendar"
 			   label="COM_PROTOTYPE_ITEM_PAYMENT_DOWN"
