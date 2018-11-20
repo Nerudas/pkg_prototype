@@ -308,6 +308,18 @@ class com_PrototypeInstallerScript
 	 *
 	 * @since 1.0.0
 	 */
+	protected function update()
+	{
+		Factory::getDbo()->setQuery("ALTER TABLE #__prototype_items MODIFY payment TEXT NOT NULL DEFAULT '';")->execute();
+	}
+
+	/**
+	 * Method to fix tables
+	 *
+	 * @param string $path path to component directory
+	 *
+	 * @since 1.0.0
+	 */
 	protected function fixTables($path)
 	{
 		$file = JPATH_ADMINISTRATOR . $path . '/sql/install.mysql.utf8.sql';

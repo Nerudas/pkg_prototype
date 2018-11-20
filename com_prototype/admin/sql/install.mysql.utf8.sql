@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `#__prototype_items` (
 	`catid`           INT(11)          NOT NULL DEFAULT '0',
 	`created`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`created_by`      INT(11)          NOT NULL DEFAULT '0',
-	`payment`         TINYINT(3)       NOT NULL DEFAULT '0',
+	`payment`         TEXT             NOT NULL DEFAULT '',
 	`payment_number`  TEXT             NOT NULL DEFAULT '',
 	`payment_down`    DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`map`             TEXT             NOT NULL DEFAULT '',
