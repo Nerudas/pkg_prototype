@@ -553,8 +553,14 @@ class PrototypeModelItems extends ListModel
 
 				// Set Preset
 				$presetKey    = trim($item->preset_price) . '|' . trim($item->preset_delivery) . '|' . trim($item->preset_object);
-				$preset       = (!empty($category) && !empty($category->presets[$presetKey])) ? $category->presets[$presetKey] : false;
+				$preset       = (!empty($category) && !empty($category->presets[$presetKey])) ? clone ($category->presets[$presetKey]) : false;
 				$item->preset = $preset;
+
+				if ($itemPresetIcon = $imagesHelper->getImage('preset_icon', 'images/prototype/items/' . $item->id, false, false))
+				{
+					$preset->icon = $itemPresetIcon;
+					$item->preset = $preset;
+				}
 
 				// Set placemark
 				$placemark               = new stdClass();

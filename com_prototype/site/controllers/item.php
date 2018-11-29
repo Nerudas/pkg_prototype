@@ -20,6 +20,8 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Component\ComponentHelper;
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class PrototypeControllerItem extends FormController
 {
 	/**
@@ -82,6 +84,14 @@ class PrototypeControllerItem extends FormController
 
 		$presetPrice = (!empty($configPresets['price'][$preset['price']])) ? $configPresets['price'][$preset['price']] : false;
 		$presetIcon  = (!empty($preset['icon'])) ? $preset['icon'] : '';
+
+		$imagesHelper = new FieldTypesFilesHelper();
+
+		if ($itemPresetIcon = $imagesHelper->getImage('preset_icon', $data['images_folder'], false, false))
+		{
+			$presetIcon = $itemPresetIcon;
+		}
+
 
 		$placemark = new Registry();
 		$placemark->set('id', $data['id']);

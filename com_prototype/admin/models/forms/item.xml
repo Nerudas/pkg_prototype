@@ -46,6 +46,11 @@
 			   label="JGLOBAL_FIELD_MAP_LABEL"
 			   description="JGLOBAL_FIELD_MAP_DESC"
 			   setplacemark="true"/>
+		<field name="preset_icon"
+			   type="image"
+			   label="COM_PROTOTYPE_PRESETS_ICON"
+			   folder_field="images_folder"
+			   filename="preset_icon"/>
 		<field name="state" type="list"
 			   label="JSTATUS"
 			   description="JFIELD_PUBLISHED_DESC"
