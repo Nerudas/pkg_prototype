@@ -16,6 +16,8 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Registry\Registry;
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class PrototypeModelItems extends ListModel
 {
 	/**
@@ -309,16 +311,24 @@ class PrototypeModelItems extends ListModel
 		$items = parent::getItems();
 		if (!empty($items))
 		{
-			$categories = $this->getCategories(array_unique(ArrayHelper::getColumn($items, 'catid')));
+			$categories   = $this->getCategories(array_unique(ArrayHelper::getColumn($items, 'catid')));
+			$imagesHelper = new FieldTypesFilesHelper();
 			foreach ($items as &$item)
 			{
 				// Get Category
 				$category       = (!empty($categories[$item->catid])) ? $categories[$item->catid] : false;
 				$item->category = $category;
 
-				$item_preset = trim($item->preset_price) . '|' . trim($item->preset_delivery) . '|' . trim($item->preset_object);
+				$presetKey = trim($item->preset_price) . '|' . trim($item->preset_delivery) . '|' . trim($item->preset_object);
 
-				$item->preset = (!empty($category) && !empty($category->presets[$item_preset])) ? $category->presets[$item_preset] : false;
+				$preset       = (!empty($category) && !empty($category->presets[$presetKey])) ? $category->presets[$presetKey] : false;
+				$item->preset = $preset;
+
+				if ($itemPresetIcon = $imagesHelper->getImage('preset_icon', 'images/prototype/items/' . $item->id, false, false))
+				{
+					$preset['icon'] = $itemPresetIcon;
+					$item->preset   = $preset;
+				}
 			}
 		}
 
