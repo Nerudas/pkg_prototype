@@ -793,9 +793,10 @@ class PrototypeModelItems extends ListModel
 				// Root
 				$data->root = ($data->id == 1);
 
-				$imagesHelper = new FieldTypesFilesHelper();
-				$imagesFolder = 'images/prototype/categories/' . $data->id;
-				$data->icon   = $imagesHelper->getImage('icon', $imagesFolder, false, false);
+				$imagesHelper     = new FieldTypesFilesHelper();
+				$imagesFolder     = 'images/prototype/categories/' . $data->id;
+				$data->icon       = $imagesHelper->getImage('icon', $imagesFolder, false, false);
+				$data->map_header = $imagesHelper->getImage('map', $imagesFolder, false, false);
 
 				// Links
 				$data->listLink   = Route::_(PrototypeHelperRoute::getListRoute($data->id));

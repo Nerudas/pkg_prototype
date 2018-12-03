@@ -27,6 +27,10 @@
 			   label="COM_PROTOTYPE_CATEGORY_ICON"
 			   folder_field="images_folder"
 			   filename="icon"/>
+		<field name="map_header" type="image"
+			   label="COM_PROTOTYPE_CATEGORY_MAP_IMAGE"
+			   folder_field="images_folder"
+			   filename="map"/>
 		<field name="lft" type="hidden" filter="unset"/>
 		<field name="rgt" type="hidden" filter="unset"/>
 		<field name="preset_demo" type="hidden"/>

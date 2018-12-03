@@ -36,6 +36,13 @@ $doc->addScriptDeclaration('
 	};
 ');
 ?>
+<style>
+	#jform_map,
+	#jform_map > .form {
+		width: 997px !important;
+		height: 345px !important;
+	}
+</style>
 <form action="<?php echo Route::_('index.php?option=com_prototype&view=categories&id=' . $this->item->id); ?>"
 	  method="post"
 	  name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
@@ -47,14 +54,20 @@ $doc->addScriptDeclaration('
 			<div class="span9">
 				<fieldset class="adminform">
 					<div class="row-fluid form-horizontal-desktop">
-
 						<div class="span3">
 							<h4><?php echo Text::_('COM_PROTOTYPE_CATEGORY_ICON'); ?></h4>
 							<?php echo $this->form->getInput('icon'); ?>
+
 						</div>
 						<div class="span9">
-							<h4><?php echo Text::_('JTAG'); ?></h4>
-							<?php echo $this->form->getInput('tags'); ?>
+							<div class="control-group">
+								<h4><?php echo Text::_('COM_PROTOTYPE_CATEGORY_MAP_IMAGE'); ?></h4>
+								<?php echo $this->form->getInput('map'); ?>
+							</div>
+							<div class="control-group">
+								<h4><?php echo Text::_('JTAG'); ?></h4>
+								<?php echo $this->form->getInput('tags'); ?>
+							</div>
 						</div>
 					</div>
 				</fieldset>
