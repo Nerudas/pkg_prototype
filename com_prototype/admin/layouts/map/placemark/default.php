@@ -63,13 +63,29 @@ extract($displayData);
 		background: rgba(255, 255, 255, 0.7);
 	}
 
-	[data-prototype-placemark] img {
+
+	[data-prototype-placemark] .icon img {
 		position: absolute;
 		bottom: 20px;
 		left: 0;
 		max-width: 65px;
 		max-height: 40px;
 		z-index: 2;
+	}
+
+	[data-prototype-placemark].no-price .icon {
+		position: absolute;
+		display: block;
+		text-align: center;
+		bottom: 20px;
+		left: 0;
+		right: 0;
+		z-index: 2;
+	}
+
+	[data-prototype-placemark].no-price .icon img {
+		position: static;
+		max-width: none;
 	}
 
 	[data-prototype-placemark] .price {
@@ -152,19 +168,19 @@ extract($displayData);
 <div data-prototype-placemark="<?php echo $placemark->get('id', 'x'); ?>"
 	 data-placemark-coordinates="[[[-60, -60],[60, -60],[60, 0],[60, 0],[0, 0],[-60, -10],[-60, -10]]]"
 	 data-placemark-coordinates-viewed="[[[-45, -45],[45, -45],[45, 0],[45, 0],[0, 0],[-45, -10],[-45, -10]]]"
-	 class="placemark" data-viewed="false">
+	 class="placemark <?php echo (!$placemark->get('show_price')) ? 'no-price' : ''; ?>" data-viewed="false">
 	<?php if ($placemark->get('show_price')): ?>
 		<div class="price">
 			<?php ?>
 			<div class="type"><?php echo $placemark->get('preset_price', ''); ?></div>
 			<div class="number">
-				<?php echo $placemark->get('price', '---'); ?>
+				<?php echo ($placemark->get('price') > 0) ? $placemark->get('price') : '---'; ?>
 			</div>
-
 		</div>
 	<?php endif; ?>
-	<img src="/<?php echo $placemark->get('preset_icon', 'media/com_prototype/images/placemark.png'); ?>"
-		 alt="<?php echo $placemark->get('title', Text::_('JGLOBAL_TITLE')); ?>">
-
+	<div class="icon">
+		<img src="/<?php echo $placemark->get('preset_icon', 'media/com_prototype/images/placemark.png'); ?>"
+			 alt="<?php echo $placemark->get('title', Text::_('JGLOBAL_TITLE')); ?>">
+	</div>
 	<div class="title"><?php echo $placemark->get('title', Text::_('JGLOBAL_TITLE')); ?></div>
 </div>
