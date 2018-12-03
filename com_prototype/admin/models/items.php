@@ -321,13 +321,13 @@ class PrototypeModelItems extends ListModel
 
 				$presetKey = trim($item->preset_price) . '|' . trim($item->preset_delivery) . '|' . trim($item->preset_object);
 
-				$preset       = (!empty($category) && !empty($category->presets[$presetKey])) ? $category->presets[$presetKey] : false;
+				$preset       = (!empty($category) && !empty($category->presets[$presetKey])) ? clone($category->presets[$presetKey]) : false;
 				$item->preset = $preset;
 
 				if ($itemPresetIcon = $imagesHelper->getImage('preset_icon', 'images/prototype/items/' . $item->id, false, false))
 				{
-					$preset['icon'] = $itemPresetIcon;
-					$item->preset   = $preset;
+					$preset->icon = $itemPresetIcon;
+					$item->preset = $preset;
 				}
 			}
 		}
@@ -379,14 +379,40 @@ class PrototypeModelItems extends ListModel
 						->where('c.id IN (' . implode(',', $getCategories) . ')');
 					$db->setQuery($query);
 					$objects = $db->loadObjectList('id');
+
+					$registry      = new Registry(ComponentHelper::getParams('com_prototype')->get('presets', array()));
+					$configs       = $registry->toArray();
+					$configPresets = array();
+					foreach ($configs as $key => $config)
+					{
+						if (!isset($configPresets[$key]))
+						{
+							$configPresets[$key] = array();
+						}
+						foreach ($config as $conf)
+						{
+							$configPresets[$key][$conf['value']] = $conf;
+						}
+					}
+
+
 					foreach ($objects as $object)
 					{
 						$registry        = new Registry($object->presets);
 						$object->presets = array();
 						foreach ($registry->toArray() as $preset)
 						{
-							$object->presets[$preset['key']] = $preset;
+							$preset['price']    = (!empty($configPresets['price'][$preset['price']])) ?
+								(object) $configPresets['price'][$preset['price']] : false;
+							$preset['delivery'] = (!empty($configPresets['delivery'][$preset['delivery']])) ?
+								(object) $configPresets['delivery'][$preset['delivery']] : false;
+							$preset['object']   = (!empty($configPresets['object'][$preset['object']])) ?
+								(object) $configPresets['object'][$preset['object']] : false;
+
+							$object->presets[$preset['key']] = (object) $preset;
 						}
+
+
 						$categories[$object->id]        = $object;
 						$this->_categories[$object->id] = $object;
 					}

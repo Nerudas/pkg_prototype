@@ -62,6 +62,9 @@ $columns = 9;
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'i.title', $listDirn, $listOrder); ?>
 					</th>
 					<th width="15%" class="nowrap hidden-phone">
+						<?php echo Text::_('JGLOBAL_FIELD_PRICE_LABEL'); ?>
+					</th>
+					<th width="15%" class="nowrap hidden-phone">
 						<?php echo Text::_('COM_PROTOTYPE_ITEM_PAYMENT_NUMBER'); ?>
 					</th>
 					<th width="10%" class="nowrap hidden-phone">
@@ -118,8 +121,8 @@ $columns = 9;
 							</div>
 						</td>
 						<td class="center hidden-phone">
-							<?php if ($item->preset && !empty($item->preset['icon'])): ?>
-								<?php echo HTMLHelper::image($item->preset['icon'], $item->title); ?>
+							<?php if ($item->preset && !empty($item->preset->icon)): ?>
+								<?php echo HTMLHelper::image($item->preset->icon, $item->title); ?>
 							<?php endif; ?>
 						</td>
 						<td>
@@ -141,6 +144,16 @@ $columns = 9;
 								<span><?php echo(!empty($item->category->title) ? $item->category->title : Text::_('JROOT')); ?></span>
 								<span><?php echo $item->location; ?></span>
 							</div>
+						</td>
+						<td class="hidden-phone">
+							<?php if ($item->price): ?>
+								<div>
+									<strong><?php echo ($item->price > 0) ? $item->price . ' ₽' : '---'; ?></strong>
+								</div>
+								<?php if ($item->preset->price): ?>
+									<div class="muted"><?php echo $item->preset->price->title; ?></div>
+								<?php endif; ?>
+							<?php endif; ?>
 						</td>
 						<td class="hidden-phone">
 							<a data-filter-payment_number="<?php echo $item->payment_number; ?>">
