@@ -411,6 +411,7 @@ class PrototypeModelCategory extends AdminModel
 		if (parent::delete($pks))
 		{
 			// Delete images
+			$filesHelper = new FieldTypesFilesHelper();
 			foreach ($pks as $pk)
 			{
 				$filesHelper->deleteItemFolder($pk, $this->images_root);
