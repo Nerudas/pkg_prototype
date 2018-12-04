@@ -443,6 +443,15 @@ class PrototypeModelItems extends ListModel
 			$categories = $this->getCategories(array_unique(ArrayHelper::getColumn($items, 'catid')));
 
 			$imagesHelper = new FieldTypesFilesHelper();
+
+			$registry      = new Registry(ComponentHelper::getParams('com_prototype')->get('payment', array()));
+			$configs       = $registry->toArray();
+			$configPayment = array();
+			foreach ($configs as $cfg)
+			{
+				$configPayment[$cfg['value']] = new Registry($cfg);
+			}
+
 			foreach ($items as &$item)
 			{
 				// Set text
@@ -462,6 +471,8 @@ class PrototypeModelItems extends ListModel
 				$item->payment_down       = new stdClass();
 				$item->payment_down->end  = $paymentDown;
 				$item->payment_down->date = $paymentDownDate;
+
+				$item->payment = (!empty($configPayment[$item->payment])) ? $configPayment[$item->payment] : new Registry();
 
 				// Set Edit
 				$item->editLink = false;
