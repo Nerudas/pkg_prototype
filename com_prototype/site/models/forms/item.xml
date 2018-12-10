@@ -8,6 +8,12 @@
 			   class="input-xxlarge input-large-text"
 			   size="40"
 			   required="true"/>
+		<field name="active" type="radio" default="1"
+			   label="COM_PROTOTYPE_ITEM_ACTIVE"
+			   class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field name="price" type="text" label="COM_PROTOTYPE_PRESETS_PRICE_LABEL"/>
 		<field name="text" type="textarea"
 			   label="COM_PROTOTYPE_ITEM_TEXT"

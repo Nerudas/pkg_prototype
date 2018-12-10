@@ -324,12 +324,15 @@ class PrototypeModelItems extends ListModel
 				$now      = Factory::getDate()->toSql();
 				$query->where('( i.state = ' . (int) $published .
 					' OR ( i.created_by = ' . $user->id . ' AND i.state IN (0,1)))');
+				$query->where('( i.active = ' . (int) $published .
+					' OR  i.created_by = ' . $user->id . ')');
 				$query->where('(' . $db->quoteName('i.publish_down') . ' = ' . $db->Quote($nullDate) . ' OR '
 					. $db->quoteName('i.publish_down') . '  >= ' . $db->Quote($now)
 					. 'OR i.created_by = ' . $user->id . ')');
 				$query->where('(' . $db->quoteName('i.publish_up') . ' <> ' . $db->Quote($nullDate) . ' AND '
 					. $db->quoteName('i.publish_up') . '  <= ' . $db->Quote($now)
 					. 'OR i.created_by = ' . $user->id . ')');
+
 				$query->where('c.state = ' . (int) $published);
 			}
 			elseif (is_array($published))

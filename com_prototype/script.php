@@ -386,5 +386,11 @@ class com_PrototypeInstallerScript
 				->query();
 		}
 
+		if (!isset($columns['active']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `active` TINYINT(3)  NOT NULL DEFAULT '0' AFTER `state`")
+				->query();
+			$db->setQuery("UPDATE  " . $table . " SET `active` = 1")->query();
+		}
 	}
 }
