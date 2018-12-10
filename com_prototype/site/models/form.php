@@ -171,8 +171,7 @@ class PrototypeModelForm extends PrototypeModelItem
 		$pk    = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
 		$isNew = ($pk == 0);
 
-		$data['created'] = Factory::getDate()->toSql();
-
+		$data['date'] = Factory::getDate()->toSql();
 
 		if ($id = parent::save($data))
 		{

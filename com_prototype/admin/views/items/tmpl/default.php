@@ -77,7 +77,7 @@ $columns = 9;
 						<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_REGION', 'region_name', $listDirn, $listOrder); ?>
 					</th>
 					<th width="10%" class="nowrap hidden-phone">
-						<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_CREATED_DATE', 'i.created', $listDirn, $listOrder); ?>
+						<?php echo HTMLHelper::_('searchtools.sort', 'JDATE', 'i.date', $listDirn, $listOrder); ?>
 					</th>
 					<th width="1%" class="nowrap hidden-phone">
 						<?php echo HTMLHelper::_('searchtools.sort', 'COM_PROTOTYPE_ITEMS_HITS', 'i.hits', $listDirn, $listOrder); ?>
@@ -196,7 +196,7 @@ $columns = 9;
 							<?php echo $this->escape($item->region_name); ?>
 						</td>
 						<td class="nowrap small hidden-phone">
-							<?php echo $item->created > 0 ? HTMLHelper::_('date', $item->created,
+							<?php echo $item->date > 0 ? HTMLHelper::_('date', $item->date,
 								Text::_('DATE_FORMAT_LC2')) : '-' ?>
 						</td>
 

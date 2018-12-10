@@ -1,4 +1,5 @@
-CREATE TABLE IF NOT EXISTS `#__prototype_items` (
+CREATE TABLE IF NOT EXISTS `#__prototype_items`
+(
 	`id`              INT(11)          NOT NULL AUTO_INCREMENT,
 	`title`           VARCHAR(255)     NOT NULL DEFAULT '',
 	`text`            MEDIUMTEXT       NOT NULL DEFAULT '',
@@ -11,8 +12,13 @@ CREATE TABLE IF NOT EXISTS `#__prototype_items` (
 	`images`          MEDIUMTEXT       NOT NULL DEFAULT '',
 	`state`           TINYINT(3)       NOT NULL DEFAULT '0',
 	`catid`           INT(11)          NOT NULL DEFAULT '0',
+	`date`             DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`created`         DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`created_by`      INT(11)          NOT NULL DEFAULT '0',
+	`modified`        DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`modified_by`     INT(11)          NOT NULL DEFAULT '0',
+	`publish_up`      DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`publish_down`    DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`payment`         TEXT             NOT NULL DEFAULT '',
 	`payment_number`  TEXT             NOT NULL DEFAULT '',
 	`payment_down`    DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -31,7 +37,8 @@ CREATE TABLE IF NOT EXISTS `#__prototype_items` (
 	DEFAULT CHARSET = utf8
 	AUTO_INCREMENT = 0;
 
-CREATE TABLE IF NOT EXISTS `#__prototype_categories` (
+CREATE TABLE IF NOT EXISTS `#__prototype_categories`
+(
 	`id`            INT(11)      NOT NULL AUTO_INCREMENT,
 	`title`         VARCHAR(255) NOT NULL DEFAULT '',
 	`parent_id`     INT(11)      NOT NULL DEFAULT '0',

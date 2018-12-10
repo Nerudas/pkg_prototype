@@ -217,6 +217,19 @@ class PrototypeModelItem extends AdminModel
 			$data['created'] = Factory::getDate()->toSql();
 		}
 
+		$data['modified']    = Factory::getDate()->toSql();
+		$data['modified_by'] = Factory::getUser()->id;
+
+		if (empty($data['publish_up']))
+		{
+			$data['publish_up'] = $data['created'];
+		}
+
+		if (empty($data['date']))
+		{
+			$data['date'] = Factory::getDate()->toSql();
+		}
+
 		if (isset($data['metadata']) && isset($data['metadata']['author']))
 		{
 			$data['metadata']['author'] = $filter->clean($data['metadata']['author'], 'TRIM');
@@ -434,9 +447,9 @@ class PrototypeModelItem extends AdminModel
 	/**
 	 * Method to prolong items to date
 	 *
-	 * @param   array &$pks An array of primary key IDs.
+	 * @param   array &$pks  An array of primary key IDs.
 	 *
-	 * @param string  $plus date plus publish_down
+	 * @param string   $plus date plus publish_down
 	 *
 	 * @return  boolean|JException  Boolean true on success, JException instance on error
 	 *
@@ -481,9 +494,9 @@ class PrototypeModelItem extends AdminModel
 	/**
 	 * Method to prolong items to date
 	 *
-	 * @param   array &$pks           An array of primary key IDs.
+	 * @param   array &$pks            An array of primary key IDs.
 	 *
-	 * @param string  $payment_number Payment number
+	 * @param string   $payment_number Payment number
 	 *
 	 * @return  boolean|JException  Boolean true on success, JException instance on error
 	 *

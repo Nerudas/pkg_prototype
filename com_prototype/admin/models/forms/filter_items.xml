@@ -28,7 +28,7 @@
 	<fields name="list">
 		<field name="fullordering" type="list"
 			   onchange="this.form.submit();"
-			   default="i.created DESC">
+			   default="i.date DESC">
 			<option value="">JGLOBAL_SORT_BY</option>
 			<option value="i.title ASC">JGLOBAL_TITLE_ASC</option>
 			<option value="i.title DESC">JGLOBAL_TITLE_DESC</option>
@@ -42,8 +42,8 @@
 			<option value="i.hits DESC">JGLOBAL_HITS_DESC</option>
 			<option value="i.created_by ASC">JAUTHOR_ASC</option>
 			<option value="i.created_by DESC">JAUTHOR_DESC</option>
-			<option value="i.created ASC">JDATE_ASC</option>
-			<option value="i.created DESC">JDATE_DESC</option>
+			<option value="i.date ASC">JDATE_ASC</option>
+			<option value="i.date DESC">JDATE_DESC</option>
 			<option value="i.payment_down ASC">COM_PROTOTYPE_ITEM_PAYMENT_DOWN_ASC</option>
 			<option value="i.payment_down DESC">COM_PROTOTYPE_ITEM_PAYMENT_DOWN_DESC</option>
 		</field>

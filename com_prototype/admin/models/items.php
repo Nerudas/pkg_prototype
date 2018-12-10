@@ -52,6 +52,7 @@ class PrototypeModelItems extends ListModel
 				'images', 'i.images',
 				'state', 'i.state',
 				'catid', 'i.catid',
+				'date', 'i.date',
 				'created', 'i.created',
 				'created_by', 'i.created_by',
 				'payment_number', 'i.payment_number',
@@ -110,7 +111,7 @@ class PrototypeModelItems extends ListModel
 		$this->setState('filter.payment_number', $payment_number);
 
 		// List state information.
-		$ordering  = empty($ordering) ? 'i.created' : $ordering;
+		$ordering  = empty($ordering) ? 'i.date' : $ordering;
 		$direction = empty($direction) ? 'desc' : $direction;
 		parent::populateState($ordering, $direction);
 	}
@@ -273,7 +274,7 @@ class PrototypeModelItems extends ListModel
 		$query->group(array('i.id'));
 
 		// Add the list ordering clause.
-		$ordering  = $this->state->get('list.ordering', 'i.created');
+		$ordering  = $this->state->get('list.ordering', 'i.date');
 		$direction = $this->state->get('list.direction', 'desc');
 		$query->order($db->escape($ordering) . ' ' . $db->escape($direction));
 

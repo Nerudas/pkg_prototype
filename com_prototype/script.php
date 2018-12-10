@@ -336,4 +336,55 @@ class com_PrototypeInstallerScript
 			}
 		}
 	}
+
+	/**
+	 * Modify table
+	 *
+	 * @param  \stdClass $parent - Parent object calling object.
+	 *
+	 * @return void
+	 *
+	 * @since  1.3.7
+	 */
+	public function update($parent)
+	{
+		$db      = Factory::getDbo();
+		$table   = '#__prototype_items';
+		$columns = $db->getTableColumns($table);
+
+		if (!isset($columns['date']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `date` DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `catid`")
+				->query();
+			$db->setQuery("UPDATE  " . $table . " SET `date` = `created`")->query();
+		}
+
+		if (!isset($columns['modified']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `modified` DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `created_by`")
+				->query();
+			$db->setQuery("UPDATE  " . $table . " SET `modified` = `created`")->query();
+		}
+
+		if (!isset($columns['modified_by']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `modified_by`  INT(11)  NOT NULL DEFAULT '0' AFTER `modified`")
+				->query();
+			$db->setQuery("UPDATE  " . $table . " SET `modified_by` = `created_by`")->query();
+		}
+
+		if (!isset($columns['publish_up']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `publish_up` DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `modified_by`")
+				->query();
+			$db->setQuery("UPDATE  " . $table . " SET `publish_up` = `created`")->query();
+		}
+
+		if (!isset($columns['publish_down']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " ADD `publish_down` DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `publish_up`")
+				->query();
+		}
+
+	}
 }

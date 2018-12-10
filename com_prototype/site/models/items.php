@@ -94,7 +94,7 @@ class PrototypeModelItems extends ListModel
 				'images', 'i.images',
 				'state', 'i.state',
 				'catid', 'i.catid',
-				'created', 'i.created',
+				'created', 'i.date',
 				'created_by', 'i.created_by',
 				'payment_number', 'i.payment_number',
 				'payment_down', 'i.payment_down',
@@ -189,7 +189,7 @@ class PrototypeModelItems extends ListModel
 		$this->setState('list.start', $app->input->get('limitstart', 0, 'uint'));
 
 		// Set ordering & direction for query.
-		$ordering  = empty($ordering) ? 'i.created' : $ordering;
+		$ordering  = empty($ordering) ? 'i.date' : $ordering;
 		$direction = empty($direction) ? 'desc' : $direction;
 		$this->setState('list.ordering', $ordering);
 		$this->setState('list.direction', $direction);
@@ -320,8 +320,16 @@ class PrototypeModelItems extends ListModel
 		{
 			if (is_numeric($published))
 			{
+				$nullDate = $db->getNullDate();
+				$now      = Factory::getDate()->toSql();
 				$query->where('( i.state = ' . (int) $published .
 					' OR ( i.created_by = ' . $user->id . ' AND i.state IN (0,1)))');
+				$query->where('(' . $db->quoteName('i.publish_down') . ' = ' . $db->Quote($nullDate) . ' OR '
+					. $db->quoteName('i.publish_down') . '  >= ' . $db->Quote($now)
+					. 'OR i.created_by = ' . $user->id . ')');
+				$query->where('(' . $db->quoteName('i.publish_up') . ' <> ' . $db->Quote($nullDate) . ' AND '
+					. $db->quoteName('i.publish_up') . '  <= ' . $db->Quote($now)
+					. 'OR i.created_by = ' . $user->id . ')');
 				$query->where('c.state = ' . (int) $published);
 			}
 			elseif (is_array($published))
@@ -398,7 +406,7 @@ class PrototypeModelItems extends ListModel
 		$query->group(array('i.id'));
 
 		// Add the list ordering clause.
-		$ordering  = $this->state->get('list.ordering', 'i.created');
+		$ordering  = $this->state->get('list.ordering', 'i.date');
 		$direction = $this->state->get('list.direction', 'desc');
 		$query->order($db->escape($ordering) . ' ' . $db->escape($direction));
 

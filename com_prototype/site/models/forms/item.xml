@@ -31,10 +31,15 @@
 		<field name="region" type="hidden"/>
 		<field name="state" type="hidden" default="1"/>
 		<field name="access" type="hidden" readonly="true"/>
-		<field name="created" type="hidden" readonly="true"/>
 		<field name="payment_down" type="hidden" readonly="true"/>
 		<field name="payment_number" type="hidden" readonly="true"/>
+		<field name="date" type="hidden" readonly="true"/>
+		<field name="created" type="hidden" readonly="true"/>
 		<field name="created_by" type="hidden" readonly="true"/>
+		<field name="modified" type="hidden" readonly="true"/>
+		<field name="modified_by" type="hidden" readonly="true"/>
+		<field name="publish_up" type="hidden" readonly="true"/>
+		<field name="publish_down" type="hidden" readonly="true"/>
 		<field name="hits" type="hidden" readonly="true"/>
 		<field name="id" type="hidden" default="0" readonly="true"/>
 		<field name="catid" type="hidden" default="0"/>
