@@ -33,5 +33,9 @@ class PrototypeHelper extends ContentHelper
 		JHtmlSidebar::addEntry(Text::_('COM_PROTOTYPE_CATEGORIES'),
 			'index.php?option=com_prototype&view=categories',
 			$vName == 'categories');
+
+		JHtmlSidebar::addEntry(Text::_('COM_PROTOTYPE_IMPORT'),
+			'index.php?option=com_prototype&view=import',
+			$vName == 'import');
 	}
 }
