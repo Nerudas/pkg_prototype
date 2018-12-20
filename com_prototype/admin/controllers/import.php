@@ -76,7 +76,7 @@ class PrototypeControllerImport extends BaseController
 		{
 			if ($counter == $this->limit)
 			{
-				$dropper++;
+				$dropper = $dropper + $this->limit;
 				$counter = 0;
 			}
 			if (!isset($jsons[$dropper]))
