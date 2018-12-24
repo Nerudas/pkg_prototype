@@ -37,8 +37,8 @@ $doc->addScriptDeclaration('
 ');
 ?>
 <style>
-	#jform_map,
-	#jform_map > .form {
+	#jform_map_header,
+	#jform_map_header > .form {
 		width: 997px !important;
 		height: 345px !important;
 	}
@@ -62,7 +62,7 @@ $doc->addScriptDeclaration('
 						<div class="span9">
 							<div class="control-group">
 								<h4><?php echo Text::_('COM_PROTOTYPE_CATEGORY_MAP_IMAGE'); ?></h4>
-								<?php echo $this->form->getInput('map'); ?>
+								<?php echo $this->form->getInput('map_header'); ?>
 							</div>
 							<div class="control-group">
 								<h4><?php echo Text::_('JTAG'); ?></h4>
