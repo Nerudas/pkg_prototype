@@ -19,6 +19,7 @@
 		<filename module="mod_prototype_latest">mod_prototype_latest.php</filename>
 		<folder>tmpl</folder>
 	</files>
+	<customContent />
 	<config>
 		<fields name="params" addfieldpath="/administrator/components/com_prototype/models/fields">
 			<fieldset name="basic">
