@@ -1,6 +1,6 @@
 /*
  * @package    Prototype Component
- * @version    1.4.1
+ * @version    1.4.2
  * @author     Nerudas  - nerudas.ru
  * @copyright  Copyright (c) 2013 - 2018 Nerudas. All rights reserved.
  * @license    GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
