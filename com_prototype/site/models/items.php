@@ -595,8 +595,8 @@ class PrototypeModelItems extends ListModel
 				$item->placemark         = $placemark;
 
 				// Set render
-				$render      = new stdClass();
-				$displayData = array(
+				$render            = new stdClass();
+				$displayData       = array(
 					'item'      => new Registry($item),
 					'author'    => new Registry($author),
 					'map'       => ($map) ? new Registry($map) : new  Registry(),
@@ -604,6 +604,7 @@ class PrototypeModelItems extends ListModel
 					'preset'    => ($preset) ? new Registry($preset) : new  Registry(),
 					'placemark' => ($placemark) ? new Registry($placemark) : new  Registry(),
 				);
+				$item->displayData = $displayData;
 
 				// List layout
 				$layout           = new FileLayout('components.com_prototype.list.item.default');
